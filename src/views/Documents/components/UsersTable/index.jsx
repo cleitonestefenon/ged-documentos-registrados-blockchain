@@ -27,7 +27,7 @@ import {
 import { getInitials } from 'helpers';
 
 // Shared components
-import { Portlet, PortletContent } from 'components';
+import { Portlet, PortletContent } from 'views/Documents_old/components/UsersTable/node_modules/components';
 
 // Component styles
 import styles from './styles';
@@ -98,7 +98,7 @@ class UsersTable extends Component {
       <Portlet className={rootClassName}>
         <PortletContent noPadding>
           <PerfectScrollbar>
-            <Table>
+            <Table size="small">
               <TableHead>
                 <TableRow>
                   <TableCell align="left">

@@ -58,14 +58,21 @@ class AccountProfile extends Component {
           </div>
         </PortletContent>
         <PortletFooter>
-          <Button
-            className={classes.uploadButton}
-            color="primary"
-            variant="text"
-          >
-            Upload picture
-          </Button>
-          <Button variant="text">Remove picture</Button>
+          <div>
+            <input
+              accept="image/*"
+              className={classes.inputFile}
+              id="contained-button-file"
+              multiple
+              type="file"
+            />
+            <label htmlFor="contained-button-file">
+              <Button component="span" className={classes.profileButton}>
+                Carregar avatar
+              </Button>
+            </label>
+          </div>
+          <Button variant="text" className={classes.profileButton}>Remover avatar</Button>
         </PortletFooter>
       </Portlet>
     );

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 // Material helpers
-import { withStyles } from '@material-ui/core';
+import { withStyles, IconButton, InputAdornment, Tooltip } from '@material-ui/core';
 
 // Material components
 import { Button, TextField } from '@material-ui/core';
@@ -21,6 +21,7 @@ import {
 
 // Component styles
 import styles from './styles';
+import { VisibilityOff, Visibility } from '@material-ui/icons';
 
 const states = [
   {
@@ -39,12 +40,13 @@ const states = [
 
 class Account extends Component {
   state = {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'contact@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
+    userName: '',
+    email: '',
+    publicKey: '',
+    privateKey: '',
+    wif: '',
+    address: '',
+    visibilityPrivateKey: false
   };
 
   handleChange = e => {
@@ -55,103 +57,127 @@ class Account extends Component {
 
   render() {
     const { classes, className, ...rest } = this.props;
-    const { firstName, lastName, phone, state, country, email } = this.state;
+    const { userName, email, publicKey, privateKey, wif, address, visibilityPrivateKey } = this.state;
 
     const rootClassName = classNames(classes.root, className);
 
     return (
-      <Portlet
-        {...rest}
-        className={rootClassName}
-      >
-        <PortletHeader>
-          <PortletLabel
-            subtitle="The information can be edited"
-            title="Profile"
-          />
-        </PortletHeader>
-        <PortletContent noPadding>
-          <form
-            autoComplete="off"
-            noValidate
-          >
-            <div className={classes.field}>
-              <TextField
-                className={classes.textField}
-                helperText="Please specify the first name"
-                label="First name"
-                margin="dense"
-                required
-                value={firstName}
-                variant="outlined"
-              />
-              <TextField
-                className={classes.textField}
-                label="Last name"
-                margin="dense"
-                required
-                value={lastName}
-                variant="outlined"
-              />
-            </div>
-            <div className={classes.field}>
-              <TextField
-                className={classes.textField}
-                label="Email Address"
-                margin="dense"
-                required
-                value={email}
-                variant="outlined"
-              />
-              <TextField
-                className={classes.textField}
-                label="Phone Number"
-                margin="dense"
-                type="number"
-                value={phone}
-                variant="outlined"
-              />
-            </div>
-            <div className={classes.field}>
-              <TextField
-                className={classes.textField}
-                label="Select State"
-                margin="dense"
-                onChange={this.handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={state}
-                variant="outlined">
-                {states.map(option => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-              <TextField
-                className={classes.textField}
-                label="Country"
-                margin="dense"
-                required
-                value={country}
-                variant="outlined"
-              />
-            </div>
-          </form>
-        </PortletContent>
-        <PortletFooter className={classes.portletFooter}>
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Save details
-          </Button>
-        </PortletFooter>
-      </Portlet>
+      <React.Fragment>
+        <Portlet
+          {...rest}
+          className={rootClassName}
+        >
+          <PortletHeader>
+            <PortletLabel
+              title="Informações sobre o usuário"
+            />
+          </PortletHeader>
+          <PortletContent noPadding>
+            <form
+              autoComplete="off"
+              noValidate
+            >
+              <div className={classes.field}>
+                <TextField
+                  className={classes.textField}
+                  label="Nome do usuário"
+                  margin="dense"
+                  disabled
+                  value={userName}
+                  variant="outlined"
+                />
+                <TextField
+                  className={classes.textField}
+                  label="Email do usuário"
+                  margin="dense"
+                  value={email}
+                  variant="outlined"
+                  disabled
+                />
+              </div>
+            </form>
+          </PortletContent>
+        </Portlet>
+        <Portlet
+          {...rest}
+          className={rootClassName}
+        >
+          <PortletHeader>
+            <PortletLabel
+              title="Informações sobre a carteira"
+            />
+          </PortletHeader>
+          <PortletContent noPadding>
+            <form
+              autoComplete="off"
+              noValidate
+            >
+              <div className={classes.field}>
+                <TextField
+                  className={classes.textField}
+                  label="Chave pública"
+                  margin="dense"
+                  value={publicKey}
+                  variant="outlined"
+                />
+                <TextField
+                  //id="outlined-adornment-password"
+                  margin="dense"
+                  className={classes.textField}
+                  variant="outlined"
+                  type={visibilityPrivateKey ? 'text' : 'password'}
+                  label="Chave privada"
+                  value={privateKey}
+                  onChange={() => { }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          aria-label="toggle password visibility"
+                          onClick={() => this.setState({ ...this.state, visibilityPrivateKey: !visibilityPrivateKey })}
+                          onMouseDown={event => event.preventDefault}
+                        >
+                          {visibilityPrivateKey ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <TextField
+                  className={classes.textField}
+                  label="WIF"
+                  margin="dense"
+                  value={wif}
+                  variant="outlined"
+                />
+                <Tooltip title="Endereço da sua carteira digital">
+                  <TextField
+                    className={classes.textField}
+                    label="Endereço"
+                    margin="dense"
+                    value={address}
+                    variant="outlined"
+                  //helperText="Endereço da sua carteira digital"
+                  />
+                </Tooltip>
+              </div>
+            </form>
+          </PortletContent>
+          <PortletFooter>
+            <Button
+              className={classes.signInButton}
+              color="primary"
+              disabled={false}
+              onClick={() => {}}
+              //size="large"
+              variant="contained"
+            >
+              Salvar            
+            </Button>
+          </PortletFooter>
+        </Portlet>
+      </React.Fragment>
     );
   }
 }

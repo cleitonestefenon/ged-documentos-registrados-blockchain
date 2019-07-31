@@ -1,2 +1,2 @@
-export { default as DocumentsTable } from './DocumentsTable';
-export { default as DocumentsToolbar } from './DocumentsToolbar';
+export { default as UsersTable } from './UsersTable';
+export { default as UsersToolbar } from './UsersToolbar';

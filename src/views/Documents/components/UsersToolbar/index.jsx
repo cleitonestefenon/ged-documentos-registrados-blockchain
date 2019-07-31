@@ -18,7 +18,7 @@ import {
 } from '@material-ui/icons';
 
 // Shared components
-import { DisplayMode, SearchInput } from 'components';
+import { DisplayMode, SearchInput } from 'views/Documents_old/components/UsersToolbar/node_modules/components';
 
 // Component styles
 import styles from './styles';

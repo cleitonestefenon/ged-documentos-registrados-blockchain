@@ -21,7 +21,11 @@ export default theme => ({
   progressWrapper: {
     marginTop: theme.spacing.unit * 2
   },
-  uploadButton: {
+  profileButton: {
+    width: '100%',
     marginRight: theme.spacing.unit * 2
-  }
+  },
+  inputFile: {
+    display: 'none',
+  },
 });
