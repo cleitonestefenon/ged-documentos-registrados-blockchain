@@ -10,10 +10,10 @@ import { withStyles } from '@material-ui/core';
 import { CircularProgress, Typography } from '@material-ui/core';
 
 // Shared layouts
-import { Dashboard as DashboardLayout } from './node_modules/layouts';
+import { Dashboard as DashboardLayout } from 'views/Documents_old/node_modules/layouts';
 
 // Shared services
-import { getUsers } from './node_modules/services/user';
+import { getUsers } from 'services/user';
 
 // Custom components
 import { UsersToolbar, UsersTable } from './components';

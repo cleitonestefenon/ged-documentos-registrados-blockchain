@@ -10,7 +10,7 @@ import { withStyles } from '@material-ui/core';
 import { CircularProgress, Typography } from '@material-ui/core';
 
 // Shared layouts
-import { Dashboard as DashboardLayout } from 'views/Documents_old/node_modules/layouts';
+import { Dashboard as DashboardLayout } from 'layouts';
 
 // Shared services
 import { getUsers } from 'services/user';
@@ -21,7 +21,7 @@ import { UsersToolbar, UsersTable } from './components';
 // Component styles
 import styles from './style';
 
-class UserList extends Component {
+class DocumentsList extends Component {
   signal = true;
 
   state = {
@@ -113,9 +113,9 @@ class UserList extends Component {
   }
 }
 
-UserList.propTypes = {
+DocumentsList.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(UserList);
+export default withStyles(styles)(DocumentsList);

@@ -4,10 +4,10 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 // Views
 import Dashboard from './views/Dashboard';
 import ProductList from './views/ProductList';
-import Documents from './views/D';
 import Typography from './views/Typography';
 import Icons from './views/Icons';
 import Account from './views/Account';
+import Document from './views/Documents';
 import Settings from './views/Settings';
 import SignUp from './views/SignUp';
 import SignIn from './views/SignIn';
@@ -29,11 +29,6 @@ export default class Routes extends Component {
                     path="/dashboard"
                 />
                 <Route
-                    component={Documents}
-                    exact
-                    path="/documents"
-                />
-                <Route
                     component={ProductList}
                     exact
                     path="/products"
@@ -52,6 +47,11 @@ export default class Routes extends Component {
                     component={Account}
                     exact
                     path="/account"
+                />
+                <Route
+                    component={Document}
+                    exact
+                    path="/documents"
                 />
                 <Route
                     component={Settings}
