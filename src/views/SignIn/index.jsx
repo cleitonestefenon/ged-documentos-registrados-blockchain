@@ -23,9 +23,6 @@ import {
 // Material icons
 import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
 
-// Shared components
-import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
-
 // Component styles
 import styles from './styles';
 
@@ -139,21 +136,14 @@ class SignIn extends Component {
                   className={classes.quoteText}
                   variant="h1"
                 >
-                  Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                  they sold out High Life.
+                  Blockchain: a inovação mais disruptiva desde a invenção da Web
                 </Typography>
                 <div className={classes.person}>
                   <Typography
                     className={classes.name}
                     variant="body1"
                   >
-                    Takamaru Ayako
-                  </Typography>
-                  <Typography
-                    className={classes.bio}
-                    variant="body2"
-                  >
-                    Manager at inVision
+                    By: Satoshi Nakamoto
                   </Typography>
                 </div>
               </div>
@@ -180,43 +170,12 @@ class SignIn extends Component {
                     className={classes.title}
                     variant="h2"
                   >
-                    Sign in
-                  </Typography>
-                  <Typography
-                    className={classes.subtitle}
-                    variant="body1"
-                  >
-                    Sign in with social media
-                  </Typography>
-                  <Button
-                    className={classes.facebookButton}
-                    color="primary"
-                    onClick={this.handleSignIn}
-                    size="large"
-                    variant="contained"
-                  >
-                    <FacebookIcon className={classes.facebookIcon} />
-                    Login with Facebook
-                  </Button>
-                  <Button
-                    className={classes.googleButton}
-                    onClick={this.handleSignIn}
-                    size="large"
-                    variant="contained"
-                  >
-                    <GoogleIcon className={classes.googleIcon} />
-                    Login with Google
-                  </Button>
-                  <Typography
-                    className={classes.sugestion}
-                    variant="body1"
-                  >
-                    or login with email address
+                    Entrar
                   </Typography>
                   <div className={classes.fields}>
                     <TextField
                       className={classes.textField}
-                      label="Email address"
+                      label="Endereço de email"
                       name="email"
                       onChange={event =>
                         this.handleFieldChange('email', event.target.value)
@@ -235,7 +194,7 @@ class SignIn extends Component {
                     )}
                     <TextField
                       className={classes.textField}
-                      label="Password"
+                      label="Senha"
                       name="password"
                       onChange={event =>
                         this.handleFieldChange('password', event.target.value)
@@ -264,27 +223,27 @@ class SignIn extends Component {
                   {isLoading ? (
                     <CircularProgress className={classes.progress} />
                   ) : (
-                    <Button
-                      className={classes.signInButton}
-                      color="primary"
-                      disabled={!isValid}
-                      onClick={this.handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      Sign in now
+                      <Button
+                        className={classes.signInButton}
+                        color="primary"
+                        disabled={!isValid}
+                        onClick={this.handleSignIn}
+                        size="large"
+                        variant="contained"
+                      >
+                        Acessar
                     </Button>
-                  )}
+                    )}
                   <Typography
                     className={classes.signUp}
                     variant="body1"
                   >
-                    Don't have an account?{' '}
+                    Ainda não possui conta?{' '}
                     <Link
                       className={classes.signUpUrl}
                       to="/sign-up"
                     >
-                      Sign up
+                      Cadastre-se
                     </Link>
                   </Typography>
                 </form>

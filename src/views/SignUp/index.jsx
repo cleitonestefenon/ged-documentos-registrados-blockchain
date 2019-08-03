@@ -162,21 +162,14 @@ class SignUp extends Component {
                   className={classes.quoteText}
                   variant="h1"
                 >
-                  Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                  they sold out High Life.
+                  Blockchain: a inovação mais disruptiva desde a invenção da Web
                 </Typography>
                 <div className={classes.person}>
                   <Typography
                     className={classes.name}
                     variant="body1"
                   >
-                    Takamaru Ayako
-                  </Typography>
-                  <Typography
-                    className={classes.bio}
-                    variant="body2"
-                  >
-                    Manager at inVision
+                    By: Satoshi Nakamoto
                   </Typography>
                 </div>
               </div>
@@ -203,18 +196,18 @@ class SignUp extends Component {
                     className={classes.title}
                     variant="h2"
                   >
-                    Create new account
+                    Crie sua conta
                   </Typography>
                   <Typography
                     className={classes.subtitle}
                     variant="body1"
                   >
-                    Use your work email to create new account... it's free.
+                    Use seu melhor email e crie uma conta... É gratuito
                   </Typography>
                   <div className={classes.fields}>
                     <TextField
                       className={classes.textField}
-                      label="First name"
+                      label="Nome completo"
                       name="firstName"
                       onChange={event =>
                         this.handleFieldChange('firstName', event.target.value)
@@ -232,24 +225,7 @@ class SignUp extends Component {
                     )}
                     <TextField
                       className={classes.textField}
-                      label="Last name"
-                      onChange={event =>
-                        this.handleFieldChange('lastName', event.target.value)
-                      }
-                      value={values.lastName}
-                      variant="outlined"
-                    />
-                    {showLastNameError && (
-                      <Typography
-                        className={classes.fieldError}
-                        variant="body2"
-                      >
-                        {errors.lastName[0]}
-                      </Typography>
-                    )}
-                    <TextField
-                      className={classes.textField}
-                      label="Email address"
+                      label="Endereço de email"
                       name="email"
                       onChange={event =>
                         this.handleFieldChange('email', event.target.value)
@@ -267,7 +243,7 @@ class SignUp extends Component {
                     )}
                     <TextField
                       className={classes.textField}
-                      label="Password"
+                      label="Senha"
                       onChange={event =>
                         this.handleFieldChange('password', event.target.value)
                       }
@@ -283,38 +259,6 @@ class SignUp extends Component {
                         {errors.password[0]}
                       </Typography>
                     )}
-                    <div className={classes.policy}>
-                      <Checkbox
-                        checked={values.policy}
-                        className={classes.policyCheckbox}
-                        color="primary"
-                        name="policy"
-                        onChange={() =>
-                          this.handleFieldChange('policy', !values.policy)
-                        }
-                      />
-                      <Typography
-                        className={classes.policyText}
-                        variant="body1"
-                      >
-                        I have read the &nbsp;
-                        <Link
-                          className={classes.policyUrl}
-                          to="#"
-                        >
-                          Terms and Conditions
-                        </Link>
-                        .
-                      </Typography>
-                    </div>
-                    {showPolicyError && (
-                      <Typography
-                        className={classes.fieldError}
-                        variant="body2"
-                      >
-                        {errors.policy[0]}
-                      </Typography>
-                    )}
                   </div>
                   {submitError && (
                     <Typography
@@ -327,27 +271,27 @@ class SignUp extends Component {
                   {isLoading ? (
                     <CircularProgress className={classes.progress} />
                   ) : (
-                    <Button
-                      className={classes.signUpButton}
-                      color="primary"
-                      disabled={!isValid}
-                      onClick={this.handleSignUp}
-                      size="large"
-                      variant="contained"
-                    >
-                      Sign up now
+                      <Button
+                        className={classes.signUpButton}
+                        color="primary"
+                        disabled={!isValid}
+                        onClick={this.handleSignUp}
+                        size="large"
+                        variant="contained"
+                      >
+                        Cadastrar
                     </Button>
-                  )}
+                    )}
                   <Typography
                     className={classes.signIn}
                     variant="body1"
                   >
-                    Have an account?{' '}
+                    Você já possui conta?{' '}
                     <Link
                       className={classes.signInUrl}
                       to="/sign-in"
                     >
-                      Sign In
+                      Faça login
                     </Link>
                   </Typography>
                 </form>
