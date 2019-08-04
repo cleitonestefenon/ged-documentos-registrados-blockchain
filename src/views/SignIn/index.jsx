@@ -29,14 +29,8 @@ import styles from './styles';
 // Form validation schema
 import schema from './schema';
 
-// Service methods
-const signIn = () => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true);
-    }, 1500);
-  });
-};
+//Services
+import {signIn} from './requests';
 
 class SignIn extends Component {
   state = {
@@ -175,7 +169,7 @@ class SignIn extends Component {
                   <div className={classes.fields}>
                     <TextField
                       className={classes.textField}
-                      label="Endereço de email"
+                      label="Endereço de e-mail"
                       name="email"
                       onChange={event =>
                         this.handleFieldChange('email', event.target.value)

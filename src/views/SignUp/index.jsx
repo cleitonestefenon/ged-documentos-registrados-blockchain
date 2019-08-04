@@ -225,7 +225,7 @@ class SignUp extends Component {
                     )}
                     <TextField
                       className={classes.textField}
-                      label="Endereço de email"
+                      label="Endereço de e-mail"
                       name="email"
                       onChange={event =>
                         this.handleFieldChange('email', event.target.value)
