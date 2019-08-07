@@ -44,11 +44,10 @@ class NotFound extends Component {
           >
             <div className={classes.content}>
               <Typography variant="h1">
-                404: The page you are looking for isn’t here
+                404: A página que você está procurando não está aqui.
               </Typography>
               <Typography variant="subtitle2">
-                You either tried some shady route or you came here by mistake.
-                Whichever it is, try using the navigation
+                Verifique o link de acesso por favor
               </Typography>
               <img
                 alt="Under development"

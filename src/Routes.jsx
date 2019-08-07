@@ -14,6 +14,18 @@ import SignIn from './views/SignIn';
 import UnderDevelopment from './views/UnderDevelopment';
 import NotFound from './views/NotFound';
 
+import { isAuthenticated } from './auth';
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={props => (
+        isAuthenticated() ? (
+            <Component {...props} />
+        ) : (
+                <Redirect to={{ path: '/sign-in', state: { from: props.location } }} />
+            )
+    )} />
+);
+
 export default class Routes extends Component {
     render() {
         return (
@@ -21,39 +33,39 @@ export default class Routes extends Component {
                 <Redirect
                     exact
                     from="/"
-                    to="/dashboard"
+                    to="/sign-in"
                 />
-                <Route
+                <PrivateRoute
                     component={Dashboard}
                     exact
                     path="/dashboard"
                 />
-                <Route
+                <PrivateRoute
                     component={ProductList}
                     exact
                     path="/products"
                 />
-                <Route
+                <PrivateRoute
                     component={Typography}
                     exact
                     path="/typography"
                 />
-                <Route
+                <PrivateRoute
                     component={Icons}
                     exact
                     path="/icons"
                 />
-                <Route
+                <PrivateRoute
                     component={Account}
                     exact
                     path="/account"
                 />
-                <Route
+                <PrivateRoute
                     component={Document}
                     exact
                     path="/documents"
                 />
-                <Route
+                <PrivateRoute
                     component={Settings}
                     exact
                     path="/settings"

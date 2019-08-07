@@ -30,13 +30,14 @@ import styles from './styles';
 import schema from './schema';
 
 //Services
-import {signIn} from './requests';
+import { signIn } from './requests';
 
 class SignIn extends Component {
   state = {
     values: {
       email: '',
-      password: ''
+      password: '',
+      tokenAuthentication: {}
     },
     touched: {
       email: false,
@@ -86,11 +87,13 @@ class SignIn extends Component {
 
       this.setState({ isLoading: true });
 
-      await signIn(values.email, values.password);
-
-      localStorage.setItem('isAuthenticated', true);
-
-      history.push('/dashboard');
+      await signIn(values.email, values.password, resp  => {
+              
+        sessionStorage.setItem('token', resp);    
+        
+        history.push('/dashboard');
+        
+      });
     } catch (error) {
       this.setState({
         isLoading: false,
