@@ -34,6 +34,7 @@ import { NotificationList } from './components';
 
 // Component styles
 import styles from './styles';
+import { isAuthenticated } from 'auth';
 
 class Topbar extends Component {
   signal = true;
@@ -75,8 +76,6 @@ class Topbar extends Component {
 
   handleSignOut = () => {
     const { history } = this.props;
-
-    localStorage.setItem('isAuthenticated', false);
     history.push('/sign-in');
   };
 

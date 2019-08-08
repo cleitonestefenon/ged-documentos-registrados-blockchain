@@ -1,3 +1,3 @@
-import React from 'react';
-
-export const isAuthenticated = () => false;
+export const isAuthenticated = () => {
+      return sessionStorage.getItem('token') != null;
+}

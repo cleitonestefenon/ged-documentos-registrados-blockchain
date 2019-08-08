@@ -31,6 +31,7 @@ import schema from './schema';
 
 //Services
 import { signIn } from './requests';
+import { isAuthenticated } from 'auth';
 
 class SignIn extends Component {
   state = {
@@ -81,25 +82,17 @@ class SignIn extends Component {
   };
 
   handleSignIn = async () => {
-    try {
-      const { history } = this.props;
-      const { values } = this.state;
 
-      this.setState({ isLoading: true });
+    const { history } = this.props;
+    const { values } = this.state;
 
-      await signIn(values.email, values.password, resp  => {
-              
-        sessionStorage.setItem('token', resp);    
-        
-        history.push('/dashboard');
-        
-      });
-    } catch (error) {
-      this.setState({
-        isLoading: false,
-        serviceError: error
-      });
-    }
+    this.setState({ isLoading: true });
+
+    await signIn(values.email, values.password, () => {
+      history.push('/dashboard');
+    });
+
+    this.setState({ isLoading: false });
   };
 
   render() {
