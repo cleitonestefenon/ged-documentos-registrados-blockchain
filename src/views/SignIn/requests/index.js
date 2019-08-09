@@ -9,7 +9,7 @@ export const signIn = (email, password, onSuccess) => {
 
     api.post('auth/authenticate', { email, password })
         .then(resp => {
-            sessionStorage.setItem('token', resp);
+            sessionStorage.setItem('token', resp);            
             onSuccess();
         }).catch(err => {
             console.error(err.response.data.error);
