@@ -32,7 +32,7 @@ import schema from './schema';
 //Services
 import { signIn } from './requests';
 import { isAuthenticated } from 'auth';
-import { criptografarTransferencia } from 'common/cryptography/crypto';
+import { criptografar } from '../../common/cryptography';
 
 class SignIn extends Component {
   state = {
@@ -89,14 +89,13 @@ class SignIn extends Component {
 
     this.setState({ isLoading: true });
 
-    var email = criptografarTransferencia(values.email);
-    var password = criptografarTransferencia(values.password);
+    var email = criptografar(values.email);
+    var password = criptografar(values.password);
 
     console.log(email);
     console.log(password);
 
     await signIn(email, password, () => {
-
       history.push('/dashboard');
     });
 
