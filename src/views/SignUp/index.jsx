@@ -47,25 +47,19 @@ const signUp = () => {
 class SignUp extends Component {
   state = {
     values: {
-      firstName: '',
-      lastName: '',
+      name: '',
       email: '',
-      password: '',
-      policy: false
+      password: ''
     },
     touched: {
-      firstName: false,
-      lastName: false,
+      name: false,
       email: false,
       password: false,
-      policy: null
     },
     errors: {
-      firstName: null,
-      lastName: null,
+      name: null,
       email: null,
-      password: null,
-      policy: null
+      password: null
     },
     isValid: false,
     isLoading: false,
@@ -108,10 +102,9 @@ class SignUp extends Component {
       this.setState({ isLoading: true });
 
       await signUp({
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        password: values.password
+         name: values.name,
+         email: values.email,
+         password: values.password
       });
 
       history.push('/sign-in');
@@ -134,16 +127,12 @@ class SignUp extends Component {
       isLoading
     } = this.state;
 
-    const showFirstNameError =
-      touched.firstName && errors.firstName ? errors.firstName[0] : false;
-    const showLastNameError =
-      touched.lastName && errors.lastName ? errors.lastName[0] : false;
+    const showNameError =
+      touched.name && errors.name ? errors.name[0] : false;
     const showEmailError =
       touched.email && errors.email ? errors.email[0] : false;
     const showPasswordError =
       touched.password && errors.password ? errors.password[0] : false;
-    const showPolicyError =
-      touched.policy && errors.policy ? errors.policy[0] : false;
 
     return (
       <div className={classes.root}>
@@ -208,19 +197,19 @@ class SignUp extends Component {
                     <TextField
                       className={classes.textField}
                       label="Nome completo"
-                      name="firstName"
+                      name="name"
                       onChange={event =>
-                        this.handleFieldChange('firstName', event.target.value)
+                        this.handleFieldChange('name', event.target.value)
                       }
-                      value={values.firstName}
+                      value={values.name}
                       variant="outlined"
                     />
-                    {showFirstNameError && (
+                    {showNameError && (
                       <Typography
                         className={classes.fieldError}
                         variant="body2"
                       >
-                        {errors.firstName[0]}
+                        {errors.name[0]}
                       </Typography>
                     )}
                     <TextField
@@ -281,7 +270,9 @@ class SignUp extends Component {
                       >
                         Cadastrar
                     </Button>
+                    
                     )}
+                    <button onClick={() => {console.log(this.state); return false}}>ver</button>
                   <Typography
                     className={classes.signIn}
                     variant="body1"

@@ -31,7 +31,6 @@ import schema from './schema';
 
 //Services
 import { signIn } from './requests';
-import { isAuthenticated } from 'auth';
 import { criptografar } from '../../common/cryptography';
 
 class SignIn extends Component {
