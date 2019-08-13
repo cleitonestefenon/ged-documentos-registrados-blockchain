@@ -34,7 +34,6 @@ import { NotificationList } from './components';
 
 // Component styles
 import styles from './styles';
-import { isAuthenticated } from 'auth';
 
 class Topbar extends Component {
   signal = true;

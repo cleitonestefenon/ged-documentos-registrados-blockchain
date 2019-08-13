@@ -32,6 +32,7 @@ import schema from './schema';
 //Services
 import { signIn } from './requests';
 import { criptografar } from '../../common/cryptography';
+import CustomizedSnackbars from 'views/snackbars';
 
 class SignIn extends Component {
   state = {
@@ -90,9 +91,6 @@ class SignIn extends Component {
 
     var email = criptografar(values.email);
     var password = criptografar(values.password);
-
-    console.log(email);
-    console.log(password);
 
     await signIn(email, password, () => {
       history.push('/dashboard');
