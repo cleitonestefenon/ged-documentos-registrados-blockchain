@@ -51,9 +51,9 @@ class Sidebar extends Component {
                         to="/"
                     >
                         <img
-                            alt="Brainalytica logo"
+                            alt="Block Share logo"
                             className={classes.logoImage}
-                            src="/images/logos/brainalytica_logo.svg"
+                            src="/images/logos/Logo BlochShare.png"
                         />
                     </Link>
                 </div>

@@ -35,10 +35,10 @@ class Account extends Component {
     visibilityPrivateKey: false
   };
 
-  handleChange = e => {
-    this.setState({
-      state: e.target.value
-    });
+  handleChange = (fieldName, value) => {
+    const newState = { ...this.state };
+      newState[fieldName] = value;
+      this.setState(newState);
   };
 
   render() {
@@ -105,6 +105,7 @@ class Account extends Component {
                   margin="dense"
                   value={publicKey}
                   variant="outlined"
+                  onChange = {event => this.handleChange("publicKey", event.target.value)}
                 />
                 <TextField
                   //id="outlined-adornment-password"
@@ -112,9 +113,9 @@ class Account extends Component {
                   className={classes.textField}
                   variant="outlined"
                   type={visibilityPrivateKey ? 'text' : 'password'}
-                  label="Chave privada"
+                  label="Chave privada"                 
                   value={privateKey}
-                  onChange={() => { }}
+                  onChange = {event => this.handleChange("privateKey", event.target.value)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
@@ -135,6 +136,7 @@ class Account extends Component {
                   label="WIF"
                   margin="dense"
                   value={wif}
+                  onChange = {event => this.handleChange("wif", event.target.value)}
                   variant="outlined"
                 />
                 <Tooltip title="Endereço da sua carteira digital">
@@ -143,6 +145,7 @@ class Account extends Component {
                     label="Endereço"
                     margin="dense"
                     value={address}
+                    onChange = {event => this.handleChange("address", event.target.value)}
                     variant="outlined"
                   //helperText="Endereço da sua carteira digital"
                   />
@@ -155,8 +158,7 @@ class Account extends Component {
               className={classes.signInButton}
               color="primary"
               disabled={false}
-              onClick={() => {}}
-              //size="large"
+              onClick={this.handleSignUp}           
               variant="contained"
             >
               Salvar            
