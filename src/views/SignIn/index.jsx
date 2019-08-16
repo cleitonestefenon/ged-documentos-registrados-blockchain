@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
 import validate from 'validate.js';
 import _ from 'underscore';
- 
+
 
 // Material helpers
 import { withStyles } from '@material-ui/core';
@@ -33,15 +33,15 @@ import schema from './schema';
 //Services
 import { signIn } from './requests';
 import { criptografar } from '../../common/cryptography';
-//import SimpleModal from 'views/ModalInformation';
+import SimpleModal from 'views/ModalInformation';
 
 
 class SignIn extends Component {
    state = {
+      modalOpen: false,
       values: {
          email: '',
          password: '',
-         //open: false,
          tokenAuthentication: {}
       },
       touched: {
@@ -54,7 +54,7 @@ class SignIn extends Component {
       },
       isValid: false,
       isLoading: false,
-      submitError: null
+      submitError: null,
    };
 
    handleBack = () => {
@@ -97,10 +97,11 @@ class SignIn extends Component {
 
       await signIn(email, password, () => {
          history.push('/dashboard');
-        // this.setState({open: true});
+         this.setState({ modalOpen: true });
       });
 
       this.setState({ isLoading: false });
+      
    };
 
    render() {
@@ -249,14 +250,12 @@ class SignIn extends Component {
                   </div>
                </Grid>
             </Grid>
-            {/* <SimpleModal 
-             open={this.state.open}
-             description='jsifbdjvd'
-             title='djknpafvef'
-             handleClose={() => this.setState({open:false})}
-            >
-
-            </SimpleModal> */}
+            <SimpleModal
+               modalOpen={false}
+               description='jsifbdjvd'
+               title='djknpafvef'
+               handleClose={() => this.setState({ modalOpen: false })}
+            />
          </div>
       );
    }
