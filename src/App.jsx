@@ -20,23 +20,33 @@ import './assets/scss/index.scss';
 
 // Routes
 import Routes from './Routes';
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import rootReducer from './config/reducers';
 
 // Browser history
 const browserHistory = createBrowserHistory();
 
 // Configure ChartJS
 Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
-  draw: chartjs.draw
+    draw: chartjs.draw
 });
 
-export default class App extends Component {
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <Router history={browserHistory}>
-          <Routes />
-        </Router>
-      </ThemeProvider>
-    );
-  }
+const store = createStore(rootReducer);
+
+class App extends Component {
+
+    render() {
+        return (
+                <Provider store={store}>
+                    <ThemeProvider theme={theme}>
+                        <Router history={browserHistory}>
+                            <Routes />
+                        </Router>
+                    </ThemeProvider>
+                </Provider>
+        );
+    }
 }
+
+export default App

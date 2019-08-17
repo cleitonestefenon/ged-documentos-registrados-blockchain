@@ -12,12 +12,14 @@ import { Button, TextField } from '@material-ui/core';
 
 // Shared components
 import {
-  Portlet,
-  PortletHeader,
-  PortletLabel,
-  PortletContent,
-  PortletFooter
+    Portlet,
+    PortletHeader,
+    PortletLabel,
+    PortletContent,
+    PortletFooter
 } from 'components';
+
+import Modal from '../../../../components/Modal';
 
 // Component styles
 import styles from './styles';
@@ -25,154 +27,172 @@ import { VisibilityOff, Visibility } from '@material-ui/icons';
 
 
 class Account extends Component {
-  state = {
-    userName: '',
-    email: '',
-    publicKey: '',
-    privateKey: '',
-    wif: '',
-    address: '',
-    visibilityPrivateKey: false
-  };
+    state = {
+        userName: '',
+        email: '',
+        publicKey: '',
+        privateKey: '',
+        wif: '',
+        address: '',
+        visibilityPrivateKey: false,
+        modalOpen: false
+    };
 
-  handleChange = (fieldName, value) => {
-    const newState = { ...this.state };
-      newState[fieldName] = value;
-      this.setState(newState);
-  };
+    componentDidMount() {
+        const { publicKey, privateKey } = this.state;
+        //buscar as inf. da carteira do usuário
 
-  render() {
-    const { classes, className, ...rest } = this.props;
-    const { userName, email, publicKey, privateKey, wif, address, visibilityPrivateKey } = this.state;
+        if (!publicKey || !privateKey) {
+            this.setState({ modalOpen: true })
+        }
+    }
 
-    const rootClassName = classNames(classes.root, className);
+    handleChange = (fieldName, value) => {
+        const newState = { ...this.state };
+        newState[fieldName] = value;
+        this.setState(newState);
+    };
 
-    return (
-      <React.Fragment>
-        <Portlet
-          {...rest}
-          className={rootClassName}
-        >
-          <PortletHeader>
-            <PortletLabel
-              title="Informações sobre o usuário"
-            />
-          </PortletHeader>
-          <PortletContent noPadding>
-            <form
-              autoComplete="off"
-              noValidate
-            >
-              <div className={classes.field}>
-                <TextField
-                  className={classes.textField}
-                  label="Nome do usuário"
-                  margin="dense"
-                  disabled
-                  value={userName}
-                  variant="outlined"
+    render() {
+        const { classes, className, ...rest } = this.props;
+        const { userName, email, publicKey, privateKey, wif, address, visibilityPrivateKey } = this.state;
+
+        const rootClassName = classNames(classes.root, className);
+
+        return (
+            <React.Fragment>
+                <Modal
+                    open={this.state.modalOpen}
+                    handleClose={() => this.setState({ modalOpen: false })}
+                    dialogTitle="Leia atentamente antes de prosseguir"
+                    dialogContentText="Você precisará configurar sua carteira antes de fazer qualquer operação no sistema. Não fique preocupado, será rápido."
+                    onAgreeClick={() => this.setState({ modalOpen: false })}
+                    agreeNameButton="Entendi"
                 />
-                <TextField
-                  className={classes.textField}
-                  label="Email do usuário"
-                  margin="dense"
-                  value={email}
-                  variant="outlined"
-                  disabled
-                />
-              </div>
-            </form>
-          </PortletContent>
-        </Portlet>
-        <Portlet
-          {...rest}
-          className={rootClassName}
-        >
-          <PortletHeader>
-            <PortletLabel
-              title="Informações sobre a carteira"
-            />
-          </PortletHeader>
-          <PortletContent noPadding>
-            <form
-              autoComplete="off"
-              noValidate
-            >
-              <div className={classes.field}>
-                <TextField
-                  className={classes.textField}
-                  label="Chave pública"
-                  margin="dense"
-                  value={publicKey}
-                  variant="outlined"
-                  onChange = {event => this.handleChange("publicKey", event.target.value)}
-                />
-                <TextField
-                  //id="outlined-adornment-password"
-                  margin="dense"
-                  className={classes.textField}
-                  variant="outlined"
-                  type={visibilityPrivateKey ? 'text' : 'password'}
-                  label="Chave privada"                 
-                  value={privateKey}
-                  onChange = {event => this.handleChange("privateKey", event.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          aria-label="toggle password visibility"
-                          onClick={() => this.setState({ ...this.state, visibilityPrivateKey: !visibilityPrivateKey })}
-                          onMouseDown={event => event.preventDefault}
+                <Portlet
+                    {...rest}
+                    className={rootClassName}
+                >
+                    <PortletHeader>
+                        <PortletLabel
+                            title="Informações sobre o usuário"
+                        />
+                    </PortletHeader>
+                    <PortletContent noPadding>
+                        <form
+                            autoComplete="off"
+                            noValidate
                         >
-                          {visibilityPrivateKey ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                <TextField
-                  className={classes.textField}
-                  label="WIF"
-                  margin="dense"
-                  value={wif}
-                  onChange = {event => this.handleChange("wif", event.target.value)}
-                  variant="outlined"
-                />
-                <Tooltip title="Endereço da sua carteira digital">
-                  <TextField
-                    className={classes.textField}
-                    label="Endereço"
-                    margin="dense"
-                    value={address}
-                    onChange = {event => this.handleChange("address", event.target.value)}
-                    variant="outlined"
-                  //helperText="Endereço da sua carteira digital"
-                  />
-                </Tooltip>
-              </div>
-            </form>
-          </PortletContent>
-          <PortletFooter>
-            <Button
-              className={classes.signInButton}
-              color="primary"
-              disabled={false}
-              onClick={this.handleSignUp}           
-              variant="contained"
-            >
-              Salvar            
+                            <div className={classes.field}>
+                                <TextField
+                                    className={classes.textField}
+                                    label="Nome do usuário"
+                                    margin="dense"
+                                    disabled
+                                    value={userName}
+                                    variant="outlined"
+                                />
+                                <TextField
+                                    className={classes.textField}
+                                    label="Email do usuário"
+                                    margin="dense"
+                                    value={email}
+                                    variant="outlined"
+                                    disabled
+                                />
+                            </div>
+                        </form>
+                    </PortletContent>
+                </Portlet>
+                <Portlet
+                    {...rest}
+                    className={rootClassName}
+                >
+                    <PortletHeader>
+                        <PortletLabel
+                            title="Informações sobre a carteira"
+                        />
+                    </PortletHeader>
+                    <PortletContent noPadding>
+                        <form
+                            autoComplete="off"
+                            noValidate
+                        >
+                            <div className={classes.field}>
+                                <TextField
+                                    className={classes.textField}
+                                    label="Chave pública"
+                                    margin="dense"
+                                    value={publicKey}
+                                    variant="outlined"
+                                    onChange={event => this.handleChange("publicKey", event.target.value)}
+                                />
+                                <TextField
+                                    //id="outlined-adornment-password"
+                                    margin="dense"
+                                    className={classes.textField}
+                                    variant="outlined"
+                                    type={visibilityPrivateKey ? 'text' : 'password'}
+                                    label="Chave privada"
+                                    value={privateKey}
+                                    onChange={event => this.handleChange("privateKey", event.target.value)}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => this.setState({ ...this.state, visibilityPrivateKey: !visibilityPrivateKey })}
+                                                    onMouseDown={event => event.preventDefault}
+                                                >
+                                                    {visibilityPrivateKey ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                />
+                                <TextField
+                                    className={classes.textField}
+                                    label="WIF"
+                                    margin="dense"
+                                    value={wif}
+                                    onChange={event => this.handleChange("wif", event.target.value)}
+                                    variant="outlined"
+                                />
+                                <Tooltip title="Endereço da sua carteira digital">
+                                    <TextField
+                                        className={classes.textField}
+                                        label="Endereço"
+                                        margin="dense"
+                                        value={address}
+                                        onChange={event => this.handleChange("address", event.target.value)}
+                                        variant="outlined"
+                                    //helperText="Endereço da sua carteira digital"
+                                    />
+                                </Tooltip>
+                            </div>
+                        </form>
+                    </PortletContent>
+                    <PortletFooter>
+                        <Button
+                            className={classes.signInButton}
+                            color="primary"
+                            disabled={false}
+                            onClick={this.handleSignUp}
+                            variant="contained"
+                        >
+                            Salvar
             </Button>
-          </PortletFooter>
-        </Portlet>
-      </React.Fragment>
-    );
-  }
+                    </PortletFooter>
+                </Portlet>
+            </React.Fragment>
+        );
+    }
 }
 
 Account.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+    className: PropTypes.string,
+    classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Account);

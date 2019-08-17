@@ -1,14 +1,13 @@
 import { api } from '../../../config/axios';
 
 // Service methods
-export const signIn = (email, password, onSuccess) => {
+export const signIn = (email, password, onSuccess, onError) => {
     api.post('auth/authenticate', { email, password })
         .then(resp => {
-            sessionStorage.setItem('token', resp);            
-            onSuccess();
+            sessionStorage.setItem('token', resp);
+            onSuccess(resp);
         }).catch(err => {
-            console.error(err.response.data.error);
-            //mostra error na tela...
+            onError(err);
         })
 
     return new Promise(resolve => {

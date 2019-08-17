@@ -13,12 +13,12 @@ import { withStyles } from '@material-ui/core';
 
 // Material components
 import {
-   Grid,
-   Button,
-   IconButton,
-   CircularProgress,
-   TextField,
-   Typography
+	Grid,
+	Button,
+	IconButton,
+	CircularProgress,
+	TextField,
+	Typography
 } from '@material-ui/core';
 
 // Material icons
@@ -33,241 +33,253 @@ import schema from './schema';
 //Services
 import { signIn } from './requests';
 import { criptografar } from '../../common/cryptography';
-import SimpleModal from 'views/ModalInformation';
-
+import Notification from '../../components/Notification';
 
 class SignIn extends Component {
-   state = {
-      modalOpen: false,
-      values: {
-         email: '',
-         password: '',
-         tokenAuthentication: {}
-      },
-      touched: {
-         email: false,
-         password: false
-      },
-      errors: {
-         email: null,
-         password: null
-      },
-      isValid: false,
-      isLoading: false,
-      submitError: null,
-   };
+	state = {
+		notification: false,
+		notificationMessage: '',
+		notificationVariant: 'success',
+		values: {
+			email: '',
+			password: '',
+			tokenAuthentication: {}
+		},
+		touched: {
+			email: false,
+			password: false
+		},
+		errors: {
+			email: null,
+			password: null
+		},
+		isValid: false,
+		isLoading: false,
+		submitError: null,
+	};
 
-   handleBack = () => {
-      const { history } = this.props;
+	handleBack = () => {
+		const { history } = this.props;
 
-      history.goBack();
-   };
+		history.goBack();
+	};
 
-   validateForm = _.debounce(() => {
-      const { values } = this.state;
+	validateForm = _.debounce(() => {
+		const { values } = this.state;
 
-      const newState = { ...this.state };
-      const errors = validate(values, schema);
+		const newState = { ...this.state };
+		const errors = validate(values, schema);
 
-      newState.errors = errors || {};
-      newState.isValid = errors ? false : true;
+		newState.errors = errors || {};
+		newState.isValid = errors ? false : true;
 
-      this.setState(newState);
-   }, 300);
+		this.setState(newState);
+	}, 300);
 
-   handleFieldChange = (field, value) => {
-      const newState = { ...this.state };
+	handleFieldChange = (field, value) => {
+		const newState = { ...this.state };
 
-      newState.submitError = null;
-      newState.touched[field] = true;
-      newState.values[field] = value;
+		newState.submitError = null;
+		newState.touched[field] = true;
+		newState.values[field] = value;
 
-      this.setState(newState, this.validateForm);
-   };
+		this.setState(newState, this.validateForm);
+	};
 
-   handleSignIn = async () => {
+	handleSignIn = async () => {
 
-      const { history } = this.props;
-      const { values } = this.state;
+		const { history } = this.props;
+		const { values } = this.state;
 
-      this.setState({ isLoading: true });
+		this.setState({ isLoading: true });
 
-      var email = criptografar(values.email);
-      var password = criptografar(values.password);
+		var email = criptografar(values.email);
+		var password = criptografar(values.password);
 
-      await signIn(email, password, () => {
-         history.push('/dashboard');
-         this.setState({ modalOpen: true });
-      });
+		await signIn(email, password, resp => {
+			this.showNotification(true, `Seja bem-vindo ${String(resp.data.organization.name).toLowerCase()} ❤❤`);
+			setTimeout(() => {
+				history.push('/dashboard')
+			}, 1000);
+		}, err => {
+			const message = err.response.data.error;
+			this.showNotification(true, message, 'error');
+		});
+	};
 
-      this.setState({ isLoading: false });
-      
-   };
+	showNotification = (open, message, variant) => {
+		this.setState({
+			isLoading: false,
+			notification: open,
+			notificationVariant: variant,
+			notificationMessage: message
+		})
+	}
 
-   render() {
-      const { classes } = this.props;
-      const {
-         values,
-         touched,
-         errors,
-         isValid,
-         submitError,
-         isLoading
-      } = this.state;
+	render() {
+		const { classes } = this.props;
+		const {
+			values,
+			touched,
+			errors,
+			isValid,
+			submitError,
+			isLoading
+		} = this.state;
 
-      const showEmailError = touched.email && errors.email;
-      const showPasswordError = touched.password && errors.password;
+		const showEmailError = touched.email && errors.email;
+		const showPasswordError = touched.password && errors.password;
 
-      return (
-         <div className={classes.root}>
-            <Grid
-               className={classes.grid}
-               container
-            >
-               <Grid
-                  className={classes.quoteWrapper}
-                  item
-                  lg={5}
-               >
-                  <div className={classes.quote}>
-                     <div className={classes.quoteInner}>
-                        <Typography
-                           className={classes.quoteText}
-                           variant="h1"
-                        >
-                           Blockchain: a inovação mais disruptiva desde a invenção da Web
+		return (
+			<div className={classes.root}>
+				<Notification
+					open={this.state.notification}
+					message={this.state.notificationMessage}
+					variant={this.state.notificationVariant}
+					handleClose={() => this.setState({ notification: false })}
+				/>
+				<Grid
+					className={classes.grid}
+					container
+				>
+					<Grid
+						className={classes.quoteWrapper}
+						item
+						lg={5}
+					>
+						<div className={classes.quote}>
+							<div className={classes.quoteInner}>
+								<Typography
+									className={classes.quoteText}
+									variant="h1"
+								>
+									Blockchain: a inovação mais disruptiva desde a invenção da Web
                 </Typography>
-                        <div className={classes.person}>
-                           <Typography
-                              className={classes.name}
-                              variant="body1"
-                           >
-                              By: Satoshi Nakamoto
+								<div className={classes.person}>
+									<Typography
+										className={classes.name}
+										variant="body1"
+									>
+										By: Satoshi Nakamoto
                   </Typography>
-                        </div>
-                     </div>
-                  </div>
-               </Grid>
-               <Grid
-                  className={classes.content}
-                  item
-                  lg={7}
-                  xs={12}
-               >
-                  <div className={classes.content}>
-                     <div className={classes.contentHeader}>
-                        <IconButton
-                           className={classes.backButton}
-                           onClick={this.handleBack}
-                        >
-                           <ArrowBackIcon />
-                        </IconButton>
-                     </div>
-                     <div className={classes.contentBody}>
-                        <form className={classes.form}>
-                           <Typography
-                              className={classes.title}
-                              variant="h2"
-                           >
-                              Entrar
-                  </Typography>
-                           <div className={classes.fields}>
-                              <TextField
-                                 className={classes.textField}
-                                 label="Endereço de e-mail"
-                                 name="email"
-                                 onChange={event =>
-                                    this.handleFieldChange('email', event.target.value)
-                                 }
-                                 type="text"
-                                 value={values.email}
-                                 variant="outlined"
-                              />
-                              {showEmailError && (
-                                 <Typography
-                                    className={classes.fieldError}
-                                    variant="body2"
-                                 >
-                                    {errors.email[0]}
-                                 </Typography>
-                              )}
-                              <TextField
-                                 className={classes.textField}
-                                 label="Senha"
-                                 name="password"
-                                 onChange={event =>
-                                    this.handleFieldChange('password', event.target.value)
-                                 }
-                                 type="password"
-                                 value={values.password}
-                                 variant="outlined"
-                              />
-                              {showPasswordError && (
-                                 <Typography
-                                    className={classes.fieldError}
-                                    variant="body2"
-                                 >
-                                    {errors.password[0]}
-                                 </Typography>
-                              )}
-                           </div>
-                           {submitError && (
-                              <Typography
-                                 className={classes.submitError}
-                                 variant="body2"
-                              >
-                                 {submitError}
-                              </Typography>
-                           )}
-                           {isLoading ? (
-                              <CircularProgress className={classes.progress} />
-                           ) : (
-                                 <Button
-                                    className={classes.signInButton}
-                                    color="primary"
-                                    disabled={!isValid}
-                                    onClick={this.handleSignIn}
-                                    size="large"
-                                    variant="contained"
-                                 >
-                                    Acessar
-                    </Button>
-                              )}
-                           <Typography
-                              className={classes.signUp}
-                              variant="body1"
-                           >
-                              Ainda não possui conta?{' '}
-                              <Link
-                                 className={classes.signUpUrl}
-                                 to="/sign-up"
-                              >
-                                 Cadastre-se
-                    </Link>
+								</div>
+							</div>
+						</div>
+					</Grid>
+					<Grid
+						className={classes.content}
+						item
+						lg={7}
+						xs={12}
+					>
+						<div className={classes.content}>
+							<div className={classes.contentHeader}>
+								<IconButton
+									className={classes.backButton}
+									onClick={this.handleBack}
+								>
+									<ArrowBackIcon />
+								</IconButton>
+							</div>
+							<div className={classes.contentBody}>
+								<form className={classes.form}>
+									<Typography
+										className={classes.title}
+										variant="h2"
+									>
+										Entrar
                            </Typography>
-                        </form>
-                     </div>
-                  </div>
-               </Grid>
-            </Grid>
-            <SimpleModal
-               modalOpen={false}
-               description='jsifbdjvd'
-               title='djknpafvef'
-               handleClose={() => this.setState({ modalOpen: false })}
-            />
-         </div>
-      );
-   }
+									<div className={classes.fields}>
+										<TextField
+											className={classes.textField}
+											label="Endereço de e-mail"
+											name="email"
+											onChange={event =>
+												this.handleFieldChange('email', event.target.value)
+											}
+											type="text"
+											value={values.email}
+											variant="outlined"
+										/>
+										{showEmailError && (
+											<Typography
+												className={classes.fieldError}
+												variant="body2"
+											>
+												{errors.email[0]}
+											</Typography>
+										)}
+										<TextField
+											className={classes.textField}
+											label="Senha"
+											name="password"
+											onChange={event =>
+												this.handleFieldChange('password', event.target.value)
+											}
+											type="password"
+											value={values.password}
+											variant="outlined"
+										/>
+										{showPasswordError && (
+											<Typography
+												className={classes.fieldError}
+												variant="body2"
+											>
+												{errors.password[0]}
+											</Typography>
+										)}
+									</div>
+									{submitError && (
+										<Typography
+											className={classes.submitError}
+											variant="body2"
+										>
+											{submitError}
+										</Typography>
+									)}
+									{isLoading ? (
+										<CircularProgress className={classes.progress} />
+									) : (
+											<Button
+												className={classes.signInButton}
+												color="primary"
+												disabled={!isValid}
+												onClick={this.handleSignIn}
+												size="large"
+												variant="contained"
+											>
+												Acessar
+                    </Button>
+										)}
+									<Typography
+										className={classes.signUp}
+										variant="body1"
+									>
+										Ainda não possui conta?{' '}
+										<Link
+											className={classes.signUpUrl}
+											to="/sign-up"
+										>
+											Cadastre-se
+                    </Link>
+									</Typography>
+								</form>
+							</div>
+						</div>
+					</Grid>
+				</Grid>
+			</div>
+		);
+	}
 }
 
 SignIn.propTypes = {
-   className: PropTypes.string,
-   classes: PropTypes.object.isRequired,
-   history: PropTypes.object.isRequired
+	className: PropTypes.string,
+	classes: PropTypes.object.isRequired,
+	history: PropTypes.object.isRequired
 };
 
 export default compose(
-   withRouter,
-   withStyles(styles)
+	withRouter,
+	withStyles(styles)
 )(SignIn);
