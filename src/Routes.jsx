@@ -95,8 +95,3 @@ export default class Routes extends Component {
         );
     }
 }
-
-const mapStateToProps = state => ({
-    todo: state.todos
-})
-//https://redux.js.org/basics/example

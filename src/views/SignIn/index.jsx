@@ -34,6 +34,9 @@ import schema from './schema';
 import { signIn } from './requests';
 import { criptografar } from '../../common/cryptography';
 import Notification from '../../components/Notification';
+import { showNotification } from 'config/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 class SignIn extends Component {
 	state = {
@@ -97,24 +100,15 @@ class SignIn extends Component {
 		var password = criptografar(values.password);
 
 		await signIn(email, password, resp => {
-			this.showNotification(true, `Seja bem-vindo ${String(resp.data.organization.name).toLowerCase()} ❤❤`);
-			setTimeout(() => {
-				history.push('/dashboard')
-			}, 1000);
-		}, err => {
-			const message = err.response.data.error;
-			this.showNotification(true, message, 'error');
+			this.props.showNotification({ message: `Seja bem-vindo ${String(resp.data.organization.name).toLowerCase()} ❤❤` });
+			history.push('/dashboard')
+		}, ({ response }) => {
+			const message = response && response.data && response.data.error || 'Não foi possível comunicar-se com o servidor.';
+			this.props.showNotification({ message, variant: 'error' });
 		});
-	};
 
-	showNotification = (open, message, variant) => {
-		this.setState({
-			isLoading: false,
-			notification: open,
-			notificationVariant: variant,
-			notificationMessage: message
-		})
-	}
+		this.setState({ isLoading: false });
+	};
 
 	render() {
 		const { classes } = this.props;
@@ -249,7 +243,7 @@ class SignIn extends Component {
 												variant="contained"
 											>
 												Acessar
-                    </Button>
+                    						</Button>
 										)}
 									<Typography
 										className={classes.signUp}
@@ -261,7 +255,7 @@ class SignIn extends Component {
 											to="/sign-up"
 										>
 											Cadastre-se
-                    </Link>
+										</Link>
 									</Typography>
 								</form>
 							</div>
@@ -279,7 +273,6 @@ SignIn.propTypes = {
 	history: PropTypes.object.isRequired
 };
 
-export default compose(
-	withRouter,
-	withStyles(styles)
-)(SignIn);
+const mapDispatchToProps = dispatch => bindActionCreators({ showNotification }, dispatch);
+
+export default compose(withRouter, withStyles(styles))(connect(null, mapDispatchToProps)(SignIn));

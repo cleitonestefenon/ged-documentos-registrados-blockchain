@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import Button from '@material-ui/core/Button';
+import { connect } from 'react-redux';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -13,6 +13,8 @@ import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { bindActionCreators } from 'redux';
+
 const variantIcon = {
     success: CheckCircleIcon,
     warning: WarningIcon,
@@ -20,7 +22,7 @@ const variantIcon = {
     info: InfoIcon,
 };
 
-const useStyles1 = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
     success: {
         backgroundColor: green[600],
     },
@@ -46,8 +48,8 @@ const useStyles1 = makeStyles(theme => ({
     },
 }));
 
-export default function Notification(props) {
-    const classes = useStyles1();
+function Notification(props) {
+    const classes = useStyles();
     const { open, message, anchorOrigin, handleClose, autoHideDuration, className, variant, ...other } = props;
     const Icon = variantIcon[variant];
 
@@ -94,3 +96,9 @@ Notification.propTypes = {
     onClose: PropTypes.func,
     variant: PropTypes.oneOf(['error', 'info', 'success', 'warning']).isRequired,
 };
+
+const mapStateToProps = store => ({
+    ...store.notification
+});
+
+export default connect(mapStateToProps)(Notification);
