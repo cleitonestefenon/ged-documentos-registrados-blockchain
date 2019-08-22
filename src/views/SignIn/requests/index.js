@@ -1,19 +1,17 @@
 import { api } from '../../../config/axios';
+import { KEY_STORAGE } from 'common/localstorage/const';
 
 // Service methods
-export const signIn = (email, password, onSuccess) => {
+export const signIn = (email, password, onSuccess, onError) => {
     api.post('auth/authenticate', { email, password })
         .then(resp => {
-            sessionStorage.setItem('token', resp);            
-            onSuccess();
+            sessionStorage.setItem(KEY_STORAGE.TOKEN, resp);
+            onSuccess(resp);
         }).catch(err => {
-            console.error(err.response.data.error);
-            //mostra error na tela...
+            onError(err);
         })
-
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(true);
-        }, 1500);
-    });
 };
+
+export const getWalletInformation = () => {
+
+}
