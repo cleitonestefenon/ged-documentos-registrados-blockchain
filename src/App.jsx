@@ -23,6 +23,7 @@ import Routes from './Routes';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import rootReducer from './config/reducers';
+import Notification from 'components/Notification';
 
 // Browser history
 const browserHistory = createBrowserHistory();
@@ -41,13 +42,14 @@ class App extends Component {
 
     render() {
         return (
-                <Provider store={store}>
-                    <ThemeProvider theme={theme}>
-                        <Router history={browserHistory}>
-                            <Routes />
-                        </Router>
-                    </ThemeProvider>
-                </Provider>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Router history={browserHistory}>
+                        <Routes />
+                    </Router>
+                </ThemeProvider>
+                <Notification />
+            </Provider>
         );
     }
 }

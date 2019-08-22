@@ -1,0 +1,6 @@
+export const KEY_STORAGE = {
+    TOKEN: 'TOKEN',
+    EMAIL: 'EMAIL',
+    ORGANIZATION_ID: 'ORGANIZATION_ID',
+    NAME: 'NAME'
+};

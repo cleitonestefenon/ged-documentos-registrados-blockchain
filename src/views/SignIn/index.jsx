@@ -7,7 +7,6 @@ import compose from 'recompose/compose';
 import validate from 'validate.js';
 import _ from 'underscore';
 
-
 // Material helpers
 import { withStyles } from '@material-ui/core';
 
@@ -33,7 +32,8 @@ import schema from './schema';
 //Services
 import { signIn } from './requests';
 import { criptografar } from '../../common/cryptography';
-import Notification from '../../components/Notification';
+
+// Redux func
 import { showNotification } from 'config/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -100,10 +100,23 @@ class SignIn extends Component {
 		var password = criptografar(values.password);
 
 		await signIn(email, password, resp => {
-			this.props.showNotification({ message: `Seja bem-vindo ${String(resp.data.organization.name).toLowerCase()} ❤❤` });
-			history.push('/dashboard')
+			this.props.showNotification({
+				message: `Seja bem-vindo ${String(resp.data.organization.name).toLowerCase()} ❤❤`,
+				variant: 'success',
+				callback: () => {
+					if() {
+						
+					}
+				}
+			});
 		}, ({ response }) => {
-			const message = response && response.data && response.data.error || 'Não foi possível comunicar-se com o servidor.';
+			let message = "";
+
+			if (response && response.data) {
+				message = response.data.error;
+			} else {
+				message = 'Não foi possível comunicar-se com o servidor.';
+			}
 			this.props.showNotification({ message, variant: 'error' });
 		});
 
@@ -126,12 +139,6 @@ class SignIn extends Component {
 
 		return (
 			<div className={classes.root}>
-				<Notification
-					open={this.state.notification}
-					message={this.state.notificationMessage}
-					variant={this.state.notificationVariant}
-					handleClose={() => this.setState({ notification: false })}
-				/>
 				<Grid
 					className={classes.grid}
 					container
@@ -146,16 +153,12 @@ class SignIn extends Component {
 								<Typography
 									className={classes.quoteText}
 									variant="h1"
-								>
-									Blockchain: a inovação mais disruptiva desde a invenção da Web
-                </Typography>
+								>Blockchain: a inovação mais disruptiva desde a invenção da Web</Typography>
 								<div className={classes.person}>
 									<Typography
 										className={classes.name}
 										variant="body1"
-									>
-										By: Satoshi Nakamoto
-                  </Typography>
+									>Satoshi Nakamoto</Typography>
 								</div>
 							</div>
 						</div>
@@ -180,9 +183,8 @@ class SignIn extends Component {
 									<Typography
 										className={classes.title}
 										variant="h2"
-									>
-										Entrar
-                           </Typography>
+									>Entrar
+									</Typography>
 									<div className={classes.fields}>
 										<TextField
 											className={classes.textField}

@@ -8,11 +8,6 @@ const notification = (state = [], action) => {
                 ...state,
                 ...action
             }
-        case 'CLOSE_NOTIFICATION':
-            return {
-                ...state,
-                ...action
-            }
         default:
             return state
     }
