@@ -21,33 +21,72 @@ import {
 
 import Modal from '../../../../components/Modal';
 
+import FieldErrorMessage from 'components/FieldErrorMessage';
+
 // Component styles
 import styles from './styles';
 import { VisibilityOff, Visibility } from '@material-ui/icons';
 import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
 
+// action redux
+import { showNotification } from 'config/actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+// Formik
+import { withFormik } from 'formik';
+
+// Yup validator
+import * as Yup from "yup";
+
+//functions
+import { defaultFormMessages } from 'common/form';
+import { formHasError } from './functions';
+import { save, getWalletInformation, update } from './requests';
+
+const initialValues = {
+    id: '',
+    publickey: '',
+    privatekey: '',
+    wif: '',
+    address: ''
+};
 
 class Account extends Component {
     state = {
         userName: getFromSessionStorage(KEY_STORAGE.NAME),
         email: getFromSessionStorage(KEY_STORAGE.EMAIL),
-        publicKey: '',
-        privateKey: '',
-        wif: '',
-        address: '',
+        organizationId: getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID),
         visibilityPrivateKey: false,
         modalOpen: false
     };
 
-    componentDidMount() {
-        const { publicKey, privateKey } = this.state;
-        //buscar as inf. da carteira do usuário
+    async componentDidMount() {
+        const { organizationId } = this.state;
+        const { resetForm } = this.props;
 
-
-        if (!publicKey || !privateKey) {
-            this.setState({ modalOpen: true })
-        }
+        await getWalletInformation(organizationId, resp => {
+            resetForm(resp.data.wallet);
+        }, err => {
+            if (err.error) {
+                showNotification({
+                    message: err.error,
+                    variant: 'error',
+                    callback: () => {
+                        this.setState({ modalOpen: true })
+                    }
+                })
+            } else {
+                showNotification({
+                    message: 'Você ainda não configurou sua carteira!? 🤔🤔',
+                    variant: 'warning',
+                    callback: () => {
+                        this.setState({ modalOpen: true })
+                    }
+                })
+            }
+        })
     }
 
     handleChange = (fieldName, value) => {
@@ -56,9 +95,47 @@ class Account extends Component {
         this.setState(newState);
     };
 
+    handleSubmit = async () => {
+        const { errors, values, submitForm, resetForm, showNotification } = this.props;
+
+        submitForm();
+
+        if (!formHasError(errors)) {
+            if (values.id) {
+                await update(this.state.organizationId, values, resp => {
+                    showNotification({
+                        message: 'Sua carteira foi atualizada com sucesso. 🤪🤪',
+                        callback: () => {
+                            resetForm(resp.data.wallet);
+                        }
+                    })
+                }, err => {
+                    showNotification({
+                        message: 'Ocorreu um erro ao salvar sua carteira. 😢😢',
+                        variant: 'error'
+                    })
+                })
+            } else {
+                await save(this.state.organizationId, values, resp => {
+                    showNotification({
+                        message: 'Agora sua carteira está pronta para ser usada. 😍😍',
+                        callback: () => {
+                            resetForm(resp.data.wallet);
+                        }
+                    })
+                }, err => {
+                    showNotification({
+                        message: 'Ocorreu um erro ao salvar seua carteira. 😢😢',
+                        variant: 'error'
+                    })
+                })
+            }
+        }
+    };
+
     render() {
-        const { classes, className, ...rest } = this.props;
-        const { userName, email, publicKey, privateKey, wif, address, visibilityPrivateKey } = this.state;
+        const { classes, className, values, errors, dirty, touched, setFieldTouched, ...rest } = this.props;
+        const { userName, email, visibilityPrivateKey } = this.state;
 
         const rootClassName = classNames(classes.root, className);
 
@@ -117,28 +194,30 @@ class Account extends Component {
                         />
                     </PortletHeader>
                     <PortletContent noPadding>
-                        <form
-                            autoComplete="off"
-                            noValidate
-                        >
+                        <form autoComplete="off">
                             <div className={classes.field}>
                                 <TextField
                                     className={classes.textField}
                                     label="Chave pública"
                                     margin="dense"
-                                    value={publicKey}
+                                    value={values.publickey}
+                                    name="publickey"
+                                    onBlur={() => setFieldTouched('publickey', true)}
                                     variant="outlined"
-                                    onChange={event => this.handleChange("publicKey", event.target.value)}
+                                    onChange={event => this.props.setFieldValue("publickey", event.target.value)}
                                 />
+                                <FieldErrorMessage touched={touched['publickey']} errors={errors} field="publickey" />
+
                                 <TextField
-                                    //id="outlined-adornment-password"
                                     margin="dense"
+                                    onBlur={() => setFieldTouched('privatekey', true)}
                                     className={classes.textField}
                                     variant="outlined"
                                     type={visibilityPrivateKey ? 'text' : 'password'}
                                     label="Chave privada"
-                                    value={privateKey}
-                                    onChange={event => this.handleChange("privateKey", event.target.value)}
+                                    value={values.privatekey}
+                                    name="privatekey"
+                                    onChange={event => this.props.setFieldValue("privatekey", event.target.value)}
                                     InputProps={{
                                         endAdornment: (
                                             <InputAdornment position="end">
@@ -154,25 +233,33 @@ class Account extends Component {
                                         ),
                                     }}
                                 />
+                                <FieldErrorMessage touched={touched['privatekey']} errors={errors} field="privatekey" />
+
                                 <TextField
                                     className={classes.textField}
                                     label="WIF"
                                     margin="dense"
-                                    value={wif}
-                                    onChange={event => this.handleChange("wif", event.target.value)}
+                                    value={values.wif}
+                                    name="wif"
+                                    onBlur={() => setFieldTouched('wif', true)}
+                                    onChange={event => this.props.setFieldValue("wif", event.target.value)}
                                     variant="outlined"
                                 />
+                                <FieldErrorMessage touched={touched['wif']} errors={errors} field="wif" />
+
                                 <Tooltip title="Endereço da sua carteira digital">
                                     <TextField
                                         className={classes.textField}
                                         label="Endereço"
                                         margin="dense"
-                                        value={address}
-                                        onChange={event => this.handleChange("address", event.target.value)}
+                                        value={values.address}
+                                        name="address"
+                                        onBlur={() => setFieldTouched('address', true)}
+                                        onChange={event => this.props.setFieldValue("address", event.target.value)}
                                         variant="outlined"
-                                    //helperText="Endereço da sua carteira digital"
                                     />
                                 </Tooltip>
+                                <FieldErrorMessage touched={touched['address']} errors={errors} field="address" />
                             </div>
                         </form>
                     </PortletContent>
@@ -180,8 +267,8 @@ class Account extends Component {
                         <Button
                             className={classes.signInButton}
                             color="primary"
-                            disabled={false}
-                            onClick={this.handleSignUp}
+                            disabled={!dirty}
+                            onClick={this.handleSubmit}
                             variant="contained"
                         >
                             Salvar
@@ -198,4 +285,30 @@ Account.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Account);
+const AccountDetailsForm = withFormik({
+    mapPropsToValues: () => ({ ...initialValues }),
+    validateOnChange: false,
+    validateOnBlur: true,
+
+    // Custom sync validation
+    validate: values => {
+        const errors = {};
+
+        //validations
+
+        return errors;
+    },
+
+    validationSchema: Yup.object({
+        publickey: Yup.string().required(defaultFormMessages.isRequired),
+        privatekey: Yup.string().required(defaultFormMessages.isRequired),
+        wif: Yup.string().required(defaultFormMessages.isRequired),
+        address: Yup.string().required(defaultFormMessages.isRequired),
+    }),
+
+    handleSubmit: () => { },
+})(Account);
+
+const mapDispatchToProps = dispatch => bindActionCreators({ showNotification }, dispatch);
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(AccountDetailsForm));

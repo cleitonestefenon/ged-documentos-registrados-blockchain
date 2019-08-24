@@ -16,72 +16,81 @@ import { Portlet, PortletContent, PortletFooter } from 'components';
 // Component styles
 import styles from './styles';
 
+// Functions
+import { getUserIP } from './requests';
+import { getFromSessionStorage } from 'common/localstorage';
+import { KEY_STORAGE } from 'common/localstorage/const';
+
 class AccountProfile extends Component {
-  render() {
-    const { classes, className, ...rest } = this.props;
 
-    const rootClassName = classNames(classes.root, className);
+	constructor(props) {
+		super(props);
 
-    return (
-      <Portlet
-        {...rest}
-        className={rootClassName}
-      >
-        <PortletContent>
-          <div className={classes.details}>
-            <div className={classes.info}>
-              <Typography variant="h2">John Doe</Typography>
-              <Typography
-                className={classes.locationText}
-                variant="body1"
-              >
-                Rm. Valcea, Romania
-              </Typography>
-              <Typography
-                className={classes.dateText}
-                variant="body1"
-              >
-                4:32PM (GMT-4)
-              </Typography>
-            </div>
-            <Avatar
-              className={classes.avatar}
-              src="/images/avatars/avatar_1.png"
-            />
-          </div>
-          <div className={classes.progressWrapper}>
-            <Typography variant="body1">Profile Completeness: 70%</Typography>
-            <LinearProgress
-              value={70}
-              variant="determinate"
-            />
-          </div>
-        </PortletContent>
-        <PortletFooter>
-          <div>
-            <input
-              accept="image/*"
-              className={classes.inputFile}
-              id="contained-button-file"
-              multiple
-              type="file"
-            />
-            <label htmlFor="contained-button-file">
-              <Button component="span" className={classes.profileButton}>
-                Carregar avatar
-              </Button>
-            </label>
-          </div>
-          <Button variant="text" className={classes.profileButton}>Remover avatar</Button>
-        </PortletFooter>
-      </Portlet>
-    );
-  }
+		this.state = {
+			name: '',
+			ip: ''
+		}
+	}
+
+	async componentDidMount() {
+		const name = getFromSessionStorage(KEY_STORAGE.NAME);
+		const ip = await getUserIP();
+
+		this.setState({ ip, name })
+	}
+
+	render() {
+		const { classes, className, ...rest } = this.props;
+
+		const rootClassName = classNames(classes.root, className);
+
+		return (
+			<Portlet
+				{...rest}
+				className={rootClassName}
+			>
+				<PortletContent>
+					<div className={classes.details}>
+						<div className={classes.info}>
+							<Typography variant="h2">{this.state.name}</Typography>
+							<Typography
+								className={classes.locationText}
+								variant="body1"
+							>
+								{this.state.ip}
+							</Typography>
+						</div>
+						<Avatar
+							className={classes.avatar}
+							src="/images/avatars/avatar_1.png"
+						/>
+					</div>
+				</PortletContent>
+				<PortletFooter>
+					<div>
+						<input
+							accept="image/*"
+							className={classes.inputFile}
+							id="contained-button-file"
+							multiple
+							type="file"
+						/>
+						<label htmlFor="contained-button-file">
+							<Button component="span" className={classes.profileButton}>
+								Carregar avatar
+              				</Button>
+						</label>
+					</div>
+					<Button variant="text" className={classes.profileButton}>Remover avatar</Button>
+				</PortletFooter>
+			</Portlet>
+		);
+	}
 }
 
 AccountProfile.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+	className: PropTypes.string,
+	classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(AccountProfile);

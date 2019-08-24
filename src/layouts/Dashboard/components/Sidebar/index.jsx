@@ -36,8 +36,17 @@ import {
 
 // Component styles
 import styles from './styles';
+import { getFromSessionStorage } from 'common/localstorage';
+import { KEY_STORAGE } from 'common/localstorage/const';
 
 class Sidebar extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            name: getFromSessionStorage(KEY_STORAGE.NAME),
+        }
+    }
     render() {
         const { classes, className } = this.props;
 
@@ -72,14 +81,8 @@ class Sidebar extends Component {
                         className={classes.nameText}
                         variant="h6"
                     >
-                        Roman Kutepov
-          </Typography>
-                    <Typography
-                        className={classes.bioText}
-                        variant="caption"
-                    >
-                        Brain Director
-          </Typography>
+                        {this.state.name}
+                    </Typography>
                 </div>
 
                 <Divider className={classes.profileDivider} />
@@ -125,7 +128,7 @@ class Sidebar extends Component {
                         to="/documents"
                     >
                         <ListItemIcon className={classes.listItemIcon}>
-                            <DescriptionOutlined/>
+                            <DescriptionOutlined />
                         </ListItemIcon>
                         <ListItemText
                             classes={{ primary: classes.listItemText }}
@@ -147,7 +150,7 @@ class Sidebar extends Component {
                             primary="Products"
                         />
                     </ListItem>
-                    
+
                     <ListItem
                         activeClassName={classes.activeListItem}
                         className={classes.listItem}
@@ -224,7 +227,7 @@ class Sidebar extends Component {
                 </List>
 
                 <Divider className={classes.listDivider} />
-                
+
                 <List
                     component="div"
                     disablePadding
