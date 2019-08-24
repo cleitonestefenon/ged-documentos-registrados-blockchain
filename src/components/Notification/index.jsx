@@ -66,10 +66,10 @@ class Notification extends Component {
                         </span>
                     }
                     action={[
-                        <IconButton key="close" aria-label="close" color="inherit" onClick={() => { }}>
+                        <IconButton key="close" aria-label="close" color="inherit" onClick={() => this.setState({ open: false })}>
                             <CloseIcon className={classes.icon} />
                         </IconButton>,
-                    ]}
+            ]}
                     {...other}
                 />
             </Snackbar>

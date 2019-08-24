@@ -24,12 +24,14 @@ import Modal from '../../../../components/Modal';
 // Component styles
 import styles from './styles';
 import { VisibilityOff, Visibility } from '@material-ui/icons';
+import { getFromSessionStorage } from 'common/localstorage';
+import { KEY_STORAGE } from 'common/localstorage/const';
 
 
 class Account extends Component {
     state = {
-        userName: '',
-        email: '',
+        userName: getFromSessionStorage(KEY_STORAGE.NAME),
+        email: getFromSessionStorage(KEY_STORAGE.EMAIL),
         publicKey: '',
         privateKey: '',
         wif: '',
@@ -41,6 +43,7 @@ class Account extends Component {
     componentDidMount() {
         const { publicKey, privateKey } = this.state;
         //buscar as inf. da carteira do usuário
+
 
         if (!publicKey || !privateKey) {
             this.setState({ modalOpen: true })
@@ -182,7 +185,7 @@ class Account extends Component {
                             variant="contained"
                         >
                             Salvar
-            </Button>
+                        </Button>
                     </PortletFooter>
                 </Portlet>
             </React.Fragment>

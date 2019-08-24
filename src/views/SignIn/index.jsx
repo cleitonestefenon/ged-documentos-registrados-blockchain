@@ -30,7 +30,7 @@ import styles from './styles';
 import schema from './schema';
 
 //Services
-import { signIn } from './requests';
+import { signIn, verifyWalletInformation } from './requests';
 import { criptografar } from '../../common/cryptography';
 
 // Redux func
@@ -91,7 +91,7 @@ class SignIn extends Component {
 
 	handleSignIn = async () => {
 
-		const { history } = this.props;
+		const { history, showNotification } = this.props;
 		const { values } = this.state;
 
 		this.setState({ isLoading: true });
@@ -100,13 +100,16 @@ class SignIn extends Component {
 		var password = criptografar(values.password);
 
 		await signIn(email, password, resp => {
-			this.props.showNotification({
+			showNotification({
 				message: `Seja bem-vindo ${String(resp.data.organization.name).toLowerCase()} ❤❤`,
 				variant: 'success',
 				callback: () => {
-					if() {
-						
-					}
+
+					verifyWalletInformation(resp.data.organization.id, () => {
+						history.push('/dashboard');
+					}, () => {
+						history.push('/account');
+					});
 				}
 			});
 		}, ({ response }) => {

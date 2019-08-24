@@ -75,7 +75,7 @@ class Topbar extends Component {
 
   handleSignOut = () => {
     const { history } = this.props;
-    sessionStorage.clear();    
+    sessionStorage.clear();
     history.push('/sign-in');
   };
 

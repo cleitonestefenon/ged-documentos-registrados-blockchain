@@ -1,3 +1,5 @@
+import { KEY_STORAGE } from "common/localstorage/const";
+
 export const isAuthenticated = () => {
-      return sessionStorage.getItem('token') != null;
+      return sessionStorage.getItem(KEY_STORAGE.TOKEN) != null;
 }

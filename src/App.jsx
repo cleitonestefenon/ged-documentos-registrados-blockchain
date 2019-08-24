@@ -46,9 +46,9 @@ class App extends Component {
                 <ThemeProvider theme={theme}>
                     <Router history={browserHistory}>
                         <Routes />
+                        <Notification />
                     </Router>
                 </ThemeProvider>
-                <Notification />
             </Provider>
         );
     }
