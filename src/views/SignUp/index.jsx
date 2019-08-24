@@ -32,10 +32,13 @@ import styles from './styles';
 // Form validation schema
 import schema from './schema';
 import { signUp } from './requests';
+import { showNotification } from 'config/actions';
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 
 validate.validators.checked = validators.checked;
-
-
 
 class SignUp extends Component {
    state = {
@@ -96,13 +99,19 @@ class SignUp extends Component {
 
    handleSignUp = async () => {
 
-      const { history } = this.props;
+      const { history, showNotification } = this.props;
       const { values } = this.state;
 
       this.setState({ isLoading: true });
 
       await signUp(values.name, values.email, values.password, () => {
-         history.push('/sign-in');
+         showNotification({
+            message: 'Sua conta foi criada com sucesso!',
+            callback: () => history.push('/sign-in')
+         });
+      }, err => {
+         showNotification({ message: err.response.data.error, variant: 'error' })
+
       })
 
       this.setState({ isLoading: false });
@@ -293,7 +302,7 @@ SignUp.propTypes = {
    history: PropTypes.object.isRequired
 };
 
-export default compose(
-   withRouter,
-   withStyles(styles)
-)(SignUp);
+const mapDispatchToProps = dispatch => bindActionCreators({ showNotification }, dispatch);
+
+export default compose(withRouter, withStyles(styles))(connect(null, mapDispatchToProps)(SignUp));
+

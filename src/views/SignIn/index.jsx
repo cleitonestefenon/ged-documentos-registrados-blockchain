@@ -104,7 +104,6 @@ class SignIn extends Component {
 				message: `Seja bem-vindo ${String(resp.data.organization.name).toLowerCase()} ❤❤`,
 				variant: 'success',
 				callback: () => {
-
 					verifyWalletInformation(resp.data.organization.id, () => {
 						history.push('/dashboard');
 					}, () => {
