@@ -68,9 +68,9 @@ class Account extends Component {
 
         await getWalletInformation(organizationId, resp => {
             resetForm(resp.data.wallet);
-        }, err => {
+        }, err => {            
             if (err.error) {
-                showNotification({
+                this.props.showNotification({
                     message: err.error,
                     variant: 'error',
                     callback: () => {
@@ -78,7 +78,7 @@ class Account extends Component {
                     }
                 })
             } else {
-                showNotification({
+                this.props.showNotification({                    
                     message: 'Você ainda não configurou sua carteira!? 🤔🤔',
                     variant: 'warning',
                     callback: () => {
