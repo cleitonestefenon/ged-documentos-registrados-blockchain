@@ -91,7 +91,6 @@ class DocumentsList extends Component {
 
     return (
       <UsersTable
-        //
         onSelect={this.handleSelect}
         users={users}
       />

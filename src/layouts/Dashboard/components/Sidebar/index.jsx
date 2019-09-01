@@ -16,20 +16,13 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    ListSubheader,
     Typography
 } from '@material-ui/core';
 
 // Material icons
 import {
     DashboardOutlined as DashboardIcon,
-    PeopleOutlined as PeopleIcon,
     ShoppingBasketOutlined as ShoppingBasketIcon,
-    LockOpenOutlined as LockOpenIcon,
-    TextFields as TextFieldsIcon,
-    ImageOutlined as ImageIcon,
-    InfoOutlined as InfoIcon,
-    AccountBoxOutlined as AccountBoxIcon,
     SettingsOutlined as SettingsIcon,
     DescriptionOutlined
 } from '@material-ui/icons';
@@ -38,7 +31,6 @@ import {
 import styles from './styles';
 import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
-import { loadAvatar } from 'common/functions';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -113,21 +105,6 @@ class Sidebar extends Component {
                         activeClassName={classes.activeListItem}
                         className={classes.listItem}
                         component={NavLink}
-                        to="/users"
-                    >
-                        <ListItemIcon className={classes.listItemIcon}>
-                            <PeopleIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{ primary: classes.listItemText }}
-                            primary="Usuários"
-                        />
-                    </ListItem>
-
-                    <ListItem
-                        activeClassName={classes.activeListItem}
-                        className={classes.listItem}
-                        component={NavLink}
                         to="/documents"
                     >
                         <ListItemIcon className={classes.listItemIcon}>
@@ -154,64 +131,7 @@ class Sidebar extends Component {
                         />
                     </ListItem>
 
-                    <ListItem
-                        activeClassName={classes.activeListItem}
-                        className={classes.listItem}
-                        component={NavLink}
-                        to="/sign-in"
-                    >
-                        <ListItemIcon className={classes.listItemIcon}>
-                            <LockOpenIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{ primary: classes.listItemText }}
-                            primary="Authentication"
-                        />
-                    </ListItem>
-
-                    <ListItem
-                        activeClassName={classes.activeListItem}
-                        className={classes.listItem}
-                        component={NavLink}
-                        to="/typography"
-                    >
-                        <ListItemIcon className={classes.listItemIcon}>
-                            <TextFieldsIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{ primary: classes.listItemText }}
-                            primary="Typography"
-                        />
-                    </ListItem>
-
-                    <ListItem
-                        activeClassName={classes.activeListItem}
-                        className={classes.listItem}
-                        component={NavLink}
-                        to="/icons"
-                    >
-                        <ListItemIcon className={classes.listItemIcon}>
-                            <ImageIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{ primary: classes.listItemText }}
-                            primary="Icons and Images"
-                        />
-                    </ListItem>
-                    <ListItem
-                        activeClassName={classes.activeListItem}
-                        className={classes.listItem}
-                        component={NavLink}
-                        to="/account"
-                    >
-                        <ListItemIcon className={classes.listItemIcon}>
-                            <AccountBoxIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{ primary: classes.listItemText }}
-                            primary="Account"
-                        />
-                    </ListItem>
+                    <Divider className={classes.listDivider} />
 
                     <ListItem
                         activeClassName={classes.activeListItem}
@@ -225,33 +145,6 @@ class Sidebar extends Component {
                         <ListItemText
                             classes={{ primary: classes.listItemText }}
                             primary="Settings"
-                        />
-                    </ListItem>
-                </List>
-
-                <Divider className={classes.listDivider} />
-
-                <List
-                    component="div"
-                    disablePadding
-                    subheader={
-                        <ListSubheader className={classes.listSubheader}>
-                            Support
-            </ListSubheader>
-                    }
-                >
-                    <ListItem
-                        className={classes.listItem}
-                        component="a"
-                        href="https://devias.io/contact-us"
-                        target="_blank"
-                    >
-                        <ListItemIcon className={classes.listItemIcon}>
-                            <InfoIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{ primary: classes.listItemText }}
-                            primary="Customer support"
                         />
                     </ListItem>
                 </List>
