@@ -37,6 +37,8 @@ import { criptografar } from '../../common/cryptography';
 import { showNotification } from 'config/actions';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { getFromSessionStorage } from 'common/localstorage';
+import { KEY_STORAGE } from 'common/localstorage/const';
 
 class SignIn extends Component {
 	state = {
@@ -60,6 +62,14 @@ class SignIn extends Component {
 		isLoading: false,
 		submitError: null,
 	};
+
+	componentDidMount() {
+		const token = getFromSessionStorage(KEY_STORAGE.TOKEN);
+
+		if(token) {
+			this.props.history.push('/dashboard');
+		}
+	}
 
 	handleBack = () => {
 		const { history } = this.props;

@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import { withStyles } from '@material-ui/core';
 
 // Material components
-import { Avatar, Typography, Button, LinearProgress } from '@material-ui/core';
+import { Avatar, Typography, Button } from '@material-ui/core';
 
 // Shared components
 import { Portlet, PortletContent, PortletFooter } from 'components';
@@ -17,9 +17,11 @@ import { Portlet, PortletContent, PortletFooter } from 'components';
 import styles from './styles';
 
 // Functions
-import { getUserIP } from './requests';
+import { getUserIP, saveAvatar } from './requests';
 import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
+import { loadAvatar } from 'common/functions';
+
 
 class AccountProfile extends Component {
 
@@ -28,7 +30,8 @@ class AccountProfile extends Component {
 
 		this.state = {
 			name: '',
-			ip: ''
+			ip: '',
+			avatar: getFromSessionStorage(KEY_STORAGE.AVATAR)
 		}
 	}
 
@@ -38,6 +41,28 @@ class AccountProfile extends Component {
 
 		this.setState({ ip, name })
 	}
+
+	arrayBufferToBase64 = buffer => {
+		var binary = '';
+		var bytes = [].slice.call(new Uint8Array(buffer));
+
+		bytes.forEach((b) => binary += String.fromCharCode(b));
+
+		return window.btoa(binary);
+	};
+
+	handleCaptureImage = async ({ target }) => {
+		const formData = new FormData();
+		formData.append('file', target.files[0]);
+
+		await saveAvatar(formData, async resp => {
+			await loadAvatar(resp.data._id, avatar => {
+				this.setState({ avatar })
+			});
+		}, err => {
+			//showNotification...
+		})
+	};
 
 	render() {
 		const { classes, className, ...rest } = this.props;
@@ -62,17 +87,17 @@ class AccountProfile extends Component {
 						</div>
 						<Avatar
 							className={classes.avatar}
-							src="/images/avatars/avatar_1.png"
+							src={this.state.avatar || "/images/avatars/avatar_default.png"}
 						/>
 					</div>
 				</PortletContent>
 				<PortletFooter>
 					<div>
 						<input
-							accept="image/*"
+							accept="image/png"
 							className={classes.inputFile}
 							id="contained-button-file"
-							multiple
+							onChange={this.handleCaptureImage}
 							type="file"
 						/>
 						<label htmlFor="contained-button-file">
@@ -81,7 +106,9 @@ class AccountProfile extends Component {
               				</Button>
 						</label>
 					</div>
-					<Button variant="text" className={classes.profileButton}>Remover avatar</Button>
+					<Button disabled={!this.state.organizationAvatar} variant="text" className={classes.profileButton}>
+						Remover avatar
+					</Button>
 				</PortletFooter>
 			</Portlet>
 		);

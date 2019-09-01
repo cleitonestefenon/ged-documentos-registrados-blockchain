@@ -1,7 +1,8 @@
-import { api } from "config/axios";
+import api from "config/axios";
+import { DOCS_SERVICE } from "config/secret";
 
 export const getWalletInformation = async (organizationId, onSuccess, onError) => {
-    await api.get(`organization/${organizationId}/wallet_information`)
+    await api.get(`${DOCS_SERVICE}/organization/${organizationId}/wallet_information`)
         .then(resp => {
             onSuccess(resp);
         })
@@ -11,7 +12,7 @@ export const getWalletInformation = async (organizationId, onSuccess, onError) =
 }
 
 export const save = async (organizationId, data, onSuccess, onError) => {
-    await api.post(`organization/${organizationId}/create_wallet`, data)
+    await api.post(`${DOCS_SERVICE}/organization/${organizationId}/create_wallet`, data)
         .then(resp => {
             onSuccess(resp)
         })
@@ -21,7 +22,7 @@ export const save = async (organizationId, data, onSuccess, onError) => {
 }
 
 export const update = async (organizationId, data, onSuccess, onError) => {
-    await api.post(`organization/${organizationId}/create_wallet`, data)
+    await api.post(`${DOCS_SERVICE}/organization/${organizationId}/create_wallet`, data)
         .then(resp => {
             onSuccess(resp)
         })

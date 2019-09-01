@@ -2,5 +2,7 @@ export const KEY_STORAGE = {
     TOKEN: 'TOKEN',
     EMAIL: 'EMAIL',
     ORGANIZATION_ID: 'ORGANIZATION_ID',
-    NAME: 'NAME'
+    NAME: 'NAME',
+    AVATAR_ID: 'AVATAR_ID',
+    AVATAR: 'AVATAR'
 };

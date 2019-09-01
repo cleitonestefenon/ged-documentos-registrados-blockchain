@@ -38,6 +38,7 @@ import {
 import styles from './styles';
 import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
+import { loadAvatar } from 'common/functions';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -45,8 +46,10 @@ class Sidebar extends Component {
 
         this.state = {
             name: getFromSessionStorage(KEY_STORAGE.NAME),
+            avatar: getFromSessionStorage(KEY_STORAGE.AVATAR)
         }
     }
+
     render() {
         const { classes, className } = this.props;
 
@@ -74,7 +77,7 @@ class Sidebar extends Component {
                         <Avatar
                             alt="Roman Kutepov"
                             className={classes.avatar}
-                            src="/images/avatars/avatar_1.png"
+                            src={this.state.avatar || "/images/avatars/avatar_default.png"}
                         />
                     </Link>
                     <Typography
