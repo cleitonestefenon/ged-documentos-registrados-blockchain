@@ -10,3 +10,9 @@ export const loadAvatar = (avatarId, onSuccess) => {
             onSuccess && onSuccess(`data:image/png;base64,${btoa(String.fromCharCode(...new Uint8Array(resp.data.file.data)))}`);
         })
 }
+
+export const mountDataImage = async avatarId => {
+    const resp = await api.get(`${FILE_SERVICE}/file/${avatarId}`)
+    
+    return `data:image/png;base64,${btoa(String.fromCharCode(...new Uint8Array(resp.data.file.data)))}`; 
+}

@@ -52,7 +52,7 @@ class Sidebar extends Component {
                 <div className={classes.logoWrapper}>
                     <Link
                         className={classes.logoLink}
-                        to="/"
+                        to="/dashboard"
                     >
                         <img
                             alt="Block Share logo"
