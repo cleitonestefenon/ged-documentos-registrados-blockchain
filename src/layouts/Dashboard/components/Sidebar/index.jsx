@@ -24,7 +24,9 @@ import {
     DashboardOutlined as DashboardIcon,
     ShoppingBasketOutlined as ShoppingBasketIcon,
     SettingsOutlined as SettingsIcon,
-    DescriptionOutlined
+    DescriptionOutlined,
+    CloudUpload,
+    CloudUploadOutlined
 } from '@material-ui/icons';
 
 // Component styles
@@ -67,7 +69,7 @@ class Sidebar extends Component {
                 <div className={classes.profile}>
                     <Link to="/account">
                         <Avatar
-                            alt="Roman Kutepov"
+                            //alt="Roman Kutepov"
                             className={classes.avatar}
                             src={this.state.avatar || "/images/avatars/avatar_default.png"}
                         />
@@ -113,6 +115,21 @@ class Sidebar extends Component {
                         <ListItemText
                             classes={{ primary: classes.listItemText }}
                             primary="Documentos"
+                        />
+                    </ListItem>
+
+                    <ListItem
+                        activeClassName={classes.activeListItem}
+                        className={classes.listItem}
+                        component={NavLink}
+                        to="/upload"
+                    >
+                        <ListItemIcon className={classes.listItemIcon}>                            
+                            <CloudUploadOutlined />
+                        </ListItemIcon>
+                        <ListItemText
+                            classes={{ primary: classes.listItemText }}
+                            primary="Upload"
                         />
                     </ListItem>
 

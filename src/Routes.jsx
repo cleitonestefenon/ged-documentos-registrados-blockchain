@@ -4,8 +4,9 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 // Views
 import Dashboard from './views/Dashboard';
 import ProductList from './views/ProductList';
+import UploadDocuments from './views/UploadDocuments';
 import Typography from './views/Typography';
-import Icons from './views/Icons';
+import Icons from './views/UploadDocuments';
 import Account from './views/Account';
 import Document from './views/Documents';
 import Settings from './views/Settings';
@@ -45,6 +46,13 @@ export default class Routes extends Component {
                     exact
                     path="/products"
                 />
+
+                <PrivateRoute
+                    component={UploadDocuments}
+                    exact
+                    path="/upload"
+                />
+
                 <PrivateRoute
                     component={Typography}
                     exact

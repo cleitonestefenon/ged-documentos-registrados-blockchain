@@ -21,26 +21,22 @@ const styles = theme => ({
   }
 });
 
-class Icons extends Component {
+class Upload extends Component {
   render() {
     const { classes } = this.props;
 
     return (
-      <DashboardLayout title="Icons">
+      <DashboardLayout title="Upload">
         <div className={classes.root}>
-          <iframe
-            className={classes.iframe}
-            src="https://material.io/tools/icons/?icon=accessibility&style=outline"
-            title="Material Design icons"
-          />
+          Upload de arquivos
         </div>
       </DashboardLayout>
     );
   }
 }
 
-Icons.propTypes = {
+Upload.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Icons);
+export default withStyles(styles)(Upload);
