@@ -5,38 +5,45 @@ import PropTypes from 'prop-types';
 
 // Material helpers
 import { withStyles } from '@material-ui/core';
+import Dropzone from 'react-dropzone';
+
+// Component styles
+import styles from './styles'
+
+// Material icons
+import { CloudUploadOutlined } from '@material-ui/icons';
 
 // Shared layouts
 import { Dashboard as DashboardLayout } from 'layouts';
 
-// Component styles
-const styles = theme => ({
-  root: {
-    padding: theme.spacing(4)
-  },
-  iframe: {
-    width: '100%',
-    minHeight: '640px',
-    border: 0
-  }
-});
 
 class Upload extends Component {
-  render() {
-    const { classes } = this.props;
+    render() {
+        const { classes } = this.props;
 
-    return (
-      <DashboardLayout title="Upload">
-        <div className={classes.root}>
-          Upload de arquivos
-        </div>
-      </DashboardLayout>
-    );
-  }
+        //https://www.youtube.com/watch?v=G5UZmvkLWSQ
+        
+        return (
+            <DashboardLayout title="Upload">
+                <div className={classes.upload}>
+                    <Dropzone onDropAccepted={() => { }}>
+                        {({ }) => (
+                            <div className={classes.areaUpload}>
+                                <div className={classes.areaUploadIcon}>
+                                    <CloudUploadOutlined />
+                                    <p>Arraste um arquivo aqui para registra-lo!!</p>
+                                </div>
+                            </div>
+                        )}
+                    </Dropzone>
+                </div>
+            </DashboardLayout>
+        );
+    }
 }
 
 Upload.propTypes = {
-  classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Upload);

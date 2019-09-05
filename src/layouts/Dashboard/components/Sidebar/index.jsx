@@ -25,7 +25,6 @@ import {
     ShoppingBasketOutlined as ShoppingBasketIcon,
     SettingsOutlined as SettingsIcon,
     DescriptionOutlined,
-    CloudUpload,
     CloudUploadOutlined
 } from '@material-ui/icons';
 

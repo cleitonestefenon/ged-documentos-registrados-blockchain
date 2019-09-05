@@ -41,6 +41,7 @@
     "react": "^16.8.6",
     "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.8.6",
+    "react-dropzone": "^10.1.8",
     "react-perfect-scrollbar": "^1.4.4",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
