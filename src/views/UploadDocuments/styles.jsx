@@ -9,16 +9,20 @@ export default theme => ({
             justifyContent: 'center',
             alignItems: 'center',
             border: '2px dashed #999',
-            
+
       },
-      upload:{
+      upload: {
             justifyContent: 'center',
             display: 'flex',
-            paddingTop: '30px'   
+            paddingTop: '30px'
       },
-      areaUploadIcon:{
+      areaUploadIcon: {
             justifyContent: 'center',
             display: 'block'
+      },
+      listDivider: {
+            marginBottom: theme.spacing(2),
+            marginTop: '30px'
       }
 
 });

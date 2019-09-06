@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 // Material helpers
-import { withStyles } from '@material-ui/core';
+import { withStyles, Divider } from '@material-ui/core';
 import Dropzone from 'react-dropzone';
 
 // Component styles
@@ -22,7 +22,7 @@ class Upload extends Component {
         const { classes } = this.props;
 
         //https://www.youtube.com/watch?v=G5UZmvkLWSQ
-        
+
         return (
             <DashboardLayout title="Upload">
                 <div className={classes.upload}>
@@ -37,6 +37,9 @@ class Upload extends Component {
                         )}
                     </Dropzone>
                 </div>
+                
+                <Divider className={classes.listDivider} />
+
             </DashboardLayout>
         );
     }
