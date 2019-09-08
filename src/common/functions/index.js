@@ -13,6 +13,17 @@ export const loadAvatar = (avatarId, onSuccess) => {
 
 export const mountDataImage = async avatarId => {
     const resp = await api.get(`${FILE_SERVICE}/file/${avatarId}`)
-    
-    return `data:image/png;base64,${btoa(String.fromCharCode(...new Uint8Array(resp.data.file.data)))}`; 
+
+    return `data:image/png;base64,${btoa(String.fromCharCode(...new Uint8Array(resp.data.file.data)))}`;
+}
+
+export const removeElementOfList = (list, simple = true, field, valueOfElement) => {
+    return list.filter(element => {
+        if (simple) {
+            return element !== valueOfElement;
+        } else {
+            console.log(element[field] + ' - ' + valueOfElement)
+            return element[field] !== valueOfElement;
+        }
+    })
 }

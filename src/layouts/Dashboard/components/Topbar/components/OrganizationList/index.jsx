@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Material helpers
-import { withStyles, Button, CircularProgress, TablePagination, IconButton, Tooltip } from '@material-ui/core';
+import { withStyles, CircularProgress, TablePagination, IconButton, Tooltip } from '@material-ui/core';
 
 // Material components
 import {
@@ -20,14 +20,14 @@ import {
 
 // Component styles
 import styles from './styles';
-import { findOrganizationByName, findOrganizationByPublicKey, findOrganizationByAddress } from './requests';
+import { findOrganizationByName, findOrganizationByPublicKey, findOrganizationByAddress, sendInvite } from './requests';
 
 // Material icons
 import {
 	ArrowForwardIos as ArrowForwardIosIcon,
 	Send
 } from '@material-ui/icons';
-import { mountDataImage, mountDataImageTeste } from 'common/functions';
+import { mountDataImage, mountDataImageTeste, removeElementOfList } from 'common/functions';
 
 class OrganizationList extends Component {
 
@@ -61,14 +61,20 @@ class OrganizationList extends Component {
 				break;
 			}
 			case 'publickey': {
-				await findOrganizationByPublicKey(searchInputValue, resp => {
-					console.log(resp)
+				await findOrganizationByPublicKey(searchInputValue, offset, rowsPerPage, resp => {
+					this.setState({
+						organizations: resp.data.organizations.rows,
+						count: resp.data.organizations.count
+					})
 				})
 				break;
 			}
 			case 'address': {
-				await findOrganizationByAddress(searchInputValue, resp => {
-					console.log(resp)
+				await findOrganizationByAddress(searchInputValue, offset, rowsPerPage, resp => {
+					this.setState({
+						organizations: resp.data.organizations.rows,
+						count: resp.data.organizations.count
+					})
 				})
 				break;
 			}
@@ -95,12 +101,18 @@ class OrganizationList extends Component {
 	}
 
 	sendSolicitation = organization => {
-		console.log(organization)
+		const { organizations } = this.state;
+
+		sendInvite(organization.id, () => {
+			this.setState({
+				organizations: removeElementOfList(organizations, false, 'id', organization.id)
+			})
+		});
 	}
 
 	render() {
 		const { organizations } = this.state;
-		const { className, classes, onSelect } = this.props;
+		const { className, classes } = this.props;
 
 		const rootClassName = classNames(classes.root, className);
 
@@ -126,7 +138,7 @@ class OrganizationList extends Component {
 						</Typography>
 					) : organizations.map(organization => {
 						return (
-							<React.Fragment>
+							<React.Fragment key={organization.id}>
 								<ListItem key={organization.id} alignItems="flex-start">
 									<ListItemAvatar>
 										<Avatar alt="Avatar">{organization.name.substr(0, 1)}</Avatar>

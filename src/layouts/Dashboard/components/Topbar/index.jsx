@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
 
 // Material helpers
-import { withStyles, Paper, Divider, ListItem, ListItemSecondaryAction, Checkbox, List, ListItemAvatar, ListItemText, Avatar, Radio } from '@material-ui/core';
+import { withStyles, Paper, Divider, ListItem, ListItemSecondaryAction, Checkbox, List, ListItemAvatar, ListItemText, Avatar, Radio, Tooltip } from '@material-ui/core';
 
 // Material components
 import {
@@ -25,8 +25,7 @@ import {
 	Close as CloseIcon,
 	NotificationsOutlined as NotificationsIcon,
 	Input as InputIcon,
-	Search as SearchIcon,
-	Folder as FolderIcon
+	Search as SearchIcon
 } from '@material-ui/icons';
 
 // Shared services
@@ -171,19 +170,25 @@ class Topbar extends Component {
 							{title}
 						</Typography>
 						<div className={classes.searchContent}>
-							<IconButton className={classes.iconButton} aria-label="menu" onClick={this.handleShowSearchFilter}>
-								<MenuIcon onClick={this.handleShowSearchFilter} />
-							</IconButton>
-							<InputBase
-								id="inputBaseSearchFilter"
-								className={classes.inputSearch}
-								onChange={this.onChangeInput}
-								placeholder={`Pesquisar organização ${filterSelected.inputLabel}`}
-								inputProps={{ 'aria-label': 'search google maps' }}
-							/>
-							<IconButton className={classes.iconButton} aria-label="search" onClick={this.handleShowOrganizations}>
-								<SearchIcon onClick={this.handleShowOrganizations} />
-							</IconButton>
+							<Tooltip title="Troque o filtro para pesquisar da maneira desejada">
+								<IconButton className={classes.iconButton} aria-label="menu" onClick={this.handleShowSearchFilter}>
+									<MenuIcon onClick={this.handleShowSearchFilter} />
+								</IconButton>
+							</Tooltip>
+							<Tooltip title="Conecte-se com outras organizações para trocar documentos">
+								<InputBase
+									id="inputBaseSearchFilter"
+									className={classes.inputSearch}
+									onChange={this.onChangeInput}
+									placeholder={`Pesquisar organização ${filterSelected.inputLabel}`}
+									inputProps={{ 'aria-label': 'search google maps' }}
+								/>
+							</Tooltip>
+							<Tooltip title="Clique para pesqusiar">
+								<IconButton className={classes.iconButton} aria-label="search" onClick={this.handleShowOrganizations}>
+									<SearchIcon onClick={this.handleShowOrganizations} />
+								</IconButton>
+							</Tooltip>
 						</div>
 						<IconButton
 							className={classes.notificationsButton}
@@ -228,7 +233,6 @@ class Topbar extends Component {
 					<OrganizationList
 						searchInputValue={searchInputValue}
 						filterSelected={filterSelected}
-						onSelect={this.handleCloseOrganizations}
 					/>
 				</Popover>
 
@@ -244,38 +248,6 @@ class Topbar extends Component {
 						onSelect={this.onSelectFilterOption}
 						filterSelected={filterSelected}
 					/>
-					{/* <List dense className={classes.listOptionsFilter}>
-						{searchOptions.map((option, key) => {
-							const labelId = `checkbox-list-secondary-label-${key}`;
-							return (
-								<ListItem
-									onClick={() => {
-										this.setState({ filterSelected: option });
-										this.handleCloseSearchFilter();
-									}}
-									key={key}
-									button
-									dense
-								>
-									<ListItemAvatar>
-										<Avatar>
-											{option.icon}
-										</Avatar>
-									</ListItemAvatar>
-									<ListItemText id={labelId} primary={option.label} />
-									<ListItemSecondaryAction>
-										<Radio
-											edge="end"
-											name={option.label}
-											onChange={() => this.setState({ filterSelected: option })}
-											checked={filterSelected.value === option.value ? true : false}
-											inputProps={{ 'aria-labelledby': labelId }}
-										/>
-									</ListItemSecondaryAction>
-								</ListItem>
-							);
-						})}
-					</List> */}
 				</Popover>
 
 				<AlertDialog

@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 // Externals
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import compose from 'recompose/compose';
 
 // Material helpers
-import { withStyles } from '@material-ui/core';
+import { withStyles, Tooltip } from '@material-ui/core';
 
 // Material components
 import { Avatar, Typography, Button } from '@material-ui/core';
@@ -16,6 +17,8 @@ import { Portlet, PortletContent, PortletFooter } from 'components';
 // action redux
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router-dom';
+
 
 // Component styles
 import styles from './styles';
@@ -61,11 +64,10 @@ class AccountProfile extends Component {
         formData.append('file', target.files[0]);
 
         await saveAvatar(formData, async resp => {
-            await loadAvatar(resp.data._id, avatar => {
-                this.setState({ avatar })
+            await loadAvatar(resp.data._id, () => {
+                this.props.history.push('/sign-in');
             });
         }, err => {
-            console.log(`erro Extenção ${err}`)
             this.props.showNotification({
                 message: 'Esse arquivo infelizmente não é suportado. 😢😢',
                 variant: 'error'
@@ -110,9 +112,11 @@ class AccountProfile extends Component {
                             type="file"
                         />
                         <label htmlFor="contained-button-file">
-                            <Button component="span" className={classes.profileButton}>
-                                Carregar avatar
-              				</Button>
+                            <Tooltip title="É possível carregar apenas imagens do tipo .png">
+                                <Button component="span" className={classes.profileButton}>
+                                    Trocar avatar
+                                </Button>
+                            </Tooltip>
                         </label>
                     </div>
                     <Button disabled={!this.state.organizationAvatar} variant="text" className={classes.profileButton}>
@@ -131,4 +135,4 @@ AccountProfile.propTypes = {
 
 const mapDispatchToProps = dispatch => bindActionCreators({ showNotification }, dispatch);
 
-export default withStyles(styles)(connect(null, mapDispatchToProps)(AccountProfile));
+export default compose(withRouter, withStyles(styles))(connect(null, mapDispatchToProps)(AccountProfile));
