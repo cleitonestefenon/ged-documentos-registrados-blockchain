@@ -31,7 +31,7 @@ class Upload extends Component {
                             <div className={classes.areaUpload}>
                                 <div className={classes.areaUploadIcon}>
                                     <CloudUploadOutlined />
-                                    <p>Arraste um arquivo aqui para registra-lo!!</p>
+                                    <p>Arraste um arquivo aqui para registrá-lo</p>
                                 </div>
                             </div>
                         )}
