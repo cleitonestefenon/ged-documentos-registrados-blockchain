@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 // Views
 import Dashboard from './views/Dashboard';
 import ProductList from './views/ProductList';
-import DocumentsRegistration from './views/DocumentsRegistration/components/DocumentUpload';
+import DocumentsRegistration from './views/DocumentsRegistration';
 import Typography from './views/Typography';
 import Icons from './views/DocumentsRegistration/components/DocumentUpload';
 import Account from './views/Account';

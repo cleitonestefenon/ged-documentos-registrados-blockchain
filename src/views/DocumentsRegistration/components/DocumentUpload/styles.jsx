@@ -1,10 +1,8 @@
 export default theme => ({
-
       areaUpload: {
             backgroundColor: '#ebebeb',
             height: '150px',
             width: '80%',
-            //maxWidth: '400px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -20,9 +18,4 @@ export default theme => ({
             justifyContent: 'center',
             display: 'block'
       },
-      listDivider: {
-            marginBottom: theme.spacing(2),
-            marginTop: '30px'
-      }
-
 });

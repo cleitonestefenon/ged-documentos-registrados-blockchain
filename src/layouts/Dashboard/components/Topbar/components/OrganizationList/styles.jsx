@@ -1,7 +1,6 @@
 export default theme => ({
   root: {
     width: '100%',
-    width: 360,
     maxHeight: 450,
     backgroundColor: theme.palette.background.paper,
   },
@@ -52,11 +51,6 @@ export default theme => ({
   listItemTextSecondary: {
     marignTop: '4px',
     color: theme.palette.text.secondary
-  },
-  arrowForward: {
-    color: theme.palette.text.secondary,
-    height: '16px',
-    width: '16px'
   },
   empty: {
     textAlign: 'center',

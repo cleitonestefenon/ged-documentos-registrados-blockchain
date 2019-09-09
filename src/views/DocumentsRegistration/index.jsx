@@ -1,15 +1,28 @@
-import { DocumentUpload } from "./components/DocumentUpload";
-import { DocumentsList } from "./components";
+import React, { Component } from 'react';
 
-class DocumentsRegistration extends Comment {
+// Custom components
+import { DocumentsList, DocumentUpload } from './components';
+
+// Shared layouts
+import { Dashboard as DashboardLayout } from 'layouts';
+
+// Material helpers
+import { withStyles, Divider } from '@material-ui/core';
+
+// Component styles
+import styles from './style';
+
+class DocumentsRegistration extends Component {
     render() {
+
+        const { classes } = this.props;
+
         return (
-            <DashboardLayout>
+            <DashboardLayout title="Upload">
                 <div className={classes.root}>
-
                     <DocumentUpload />
+                    <Divider className={classes.listDivider} />
                     <DocumentsList />
-
                 </div>
             </DashboardLayout>
         );

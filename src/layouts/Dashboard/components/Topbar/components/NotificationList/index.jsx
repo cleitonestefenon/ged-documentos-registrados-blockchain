@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
 
 // Externals
 import PropTypes from 'prop-types';
@@ -10,7 +9,6 @@ import { withStyles, ListItemAvatar, Avatar, Tooltip, IconButton } from '@materi
 
 // Material components
 import {
-	Button,
 	Divider,
 	List,
 	ListItem,

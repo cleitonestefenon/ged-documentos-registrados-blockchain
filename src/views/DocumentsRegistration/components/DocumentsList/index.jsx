@@ -27,7 +27,7 @@ import {
 import { getInitials } from 'helpers';
 
 // Component styles
-import styles from './style';
+import styles from './styles';
 import { Portlet, PortletContent } from 'components';
 
 class DocumentsList extends Component {

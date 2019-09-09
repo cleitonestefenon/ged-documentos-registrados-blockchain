@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
 
 // Material helpers
-import { withStyles, Paper, Divider, ListItem, ListItemSecondaryAction, Checkbox, List, ListItemAvatar, ListItemText, Avatar, Radio, Tooltip } from '@material-ui/core';
+import { withStyles, Tooltip } from '@material-ui/core';
 
 // Material components
 import {
@@ -27,9 +27,6 @@ import {
 	Input as InputIcon,
 	Search as SearchIcon
 } from '@material-ui/icons';
-
-// Shared services
-import { getNotifications } from 'services/notification';
 
 // Custom components
 import { NotificationList } from './components';
@@ -130,7 +127,7 @@ class Topbar extends Component {
 	render() {
 		const { classes, className, title, isSidebarOpen, onToggleSidebar } = this.props;
 
-		const { notifications, notificationsCount, notificationsEl, searchEl, searchInputValue, searchFilterEl, filterSelected } = this.state;
+		const { notificationsCount, notificationsEl, searchEl, searchInputValue, searchFilterEl, filterSelected } = this.state;
 
 		const rootClassName = classNames(classes.root, className);
 
