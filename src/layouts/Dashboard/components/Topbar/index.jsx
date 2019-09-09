@@ -39,6 +39,7 @@ import styles from './styles';
 import AlertDialog from 'components/Modal';
 import OrganizationList from './components/OrganizationList';
 import SearchOptionsList from './components/SearchOptionsList';
+import { getNumberOfNotifications } from './requests';
 
 const searchOptions = [
 	{ label: 'Nome', value: 'name', icon: 'N', inputLabel: "por nome..." },
@@ -54,39 +55,24 @@ class Topbar extends Component {
 		filterSelected: { label: 'Nome', value: 'name', icon: 'N', inputLabel: "por nome..." },
 		searchInputValue: '',
 		notifications: [],
-		notificationsLimit: 4,
 		notificationsCount: 0,
 		notificationsEl: null,
 		searchFilterEl: null,
 		searchEl: null
 	};
 
-	async getNotifications() {
-		try {
-			const { notificationsLimit } = this.state;
-
-			const { notifications, notificationsCount } = await getNotifications(
-				notificationsLimit
-			);
-
-			if (this.signal) {
-				this.setState({
-					notifications,
-					notificationsCount
-				});
-			}
-		} catch (error) {
-			return;
-		}
+	async componentDidMount() {
+		this.refleshCountNotifications();
 	}
 
-	componentDidMount() {
-		this.signal = true;
-		this.getNotifications();
+	getCountNotifications = async () => {
+		return await getNumberOfNotifications();
 	}
 
-	componentWillUnmount() {
-		this.signal = false;
+	refleshCountNotifications = async () => {
+		const count = await this.getCountNotifications();
+
+		this.setState({ notificationsCount: count })
 	}
 
 	handleSignOut = () => {
@@ -197,7 +183,6 @@ class Topbar extends Component {
 							<Badge
 								badgeContent={notificationsCount}
 								color="primary"
-								variant="dot"
 							>
 								<NotificationsIcon />
 							</Badge>
@@ -218,8 +203,8 @@ class Topbar extends Component {
 					transformOrigin={{ vertical: 'top', horizontal: 'center' }}
 				>
 					<NotificationList
-						notifications={notifications}
-						onSelect={this.handleCloseNotifications}
+						onClose={this.handleCloseNotifications}
+						onSelect={this.refleshCountNotifications}
 					/>
 				</Popover>
 

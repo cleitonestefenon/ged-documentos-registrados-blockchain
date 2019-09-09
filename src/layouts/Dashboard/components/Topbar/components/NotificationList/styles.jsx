@@ -5,7 +5,7 @@ export default theme => ({
   },
   header: {
     backgroundColor: theme.palette.background.default,
-    backgroundImage: 'url("/images/connected_world.svg")',
+    backgroundImage: 'url("/images/notifications-image.png")',
     backgroundPositionX: 'right',
     backgroundPositionY: 'center',
     backgroundRepeat: 'no-repeat',
@@ -39,11 +39,6 @@ export default theme => ({
     color: theme.palette.text.secondary,
     height: '16px',
     width: '16px'
-  },
-  footer: {
-    paddingBottom: theme.spacing(1),
-    display: 'flex',
-    justifyContent: 'center'
   },
   empty: {
     textAlign: 'center',

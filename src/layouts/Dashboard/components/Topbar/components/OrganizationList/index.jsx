@@ -4,6 +4,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+// action redux
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
 // Material helpers
 import { withStyles, CircularProgress, TablePagination, IconButton, Tooltip } from '@material-ui/core';
 
@@ -23,11 +27,11 @@ import styles from './styles';
 import { findOrganizationByName, findOrganizationByPublicKey, findOrganizationByAddress, sendInvite } from './requests';
 
 // Material icons
-import {
-	ArrowForwardIos as ArrowForwardIosIcon,
-	Send
-} from '@material-ui/icons';
-import { mountDataImage, mountDataImageTeste, removeElementOfList } from 'common/functions';
+import { Send } from '@material-ui/icons';
+
+// Common function
+import { removeElementOfList } from 'common/functions';
+import { showNotification } from 'config/actions';
 
 class OrganizationList extends Component {
 
@@ -83,7 +87,6 @@ class OrganizationList extends Component {
 	}
 
 	handleChangePage = async (event, newPage) => {
-		console.log(newPage)
 		await this.setState({
 			offset: newPage,
 			organizations: null
@@ -107,6 +110,10 @@ class OrganizationList extends Component {
 			this.setState({
 				organizations: removeElementOfList(organizations, false, 'id', organization.id)
 			})
+			this.props.showNotification({
+                message: 'Convite enviado com sucesso! 😎',
+                variant: 'success'
+            })
 		});
 	}
 
@@ -204,4 +211,6 @@ OrganizationList.defaultProps = {
 	onSelect: () => { }
 };
 
-export default withStyles(styles)(OrganizationList);
+const mapDispatchToProps = dispatch => bindActionCreators({ showNotification }, dispatch);
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(OrganizationList));

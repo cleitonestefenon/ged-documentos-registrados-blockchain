@@ -6,138 +6,139 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Material helpers
-import { withStyles } from '@material-ui/core';
+import { withStyles, ListItemAvatar, Avatar, Tooltip, IconButton } from '@material-ui/core';
 
 // Material components
 import {
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography
+	Button,
+	Divider,
+	List,
+	ListItem,
+	ListItemText,
+	Typography
 } from '@material-ui/core';
 
 // Material icons
-import {
-  ArrowForwardIos as ArrowForwardIosIcon,
-  Payment as PaymentIcon,
-  PeopleOutlined as PeopleIcon,
-  Code as CodeIcon,
-  Store as StoreIcon
-} from '@material-ui/icons';
+import { Check, Close } from '@material-ui/icons';
 
 // Component styles
 import styles from './styles';
 
-const icons = {
-  order: {
-    icon: <PaymentIcon />,
-    color: 'blue'
-  },
-  user: {
-    icon: <PeopleIcon />,
-    color: 'red'
-  },
-  product: {
-    icon: <StoreIcon />,
-    color: 'green'
-  },
-  feature: {
-    icon: <CodeIcon />,
-    color: 'purple'
-  }
-};
+import { searchNotifications, acceptInvite, rejectInvitation } from './requests';
 
 class NotificationList extends Component {
-  render() {
-    const { className, classes, notifications, onSelect } = this.props;
 
-    const rootClassName = classNames(classes.root, className);
+	constructor(props) {
+		super(props);
 
-    return (
-      <div className={rootClassName}>
-        {notifications.length > 0 ? (
-          <Fragment>
-            <div className={classes.header}>
-              <Typography variant="h6">User Notifications</Typography>
-              <Typography
-                className={classes.subtitle}
-                variant="body2"
-              >
-                {notifications.length} new notifications
-              </Typography>
-            </div>
-            <div className={classes.content}>
-              <List component="div">
-                {notifications.map(notification => (
-                  <Link
-                    key={notification.id}
-                    to="#"
-                  >
-                    <ListItem
-                      className={classes.listItem}
-                      component="div"
-                      onClick={onSelect}
-                    >
-                      <ListItemIcon
-                        className={classes.listItemIcon}
-                        style={{ color: icons[notification.type].color }}
-                      >
-                        {icons[notification.type].icon}
-                      </ListItemIcon>
-                      <ListItemText
-                        classes={{ secondary: classes.listItemTextSecondary }}
-                        primary={notification.title}
-                        secondary={notification.when}
-                      />
-                      <ArrowForwardIosIcon className={classes.arrowForward} />
-                    </ListItem>
-                    <Divider />
-                  </Link>
-                ))}
-              </List>
-              <div className={classes.footer}>
-                <Button
-                  color="primary"
-                  component={Link}
-                  size="small"
-                  to="#"
-                  variant="contained"
-                >
-                  See all
-                </Button>
-              </div>
-            </div>
-          </Fragment>
-        ) : (
-          <div className={classes.empty}>
-            <div className={classes.emptyImageWrapper}>
-              <img
-                alt="Empty list"
-                className={classes.emptyImage}
-                src="/images/empty.png"
-              />
-            </div>
-            <Typography variant="h4">There's nothing here...</Typography>
-          </div>
-        )}
-      </div>
-    );
-  }
+		this.state = {
+			notifications: []
+		}
+	}
+
+	async componentDidMount() {
+		this.refleshNotifications();
+	}
+
+	refleshNotifications = async () => {
+		const { data } = await searchNotifications();
+
+		this.setState({
+			notifications: data.organizationsInteresteds
+		})
+	}
+
+	acceptSolicitation = async solicitation => {
+		await acceptInvite(solicitation.id);
+
+		this.refleshNotifications();
+
+		await this.props.onSelect();
+	}
+
+	rejectSolicitation = async solicitation => {
+		await rejectInvitation(solicitation.id);
+
+		this.refleshNotifications();
+		
+		await this.props.onSelect();
+	}
+
+	render() {
+		const { className, classes } = this.props;
+		const { notifications } = this.state;
+
+		const rootClassName = classNames(classes.root, className);
+
+		return (
+			<div className={rootClassName}>
+				{notifications.length > 0 ? (
+					<Fragment>
+						<div className={classes.header}>
+							<Typography variant="h6">Notificações</Typography>
+							<Typography
+								className={classes.subtitle}
+								variant="body2"
+							>
+								{notifications.length} nova(s) notificação(ções)
+              				</Typography>
+						</div>
+						<div className={classes.content}>
+							<List component="div">
+								{notifications.map(notification => (
+									<React.Fragment key={notification.id}>
+										<ListItem key={notification.id} alignItems="flex-start">
+											<ListItemAvatar>
+												<Avatar alt="Avatar">{notification.name.substr(0, 1)}</Avatar>
+											</ListItemAvatar>
+											<ListItemText
+												key={notification.id}
+												secondary={`${notification.name} deseja compartilhar documentos com você!`}
+											/>
+											<Tooltip title="Aceitar" aria-label="tooltip">
+												<IconButton color="primary" aria-label="arrow">
+													<Check color="primary" onClick={() => this.acceptSolicitation(notification)} />
+												</IconButton>
+											</Tooltip>
+											<Tooltip title="Rejeitar" aria-label="tooltip">
+												<IconButton aria-label="arrow">
+													<Close color="error" onClick={() => this.rejectSolicitation(notification)} />
+												</IconButton>
+											</Tooltip>
+										</ListItem>
+										<Divider variant="middle" component="li" />
+									</React.Fragment>
+								))}
+							</List>
+						</div>
+					</Fragment>
+				) : (
+						<div className={classes.empty}>
+							<div className={classes.emptyImageWrapper}>
+								<img
+									alt="Empty list"
+									className={classes.emptyImage}
+									src="/images/empty.png"
+								/>
+							</div>
+							<Typography variant="h4">Nenhuma notificação encontrada...</Typography>
+						</div>
+					)}
+			</div>
+		);
+	}
 }
 
 NotificationList.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired,
-  notifications: PropTypes.array.isRequired,
-  onSelect: PropTypes.func
+	className: PropTypes.string,
+	classes: PropTypes.object.isRequired,
+	notifications: PropTypes.array.isRequired,
+	onSelect: PropTypes.func
 };
 
 NotificationList.defaultProps = {
-  notifications: [],
-  onSelect: () => {}
+	notifications: [],
+	onSelect: () => { }
 };
 
 export default withStyles(styles)(NotificationList);

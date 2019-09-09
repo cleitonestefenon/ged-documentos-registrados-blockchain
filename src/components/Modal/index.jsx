@@ -22,11 +22,11 @@ export default function AlertDialog({ open, handleClose, dialogTitle, dialogCont
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button hidden={!onDisagreeClick} onClick={onDisagreeClick} color="primary">
-                    {disagreeNameButton}
-                </Button>
                 <Button hidden={!onAgreeClick} onClick={onAgreeClick} color="primary" autoFocus>
                     {agreeNameButton}
+                </Button>
+                <Button hidden={!onDisagreeClick} onClick={onDisagreeClick} color="secondary">
+                    {disagreeNameButton}
                 </Button>
             </DialogActions>
         </Dialog>
