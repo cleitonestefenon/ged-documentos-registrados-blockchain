@@ -3,15 +3,16 @@ import React, { Component } from 'react';
 // Externals
 import PropTypes from 'prop-types';
 
+import uploadImage from '../../../../icons/upload-para-a-nuvem.svg';
+
 // Material helpers
-import { withStyles, Divider } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import Dropzone from 'react-dropzone';
+
 
 // Component styles
 import styles from './styles'
 
-// Material icons
-import { CloudUploadOutlined } from '@material-ui/icons';
 
 class Upload extends Component {
     render() {
@@ -22,12 +23,19 @@ class Upload extends Component {
         return (
             <div className={classes.upload}>
                 <Dropzone onDropAccepted={() => { }}>
-                    {({ }) => (
-                        <div className={classes.areaUpload}>
+                    {({ getRootProps, getInputProps, isDragActive }) => (
+
+                        <div
+                            className={classes.areaUpload}
+                            {...getRootProps()}
+                            isDragActive={isDragActive}
+                        >
+                            <input {...getInputProps()} />
                             <div className={classes.areaUploadIcon}>
-                                <CloudUploadOutlined />
-                                <p>Arraste um arquivo aqui para registrá-lo</p>
+                                <img src={uploadImage} width='64px' height='64px' alt='Upload Image' style={{width: '100%'}} />                               
+                                <p>Clique aqui ou arraste um arquivo para registrá-lo</p>
                             </div>
+
                         </div>
                     )}
                 </Dropzone>
