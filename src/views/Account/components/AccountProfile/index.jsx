@@ -65,7 +65,11 @@ class AccountProfile extends Component {
 
         await saveAvatar(formData, async resp => {
             await loadAvatar(resp.data._id, () => {
-                this.props.history.push('/sign-in');
+                this.props.showNotification({
+                    message: 'Avatar atualizado com sucesso! 👻👻',
+                    variant: 'success',
+                    callback: () => this.props.history.push('/dashboard')
+                })
             });
         }, err => {
             this.props.showNotification({
@@ -105,7 +109,7 @@ class AccountProfile extends Component {
                 <PortletFooter>
                     <div>
                         <input
-                            accept="image/png"
+                            accept="image/*"
                             className={classes.inputFile}
                             id="contained-button-file"
                             onChange={this.handleCaptureImage}
