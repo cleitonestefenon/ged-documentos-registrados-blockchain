@@ -4,11 +4,11 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 // Views
 import Dashboard from './views/Dashboard';
 import ProductList from './views/ProductList';
-import DocumentsRegistration from './views/DocumentsRegistration';
+import Documents from './views/Documents';
 import Typography from './views/Typography';
-import Icons from './views/DocumentsRegistration/components/DocumentUpload';
+import Icons from './views/Documents/components/DocumentUpload';
 import Account from './views/Account';
-import Document from './views/Documents';
+import Organizations from './views/Organizations';
 import Settings from './views/Settings';
 import SignUp from './views/SignUp';
 import SignIn from './views/SignIn';
@@ -48,7 +48,7 @@ export default class Routes extends Component {
                 />
 
                 <PrivateRoute
-                    component={DocumentsRegistration}
+                    component={Documents}
                     exact
                     path="/upload"
                 />
@@ -69,9 +69,9 @@ export default class Routes extends Component {
                     path="/account"
                 />
                 <PrivateRoute
-                    component={Document}
+                    component={Organizations}
                     exact
-                    path="/documents"
+                    path="/Organizations"
                 />
                 <PrivateRoute
                     component={Settings}

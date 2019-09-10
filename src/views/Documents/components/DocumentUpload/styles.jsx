@@ -7,6 +7,7 @@ export default theme => ({
             justifyContent: 'center',
             alignItems: 'center',
             border: '2px dashed #999',
+            cursor: 'pointer'
 
       },
       upload: {
@@ -16,6 +17,7 @@ export default theme => ({
       },
       areaUploadIcon: {
             justifyContent: 'center',
+            alignItems: 'center',
             display: 'block'
-      },
+      }
 });

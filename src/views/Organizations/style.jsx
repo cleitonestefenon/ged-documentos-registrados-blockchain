@@ -10,9 +10,5 @@ export default theme => ({
     paddingBottom: '24px',
     display: 'flex',
     justifyContent: 'center'
-  },
-  listDivider: {
-    marginBottom: theme.spacing(3),
-    marginTop: theme.spacing(3),
   }
 });
