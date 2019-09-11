@@ -12,17 +12,35 @@ import Dropzone from 'react-dropzone';
 
 // Component styles
 import styles from './styles'
+import { file } from '@babel/types';
 
 
 class Upload extends Component {
+
+    state = {
+        uploadDocuments: []
+    }
+
+    renderDragMessage = (isDragActive) => {
+        if(!isDragActive) {
+            return <p>Clique aqui ou arraste um arquivo para registrá-lo</p>
+        } else {
+            return <p>Solte o arquivo para registrá-lo</p>
+        }
+    }
+
+    onDocuments = (upload) => {
+        console.log(upload);
+    }
+
+
     render() {
         const { classes } = this.props;
-
-        //https://www.youtube.com/watch?v=G5UZmvkLWSQ
-
         return (
             <div className={classes.upload}>
-                <Dropzone onDropAccepted={() => { }}>
+                <Dropzone maxSize='1' onDropAccepted={event => {
+                    this.onDocuments(event);
+                }}>
                     {({ getRootProps, getInputProps, isDragActive }) => (
 
                         <div
@@ -32,8 +50,8 @@ class Upload extends Component {
                         >
                             <input {...getInputProps()} />
                             <div className={classes.areaUploadIcon}>
-                                <img src={uploadImage} width='64px' height='64px' alt='Upload Image' style={{width: '100%'}} />                               
-                                <p>Clique aqui ou arraste um arquivo para registrá-lo</p>
+                                <img src={uploadImage} width='64px' height='74px' alt='Upload Image' style={{width: '100%'}} />                               
+                                {this.renderDragMessage(isDragActive)}
                             </div>
 
                         </div>

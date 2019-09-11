@@ -29,7 +29,6 @@ export const verifyWalletInformation = async (organizationId, onSuccess, onError
         })
         .catch(err => {
             onError(err);
-            console.log(err)
         })
 }
 
