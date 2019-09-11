@@ -20,23 +20,27 @@ import { UsersToolbar, UsersTable } from './components';
 
 // Component styles
 import styles from './style';
-import { getDocuments } from './components/requests';
 
-class DocumentsList extends Component {
+import { findAllOrganizations } from './components/requests';
+
+class Organizations extends Component {
     signal = true;
 
     state = {
         isLoading: false,
-        limit: 10,
+        limit: 25,
+        offset: 0,
         users: [],
         selectedUsers: [],
         error: null
     };
 
     loadDocuments = async () => {
-        const documents = await getDocuments();
+        const { limit, offset } = this.state;
 
-        console.log(documents)
+        const organizations = await findAllOrganizations(offset, limit);
+
+        console.log(organizations)
     }
 
     async getUsers() {
@@ -120,9 +124,9 @@ class DocumentsList extends Component {
     }
 }
 
-DocumentsList.propTypes = {
+Organizations.propTypes = {
     className: PropTypes.string,
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(DocumentsList);
+export default withStyles(styles)(Organizations);

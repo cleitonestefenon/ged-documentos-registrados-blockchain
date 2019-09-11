@@ -71,7 +71,7 @@ export default class Routes extends Component {
                 <PrivateRoute
                     component={Organizations}
                     exact
-                    path="/Organizations"
+                    path="/organizations"
                 />
                 <PrivateRoute
                     component={Settings}

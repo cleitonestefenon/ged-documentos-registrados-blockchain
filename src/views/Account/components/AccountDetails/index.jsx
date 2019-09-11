@@ -40,6 +40,8 @@ import { withFormik } from 'formik';
 // Yup validator
 import * as Yup from "yup";
 
+import { criptografar, descriptografar } from 'common/cryptography';
+
 //functions
 import { defaultFormMessages } from 'common/form';
 import { formHasError } from './functions';
@@ -224,7 +226,14 @@ class Account extends Component {
                                                 <IconButton
                                                     edge="end"
                                                     aria-label="toggle password visibility"
-                                                    onClick={() => this.setState({ ...this.state, visibilityPrivateKey: !visibilityPrivateKey })}
+                                                    onClick={() => {
+                                                        if(visibilityPrivateKey === false){
+                                                            this.props.setFieldValue('privatekey', descriptografar(values.privatekey))
+                                                        } else {
+                                                            this.props.setFieldValue('privatekey', criptografar(values.privatekey))
+                                                        }
+                                                        this.setState({ ...this.state, visibilityPrivateKey: !visibilityPrivateKey })
+                                                    }}
                                                     onMouseDown={event => event.preventDefault}
                                                 >
                                                     {visibilityPrivateKey ? <VisibilityOff /> : <Visibility />}

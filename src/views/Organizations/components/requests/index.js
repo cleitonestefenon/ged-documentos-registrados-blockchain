@@ -8,3 +8,9 @@ export async function getDocuments() {
 
     return await api.post(`${DOCS_SERVICE}/doc/find_transactions`, { organization });
 }
+
+export async function findAllOrganizations(offset, limit) {
+    const id = getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID);
+
+    return await api.get(`${DOCS_SERVICE}/organization/${id}/findSharedOrganizations/${offset}/${limit}`);
+}
