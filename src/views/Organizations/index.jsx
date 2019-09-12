@@ -31,6 +31,7 @@ class Organizations extends Component {
         limit: 25,
         offset: 0,
         users: [],
+        organizations: [],
         selectedUsers: [],
         error: null
     };
@@ -40,7 +41,7 @@ class Organizations extends Component {
 
         const organizations = await findAllOrganizations(offset, limit);
 
-        console.log(organizations)
+        this.setState({ organizations })
     }
 
     async getUsers() {
