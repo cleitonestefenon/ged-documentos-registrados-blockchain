@@ -9,14 +9,14 @@ export async function searchNotifications() {
     return await api.get(`${DOCS_SERVICE}/organization/${id}/findAllNotifications`);
 }
 
-export async function acceptInvite(organizationInterested) {
-    const organizationInvited = getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID);
+export async function acceptInvite(interestedid) {
+    const invitedid = getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID);
 
-    return await api.post(`${DOCS_SERVICE}/organization/accept_invite`, { organizationInterested, organizationInvited });
+    return await api.post(`${DOCS_SERVICE}/organization/accept_invite`, { interestedid, invitedid });
 }
 
-export async function rejectInvitation(organizationInterested) {
-    const organizationInvited = getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID);
+export async function rejectInvitation(interestedid) {
+    const invitedid = getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID);
 
-    return await api.post(`${DOCS_SERVICE}/organization/reject_invitation`, { organizationInterested, organizationInvited });
+    return await api.post(`${DOCS_SERVICE}/organization/reject_invitation`, { interestedid, invitedid });
 }

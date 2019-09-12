@@ -70,7 +70,7 @@ class Account extends Component {
 
         await getWalletInformation(organizationId, resp => {
             resetForm(resp.data.wallet);
-        }, err => {            
+        }, err => {
             if (err.error) {
                 this.props.showNotification({
                     message: err.error,
@@ -80,7 +80,7 @@ class Account extends Component {
                     }
                 })
             } else {
-                this.props.showNotification({                    
+                this.props.showNotification({
                     message: 'Você ainda não configurou sua carteira!? 🤔🤔',
                     variant: 'warning',
                     callback: () => {
@@ -227,7 +227,7 @@ class Account extends Component {
                                                     edge="end"
                                                     aria-label="toggle password visibility"
                                                     onClick={() => {
-                                                        if(visibilityPrivateKey === false){
+                                                        if (visibilityPrivateKey === false) {
                                                             this.props.setFieldValue('privatekey', descriptografar(values.privatekey))
                                                         } else {
                                                             this.props.setFieldValue('privatekey', criptografar(values.privatekey))

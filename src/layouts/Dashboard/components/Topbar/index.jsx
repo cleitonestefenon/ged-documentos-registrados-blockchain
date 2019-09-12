@@ -39,9 +39,9 @@ import SearchOptionsList from './components/SearchOptionsList';
 import { getNumberOfNotifications } from './requests';
 
 const searchOptions = [
-	{ label: 'Nome', value: 'name', icon: 'N', inputLabel: "por nome..." },
-	{ label: 'Chave pública', value: 'publickey', icon: 'C', inputLabel: "pela chave pública..." },
-	{ label: 'Endereço', value: 'address', icon: 'E', inputLabel: "pelo endereço..." }
+	{ label: 'Nome', value: 'name', inputLabel: "por nome..." },
+	{ label: 'Chave pública', value: 'publickey', inputLabel: "pela chave pública..." },
+	{ label: 'Endereço', value: 'address', inputLabel: "pelo endereço..." }
 ]
 
 class Topbar extends Component {
@@ -79,21 +79,21 @@ class Topbar extends Component {
 		history.push('/sign-in');
 	};
 
+	handleShowOrganizations = event => {
+		this.setState({
+			searchEl: event.currentTarget
+		});
+	};
+
 	handleShowNotifications = event => {
 		this.setState({
 			notificationsEl: event.currentTarget
 		});
 	};
 
-	handleCloseNotifications = () => {
+	handleShowSearchFilter = event => {
 		this.setState({
-			notificationsEl: null
-		});
-	};
-
-	handleShowOrganizations = () => {
-		this.setState({
-			searchEl: document.getElementById("inputBaseSearchFilter")
+			searchFilterEl: event.currentTarget
 		});
 	};
 
@@ -103,9 +103,9 @@ class Topbar extends Component {
 		});
 	};
 
-	handleShowSearchFilter = event => {
+	handleCloseNotifications = () => {
 		this.setState({
-			searchFilterEl: event.currentTarget
+			notificationsEl: null
 		});
 	};
 
@@ -160,7 +160,6 @@ class Topbar extends Component {
 							</Tooltip>
 							<Tooltip title="Conecte-se com outras organizações para trocar documentos">
 								<InputBase
-									id="inputBaseSearchFilter"
 									className={classes.inputSearch}
 									onChange={this.onChangeInput}
 									placeholder={`Pesquisar organização ${filterSelected.inputLabel}`}
@@ -207,10 +206,10 @@ class Topbar extends Component {
 
 				<Popover
 					anchorEl={searchEl}
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
 					onClose={this.handleCloseOrganizations}
 					open={showOrganizations}
-					transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+					transformOrigin={{ vertical: 'top', horizontal: 'left' }}
 				>
 					<OrganizationList
 						searchInputValue={searchInputValue}

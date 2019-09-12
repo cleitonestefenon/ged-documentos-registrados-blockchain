@@ -106,7 +106,7 @@ class OrganizationList extends Component {
 	sendSolicitation = organization => {
 		const { organizations } = this.state;
 
-		sendInvite(organization.id, () => {
+		sendInvite(organization.id, resp => {
 			this.setState({
 				organizations: removeElementOfList(organizations, false, 'id', organization.id)
 			})

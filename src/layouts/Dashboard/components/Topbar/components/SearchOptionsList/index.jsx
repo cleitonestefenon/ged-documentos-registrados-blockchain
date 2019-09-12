@@ -12,8 +12,6 @@ import {
 	List,
 	ListItem,
 	ListItemText,
-	ListItemAvatar,
-	Avatar,
 } from '@material-ui/core';
 
 // Component styles
@@ -38,11 +36,6 @@ class SearchOptionsList extends Component {
 								button
 								dense
 							>
-								<ListItemAvatar>
-									<Avatar>
-										{option.icon}
-									</Avatar>
-								</ListItemAvatar>
 								<ListItemText id={labelId} primary={option.label} />
 								<ListItemSecondaryAction>
 									<Radio

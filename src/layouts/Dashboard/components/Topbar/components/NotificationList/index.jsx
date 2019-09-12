@@ -5,7 +5,13 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 // Material helpers
-import { withStyles, ListItemAvatar, Avatar, Tooltip, IconButton } from '@material-ui/core';
+import {
+	withStyles,
+	ListItemAvatar,
+	Avatar,
+	Tooltip,
+	IconButton
+} from '@material-ui/core';
 
 // Material components
 import {
@@ -22,7 +28,11 @@ import { Check, Close } from '@material-ui/icons';
 // Component styles
 import styles from './styles';
 
-import { searchNotifications, acceptInvite, rejectInvitation } from './requests';
+import {
+	searchNotifications,
+	acceptInvite,
+	rejectInvitation
+} from './requests';
 
 class NotificationList extends Component {
 
@@ -41,9 +51,16 @@ class NotificationList extends Component {
 	refleshNotifications = async () => {
 		const { data } = await searchNotifications();
 
-		this.setState({
-			notifications: data.organizationsInteresteds
+		const notifications = data.organizationsInteresteds && data.organizationsInteresteds.map(el => {
+			return {
+				id: el['Interested.id'],
+				name: el['Interested.name'],
+				email: el['Interested.email'],
+				oidphoto: el['Interested.oidphoto']
+			};
 		})
+
+		this.setState({ notifications })
 	}
 
 	acceptSolicitation = async solicitation => {
@@ -58,7 +75,7 @@ class NotificationList extends Component {
 		await rejectInvitation(solicitation.id);
 
 		this.refleshNotifications();
-		
+
 		await this.props.onSelect();
 	}
 

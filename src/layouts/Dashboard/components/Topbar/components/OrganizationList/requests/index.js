@@ -5,7 +5,7 @@ import { KEY_STORAGE } from 'common/localstorage/const';
 
 export const findOrganizationByName = async (value, offset, limit, onSuccess) => {
     const id = getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID);
-    const resp = await api.get(`${DOCS_SERVICE}/organization/${id}/findByName/${value || 'a'}/${offset}/${limit}`);
+    const resp = await api.get(`${DOCS_SERVICE}/organization/${id}/findByName/${value || ' '}/${offset}/${limit}`);
 
     onSuccess && onSuccess(resp);
 }
@@ -24,10 +24,10 @@ export const findOrganizationByPublicKey = async (value, offset, limit, onSucces
     onSuccess && onSuccess(resp);
 }
 
-export const sendInvite = async (organizationInvited, onSuccess) => {
+export const sendInvite = async (invitedid, onSuccess) => {
     const resp = await api.post(`${DOCS_SERVICE}/organization/send_invite`, {
-        organizationInterested: getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID),
-        organizationInvited
+        interestedid: getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID),
+        invitedid
     });
 
     onSuccess && onSuccess(resp);
