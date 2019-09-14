@@ -11,6 +11,7 @@ export async function getDocuments() {
 
 export async function findAllOrganizations(offset, limit) {
     const id = getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID);
-
-    return await api.get(`${DOCS_SERVICE}/organization/${id}/findSharedOrganizations/${offset}/${limit}`);
+    const resp = await api.get(`${DOCS_SERVICE}/organization/${id}/findSharedOrganizations/${offset}/${limit}`);
+    resp.data.map(friend => {console.log(friend.Invited)}) 
+    return resp
 }

@@ -23,7 +23,7 @@ import { DisplayMode, SearchInput } from 'components';
 // Component styles
 import styles from './styles';
 
-class UsersToolbar extends Component {
+class OrganizationToolbar extends Component {
   render() {
     const { classes, className, selectedUsers } = this.props;
 
@@ -77,14 +77,14 @@ class UsersToolbar extends Component {
   }
 }
 
-UsersToolbar.propTypes = {
+OrganizationToolbar.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
   selectedUsers: PropTypes.array
 };
 
-UsersToolbar.defaultProps = {
+OrganizationToolbar.defaultProps = {
   selectedUsers: []
 };
 
-export default withStyles(styles)(UsersToolbar);
+export default withStyles(styles)(OrganizationToolbar);
