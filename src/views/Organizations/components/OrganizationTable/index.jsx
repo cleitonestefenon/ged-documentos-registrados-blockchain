@@ -32,7 +32,7 @@ import { Portlet, PortletContent } from 'components';
 import { findAllOrganizations } from '../requests';
 import { async } from 'q';
 
-class OrganizationTable extends Component { 
+class OrganizationTable extends Component {
   state = {
     selectedOrganizations: [],
     organizations: [],
@@ -40,13 +40,18 @@ class OrganizationTable extends Component {
     page: 0 //offset
   };
 
-	searchOrganization = async () => {    
-    const { page, rowsPerPage } = this.props;
+  componentDidMount() {
+    this.searchOrganizations();
+  }
 
+  searchOrganizations = async () => {
+    const { page, rowsPerPage } = this.state;
     await findAllOrganizations(page, rowsPerPage, resp => {
-      this.setState({ 
-        organizations: resp.data  
+      this.setState({
+        organizations: resp
       })
+    }, err => {
+
     })
   }
 
@@ -102,7 +107,7 @@ class OrganizationTable extends Component {
   render() {
     const { classes, className, friend, users } = this.props;
     const { activeTab, organizations, rowsPerPage, page, searchOrganization } = this.state;
-
+    
     const rootClassName = classNames(classes.root, className);
 
     return (
@@ -114,36 +119,20 @@ class OrganizationTable extends Component {
                 <TableRow>
                   <TableCell align="left">
                     <Checkbox
-                      checked={organizations.length === users.length}
+                      checked={false}
                       color="primary"
-                      indeterminate={
-                        organizations.length > 0 &&
-                        organizations.length < users.length
-                      }
-                      onChange={this.handleSelectAll}
+                      indeterminate={false}
+                      onChange={() => {}}
                     />
-                    Name
+                    Nome
                   </TableCell>
-                  <TableCell align="left">ID</TableCell>
-                  <TableCell align="left">State</TableCell>
-                  <TableCell align="left">Phone</TableCell>
-                  <TableCell align="left">Registration date</TableCell>
+                  <TableCell align="left">E-mail</TableCell>
+                  <TableCell align="left">Status</TableCell>
+                  <TableCell align="left">Chave Pública</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {organizations
-                  .filter(friend => {
-                    if (activeTab === 1) {
-                      return !friend.returning;
-                    }
-
-                    if (activeTab === 2) {
-                      return friend.returning;
-                    }
-
-                    return friend;
-                  })
-                  .slice(0, rowsPerPage)
                   .map(friend => (
                     <TableRow
                       className={classes.tableRow}
@@ -178,13 +167,13 @@ class OrganizationTable extends Component {
                         </div>
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {friend.id}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {friend.address.email}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
                         {friend.email}
+                      </TableCell>
+                      <TableCell className={classes.tableCell}>
+                        {friend.match ? 'Aceitou' : 'Aguardando'}
+                      </TableCell>
+                      <TableCell className={classes.tableCell}>
+                        {friend.publickey}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
                         {moment(friend.email).format('DD/MM/YYYY')}
@@ -226,8 +215,10 @@ OrganizationTable.propTypes = {
 
 OrganizationTable.defaultProps = {
   users: [],
-  onSelect: () => {},
-  onShowDetails: () => {}
+  onSelect: () => { },
+  onShowDetails: () => { }
 };
+
+
 
 export default withStyles(styles)(OrganizationTable);
