@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import compose from 'recompose/compose';
 
 // Material helpers
-import { withStyles, Tooltip } from '@material-ui/core';
+import { withStyles, Tooltip, Grid, CircularProgress } from '@material-ui/core';
 
 // Material components
 import { Avatar, Typography, Button } from '@material-ui/core';
@@ -24,8 +24,8 @@ import { withRouter } from 'react-router-dom';
 import styles from './styles';
 
 // Functions
-import { getUserIP, saveAvatar } from './requests';
-import { getFromSessionStorage } from 'common/localstorage';
+import { getUserIP, saveAvatar, removeAvatar } from './requests';
+import { getFromSessionStorage, saveAsSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
 import { loadAvatar } from 'common/functions';
 import { showNotification } from 'config/actions';
@@ -39,7 +39,8 @@ class AccountProfile extends Component {
         this.state = {
             name: '',
             ip: '',
-            avatar: getFromSessionStorage(KEY_STORAGE.AVATAR)
+            loading: false,
+            avatar: getFromSessionStorage(KEY_STORAGE.AVATAR),
         }
     }
 
@@ -50,34 +51,70 @@ class AccountProfile extends Component {
         this.setState({ ip, name })
     }
 
-    arrayBufferToBase64 = buffer => {
-        var binary = '';
-        var bytes = [].slice.call(new Uint8Array(buffer));
+    showLoading = () => {
+        this.setState({ loading: true })
+    }
 
-        bytes.forEach((b) => binary += String.fromCharCode(b));
+    hiddenLoading = () => {
+        this.setState({ loading: false })
+    }
 
-        return window.btoa(binary);
-    };
+    handleCaptureImage = ({ target }) => {
 
-    handleCaptureImage = async ({ target }) => {
+        this.showLoading();
+
         const formData = new FormData();
         formData.append('file', target.files[0]);
 
-        await saveAvatar(formData, async resp => {
-            await loadAvatar(resp.data._id, () => {
+        saveAvatar(formData, resp => {
+            loadAvatar(resp.data._id, () => {
                 this.props.showNotification({
                     message: 'Avatar atualizado com sucesso! 👻👻',
                     variant: 'success',
-                    callback: () => this.props.history.push('/dashboard')
+                    callback: () => {
+                        this.hiddenLoading();
+                        saveAsSessionStorage(KEY_STORAGE.AVATAR_ID, resp.data._id);
+                        window.location.reload();
+                    }
                 })
             });
         }, err => {
             this.props.showNotification({
                 message: 'Esse arquivo infelizmente não é suportado. 😢😢',
-                variant: 'error'
+                variant: 'error',
+                callback: () => {
+                    this.hiddenLoading();
+                }
             })
         })
     };
+
+    deleteAvatar = () => {
+
+        this.showLoading();
+
+        removeAvatar(() => {
+            this.props.showNotification({
+                message: 'Avatar removido com sucesso ✌✌',
+                variant: 'success',
+                callback: () => {
+                    this.hiddenLoading();
+                    saveAsSessionStorage(KEY_STORAGE.AVATAR, '');
+                    saveAsSessionStorage(KEY_STORAGE.AVATAR_ID, '');
+                    window.location.reload();
+                }
+            })
+            this.setState({ avatar: null, loading: false })
+        }, err => {
+            this.props.showNotification({
+                message: 'Ops, alguma coisa deu errado. Tente daqui a pouco!',
+                variant: 'error',
+                callback: () => {
+                    this.hiddenLoading();
+                }
+            })
+        });
+    }
 
     render() {
         const { classes, className, ...rest } = this.props;
@@ -90,21 +127,33 @@ class AccountProfile extends Component {
                 className={rootClassName}
             >
                 <PortletContent>
-                    <div className={classes.details}>
-                        <div className={classes.info}>
-                            <Typography variant="h2">{this.state.name}</Typography>
-                            <Typography
-                                className={classes.locationText}
-                                variant="body1"
-                            >
-                                {this.state.ip}
-                            </Typography>
-                        </div>
-                        <Avatar
-                            className={classes.avatar}
-                            src={this.state.avatar || "/images/avatars/avatar_default.png"}
-                        />
-                    </div>
+                    {this.state.loading ? (
+                        <Grid container justify="center" alignItems="center">
+                            <CircularProgress />
+                        </Grid>
+                    ) : (
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm container>
+                                    <Grid item xs container direction="column" spacing={2}>
+                                        <Grid item xs>
+                                            <Typography noWrap={false} variant="h4">
+                                                {this.state.name}
+                                            </Typography>
+                                            <Typography variant="h6">
+                                                {this.state.ip}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item>
+                                    <Avatar
+                                        className={classes.avatar}
+                                        src={this.state.avatar || "/images/avatars/avatar_default.png"}
+                                    />
+                                </Grid>
+                            </Grid>
+                        )
+                    }
                 </PortletContent>
                 <PortletFooter>
                     <div>
@@ -116,14 +165,17 @@ class AccountProfile extends Component {
                             type="file"
                         />
                         <label htmlFor="contained-button-file">
-                            <Tooltip title="É possível carregar apenas imagens do tipo .png">
-                                <Button component="span" className={classes.profileButton}>
-                                    Trocar avatar
-                                </Button>
-                            </Tooltip>
+                            <Button component="span" className={classes.profileButton}>
+                                Trocar avatar
+                            </Button>
                         </label>
                     </div>
-                    <Button disabled={!this.state.organizationAvatar} variant="text" className={classes.profileButton}>
+                    <Button
+                        disabled={!this.state.avatar}
+                        variant="text"
+                        className={classes.profileButton}
+                        onClick={this.deleteAvatar}
+                    >
                         Remover avatar
 					</Button>
                 </PortletFooter>

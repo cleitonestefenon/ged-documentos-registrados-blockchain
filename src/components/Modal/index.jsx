@@ -22,12 +22,24 @@ export default function AlertDialog({ open, handleClose, dialogTitle, dialogCont
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button hidden={!onAgreeClick} onClick={onAgreeClick} color="primary" autoFocus>
-                    {agreeNameButton}
-                </Button>
-                <Button hidden={!onDisagreeClick} onClick={onDisagreeClick} color="secondary">
-                    {disagreeNameButton}
-                </Button>
+                {onAgreeClick && onDisagreeClick ? (
+                    <React.Fragment>
+                        <Button hidden={!onAgreeClick} onClick={onAgreeClick} color="primary" autoFocus>
+                            {agreeNameButton}
+                        </Button>
+                        <Button hidden={!onDisagreeClick} onClick={onDisagreeClick} color="secondary">
+                            {disagreeNameButton}
+                        </Button>
+                    </React.Fragment>
+                ) : !onAgreeClick ? (
+                    <Button hidden={!onDisagreeClick} onClick={onDisagreeClick} color="secondary">
+                        {disagreeNameButton}
+                    </Button>
+                ) : !onDisagreeClick ? (
+                    <Button hidden={!onAgreeClick} onClick={onAgreeClick} color="primary" autoFocus>
+                        {agreeNameButton}
+                    </Button>
+                ) : null}
             </DialogActions>
         </Dialog>
     );

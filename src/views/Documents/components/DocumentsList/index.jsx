@@ -8,19 +8,19 @@ import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // Material helpers
-import { withStyles } from '@material-ui/core';
+import { withStyles, Button, IconButton, Badge, Menu, MenuItem, ListItemText, Grid, CircularProgress } from '@material-ui/core';
 
 // Material components
 import {
-  Avatar,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-  TablePagination
+	Avatar,
+	Checkbox,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+	Typography,
+	TablePagination
 } from '@material-ui/core';
 
 // Shared helpers
@@ -29,191 +29,183 @@ import { getInitials } from 'helpers';
 // Component styles
 import styles from './styles';
 import { Portlet, PortletContent } from 'components';
+import { loadAllTransactions } from '../requests';
+import { Check, Close, MoreVert } from '@material-ui/icons';
 
 class DocumentsList extends Component {
-  state = {
-    selectedUsers: [],
-    rowsPerPage: 10,
-    page: 0
-  };
+	state = {
+		transactions: [],
+		loading: false,
+		anchorEl: null,
+		rowsPerPage: 10,
+		page: 0
+	};
 
-  handleSelectAll = event => {
-    const { users, onSelect } = this.props;
+	componentDidMount() {
+		this.getTransactions();
+	}
 
-    let selectedUsers;
+	getTransactions = () => {
+		const { page, rowsPerPage } = this.state;
 
-    if (event.target.checked) {
-      selectedUsers = users.map(user => user.id);
-    } else {
-      selectedUsers = [];
-    }
+		this.showLoading();
 
-    this.setState({ selectedUsers });
+		loadAllTransactions(page, rowsPerPage, transactions => {
+			this.setState({ transactions, loading: false });
+		}, err => {
+			this.hiddenLoading();
+			console.error(err);
+		})
+	}
 
-    onSelect(selectedUsers);
-  };
+	showLoading = () => {
+		this.setState({ loading: true })
+	}
 
-  handleSelectOne = (event, id) => {
-    const { onSelect } = this.props;
-    const { selectedUsers } = this.state;
+	hiddenLoading = () => {
+		this.setState({ loading: false })
+	}
 
-    const selectedIndex = selectedUsers.indexOf(id);
-    let newSelectedUsers = [];
+	handleChangePage = async (event, page) => {
+		await this.setState({ page });
+		this.getTransactions();
+	};
 
-    if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
-    } else if (selectedIndex === 0) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1));
-    } else if (selectedIndex === selectedUsers.length - 1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedUsers = newSelectedUsers.concat(
-        selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1)
-      );
-    }
+	handleChangeRowsPerPage = async event => {
+		await this.setState({ rowsPerPage: event.target.value });
+		this.getTransactions();
+	};
 
-    this.setState({ selectedUsers: newSelectedUsers });
+	handleClick = event => {
+		this.setState({ anchorEl: event.currentTarget })
+	}
 
-    onSelect(newSelectedUsers);
-  };
+	handleClose = () => {
+		this.setState({ anchorEl: null })
+	}
 
-  handleChangePage = (event, page) => {
-    this.setState({ page });
-  };
+	render() {
+		const { classes, className } = this.props;
+		const { rowsPerPage, page, transactions, anchorEl, loading } = this.state;
 
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
-  };
+		const rootClassName = classNames(classes.root, className);
 
-  render() {
-    const { classes, className, users } = this.props;
-    const { activeTab, selectedUsers, rowsPerPage, page } = this.state;
+		return (
+			<Portlet className={rootClassName}>
+				<PortletContent noPadding>
+					<PerfectScrollbar>
+						{loading ? (
+							<Grid container justify="center" alignItems="center" className={classes.loading}>
+								<CircularProgress />
+							</Grid>
+						) : (
+								<Table size="small">
+									<TableHead>
+										<TableRow>
+											<TableCell align="left">Transação</TableCell>
+											<TableCell align="left">Confirmações</TableCell>
+											<TableCell align="left">Confirmada</TableCell>
+											<TableCell align="left">Data registro</TableCell>
+											<TableCell align="left">Ações</TableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{transactions ? transactions.map(el => (
+											<TableRow
+												className={classes.tableRow}
+												hover
+												key={el.id}
+											>
+												<TableCell
+													align="center"
+													className={classes.tableCell}
+												>
+													<Typography variant="body1">{el.transaction}</Typography>
+												</TableCell>
 
-    const rootClassName = classNames(classes.root, className);
+												<TableCell
+													align="center"
+													className={classes.tableCell}
+												>
+													{el.confirmations > 6 ? (
+														<Badge max={6} color="primary" variant="standard" badgeContent={el.confirmations} />
+													) : (
+															<Badge max={6} color="error" badgeContent={el.confirmations} />
+														)
+													}
+												</TableCell>
 
-    return (
-      <Portlet className={rootClassName}>
-        <PortletContent noPadding>
-          <PerfectScrollbar>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="left">
-                    <Checkbox
-                      checked={selectedUsers.length === users.length}
-                      color="primary"
-                      indeterminate={
-                        selectedUsers.length > 0 &&
-                        selectedUsers.length < users.length
-                      }
-                      onChange={this.handleSelectAll}
-                    />
-                    Name
-                  </TableCell>
-                  <TableCell align="left">ID</TableCell>
-                  <TableCell align="left">State</TableCell>
-                  <TableCell align="left">Phone</TableCell>
-                  <TableCell align="left">Registration date</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {users
-                  .filter(user => {
-                    if (activeTab === 1) {
-                      return !user.returning;
-                    }
+												<TableCell
+													align="center"
+													className={classes.tableCell}
+												>
+													{el.confirmed ? <Check color="primary" /> : <Close color="error" />}
+												</TableCell>
 
-                    if (activeTab === 2) {
-                      return user.returning;
-                    }
+												<TableCell
+													align="center"
+													className={classes.tableCell}
+												>
+													{moment(el.createdAt).format('DD/MM/YYYY')}
+												</TableCell>
 
-                    return user;
-                  })
-                  .slice(0, rowsPerPage)
-                  .map(user => (
-                    <TableRow
-                      className={classes.tableRow}
-                      hover
-                      key={user.id}
-                      selected={selectedUsers.indexOf(user.id) !== -1}
-                    >
-                      <TableCell className={classes.tableCell}>
-                        <div className={classes.tableCellInner}>
-                          <Checkbox
-                            checked={selectedUsers.indexOf(user.id) !== -1}
-                            color="primary"
-                            onChange={event =>
-                              this.handleSelectOne(event, user.id)
-                            }
-                            value="true"
-                          />
-                          <Avatar
-                            className={classes.avatar}
-                            src={user.avatarUrl}
-                          >
-                            {getInitials(user.name)}
-                          </Avatar>
-                          <Link to="#">
-                            <Typography
-                              className={classes.nameText}
-                              variant="body1"
-                            >
-                              {user.name}
-                            </Typography>
-                          </Link>
-                        </div>
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {user.id}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {user.address.state}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {user.phone}
-                      </TableCell>
-                      <TableCell className={classes.tableCell}>
-                        {moment(user.createdAt).format('DD/MM/YYYY')}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </PerfectScrollbar>
-          <TablePagination
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            component="div"
-            count={users.length}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
-        </PortletContent>
-      </Portlet>
-    );
-  }
+												<TableCell
+													align="center"
+													className={classes.tableCell}
+												>
+													<IconButton size="medium">
+														<MoreVert onClick={this.handleClick} />
+													</IconButton>
+												</TableCell>
+											</TableRow>
+										)) : null}
+									</TableBody>
+								</Table>
+							)}
+					</PerfectScrollbar>
+					<TablePagination
+						backIconButtonProps={{
+							'aria-label': 'Previous Page'
+						}}
+						component="div"
+						count={transactions.length}
+						nextIconButtonProps={{
+							'aria-label': 'Next Page'
+						}}
+						onChangePage={this.handleChangePage}
+						onChangeRowsPerPage={this.handleChangeRowsPerPage}
+						page={page}
+						rowsPerPage={rowsPerPage}
+						rowsPerPageOptions={[5, 10, 25]}
+					/>
+					<Menu
+						anchorEl={anchorEl}
+						keepMounted
+						open={Boolean(anchorEl)}
+						onClose={this.handleClose}
+					>
+						<MenuItem>
+							<ListItemText primary="Detalhar" />
+						</MenuItem>
+					</Menu>
+				</PortletContent>
+			</Portlet>
+		);
+	}
 }
 
 DocumentsList.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired,
-  onSelect: PropTypes.func,
-  onShowDetails: PropTypes.func,
-  users: PropTypes.array.isRequired
+	className: PropTypes.string,
+	classes: PropTypes.object.isRequired,
+	onSelect: PropTypes.func,
+	onShowDetails: PropTypes.func,
+	transactions: PropTypes.array.isRequired
 };
 
 DocumentsList.defaultProps = {
-  users: [],
-  onSelect: () => {},
-  onShowDetails: () => {}
+	transactions: [],
+	onSelect: () => { },
+	onShowDetails: () => { }
 };
 
 export default withStyles(styles)(DocumentsList);

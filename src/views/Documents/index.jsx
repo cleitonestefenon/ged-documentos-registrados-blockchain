@@ -12,7 +12,9 @@ import { withStyles, Divider } from '@material-ui/core';
 // Component styles
 import styles from './style';
 
+
 class DocumentsRegistration extends Component {
+
     render() {
 
         const { classes } = this.props;

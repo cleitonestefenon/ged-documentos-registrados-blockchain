@@ -3,60 +3,140 @@ import React, { Component } from 'react';
 // Externals
 import PropTypes from 'prop-types';
 
-import uploadImage from '../../../../icons/upload-para-a-nuvem.svg';
+// action redux
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+//Functions
+import { showNotification } from 'config/actions';
 
 // Material helpers
-import { withStyles } from '@material-ui/core';
-import Dropzone from 'react-dropzone';
+import { withStyles, Typography } from '@material-ui/core';
 
+// Components
+import Dropzone from 'react-dropzone';
+import WithDocument from './WithDocument';
+import AlertDialog from 'components/Modal';
 
 // Component styles
-import styles from './styles'
-import { file } from '@babel/types';
+import styles from './styles';
+
+//Functions
+import { registerDocument, loadAllTransactions } from '../requests';
+import { getBytesFromFile } from 'common/functions';
+import { SHA256 } from 'crypto-js';
+import WithoutDocument from './WithoutDocument';
+
+
 
 
 class Upload extends Component {
 
     state = {
-        uploadDocuments: []
+        document: null,
+        sha256: '',
+        loading: false,
+        openAlertDialog: false
     }
 
-    renderDragMessage = (isDragActive) => {
-        if(!isDragActive) {
-            return <p>Clique aqui ou arraste um arquivo para registrá-lo</p>
-        } else {
-            return <p>Solte o arquivo para registrá-lo</p>
-        }
+    onDropAccepted = event => {
+        this.setState({
+            document: event[0],
+            sha256: SHA256(getBytesFromFile(event[0]))
+        })
     }
 
-    onDocuments = (upload) => {
-        console.log(upload);
+    onClickRegister = async () => {
+        this.setState({ loading: true })
+
+        registerDocument(this.state.document, () => {
+            this.props.showNotification({
+                variant: 'success',
+                message: 'Documento enviado para registro ✔✔'
+            })
+        }, err => {
+            this.props.showNotification({
+                variant: 'error',
+                message: err && err.error || 'Não foi possível registrar este arquivo  😮😮',
+                callback: () => {
+                    if (err && err.response.data.transaction) {
+                        this.setState({
+                            openAlertDialog: true,
+                            transactionId: err.response.data.transaction.id
+                        })
+                    }
+                }
+            })
+        })
+        this.resetState()
     }
 
+    resetState = () => {
+        this.setState({
+            document: null,
+            sha256: '',
+            loading: false
+        })
+    }
+
+    onDropRejected = event => {
+        this.props.showNotification({
+            variant: 'error',
+            message: 'Não foi possível registrar este arquivo  😮😮'
+        })
+    }
+
+    clearDocumentSelected = () => {
+        this.setState({ document: null })
+    }
 
     render() {
+
         const { classes } = this.props;
+
+        const { document,
+            sha256,
+            openAlertDialog,
+            transactionId,
+            loading,
+            registredWithSuccess } = this.state;
+
         return (
-            <div className={classes.upload}>
-                <Dropzone maxSize='1' onDropAccepted={event => {
-                    this.onDocuments(event);
-                }}>
+            <div className={classes.content}>
+                <Dropzone
+                    maxSize={5000000}
+                    multiple={false}
+                    onDropAccepted={this.onDropAccepted}
+                    onDropRejected={this.onDropRejected}
+                    disabled={Boolean(document)}
+                >
                     {({ getRootProps, getInputProps, isDragActive }) => (
-
-                        <div
-                            className={classes.areaUpload}
-                            {...getRootProps()}
-                            isDragActive={isDragActive}
-                        >
-                            <input {...getInputProps()} />
-                            <div className={classes.areaUploadIcon}>
-                                <img src={uploadImage} width='64px' height='74px' alt='Upload Image' style={{width: '100%'}} />                               
-                                {this.renderDragMessage(isDragActive)}
-                            </div>
-
-                        </div>
+                        document && document ? (
+                            <WithDocument
+                                document={this.state.document}
+                                sha256={sha256}
+                                loading={loading}
+                                success={registredWithSuccess}
+                                onClickRegister={this.onClickRegister}
+                                clearDocumentSelected={this.clearDocumentSelected}
+                            />
+                        ) : (
+                                <WithoutDocument
+                                    getRootProps={getRootProps}
+                                    isDragActive={isDragActive}
+                                    getInputProps={getInputProps}
+                                />
+                            )
                     )}
                 </Dropzone>
+                <AlertDialog
+                    open={openAlertDialog}
+                    handleClose={() => this.setState({ openAlertDialog: false })}
+                    dialogTitle="Atenção, documento já registrado!"
+                    dialogContentText={`Este documento já foi registrado, você pode encontrá-lo pelo ID ${transactionId}`}
+                    onAgreeClick={() => this.setState({ openAlertDialog: false })}
+                    agreeNameButton="Confirmar"
+                />
             </div>
         );
     }
@@ -66,4 +146,6 @@ Upload.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Upload);
+const mapDispatchToProps = dispatch => bindActionCreators({ showNotification }, dispatch);
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(Upload));

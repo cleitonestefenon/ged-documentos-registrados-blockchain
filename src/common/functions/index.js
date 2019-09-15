@@ -26,3 +26,47 @@ export const removeElementOfList = (list, simple = true, field, valueOfElement) 
         }
     })
 }
+
+export function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+export function copyStringToClipboard (str) {
+    // Create new element
+    var el = document.createElement('textarea');
+    // Set value (string to be copied)
+    el.value = str;
+    // Set non-editable to avoid focus and move outside of view
+    el.setAttribute('readonly', '');
+    el.style = {position: 'absolute', left: '-9999px'};
+    document.body.appendChild(el);
+    // Select text inside element
+    el.select();
+    // Copy text to clipboard
+    document.execCommand('copy');
+    // Remove temporary element
+    document.body.removeChild(el);
+ }
+
+ export function getBytesFromFile(file) {
+    var reader = new FileReader();
+    let stringBytes = null;
+
+    reader.readAsArrayBuffer(file);
+
+    reader.onload = () => {
+        var arrayBuffer = reader.result
+        var bytes = new Uint8Array(arrayBuffer);
+        
+        stringBytes = bytes.toString();
+    }
+    return stringBytes + "";
+ }

@@ -1,23 +1,22 @@
 export default theme => ({
-      areaUpload: {
-            backgroundColor: '#ebebeb',
+      areaUploadWithoutDocument: {
             height: '150px',
             width: '80%',
             display: 'flex',
-            justifyContent: 'center',
             alignItems: 'center',
-            border: '2px dashed #999',
-            cursor: 'pointer'
-
+            justifyContent: 'center',
+            cursor: 'pointer',
+            boxShadow: theme.shadows[20],
+            margin: '30px'
       },
-      upload: {
+      content: {
             justifyContent: 'center',
             display: 'flex',
-            paddingTop: '30px'
       },
-      areaUploadIcon: {
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: 'block'
-      }
+      bigAvatar: {
+            margin: 10,
+            width: 60,
+            height: 60,
+          },
+
 });

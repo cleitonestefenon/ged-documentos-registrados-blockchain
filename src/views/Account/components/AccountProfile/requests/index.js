@@ -32,3 +32,16 @@ export const getAvatarById = async (id, onSuccess) => {
             onSuccess(resp.data.file)
         })
 }
+
+export const removeAvatar = async (onSuccess, onError) => {
+    const organizationId = getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID);
+    const avatarId = getFromSessionStorage(KEY_STORAGE.AVATAR_ID);
+
+    api.delete(`${DOCS_SERVICE}/organization/${organizationId}/remove_avatar/${avatarId}`)
+        .then(() => {
+            onSuccess()
+        })
+        .catch(err => {
+            onError && onError(err)
+        })
+}

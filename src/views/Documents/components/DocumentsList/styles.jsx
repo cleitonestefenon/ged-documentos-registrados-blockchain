@@ -18,10 +18,7 @@ export default theme => ({
     height: '36px',
     width: '36px'
   },
-  nameText: {
-    display: 'inline-block',
-    marginLeft: theme.spacing(2),
-    fontWeight: 500,
-    cursor: 'pointer'
+  loading: {
+    margin: theme.spacing(3)
   }
 });
