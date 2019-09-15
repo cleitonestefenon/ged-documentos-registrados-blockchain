@@ -99,7 +99,7 @@ class Organizations extends Component {
         }
 
         if (users.length === 0) {
-            return <Typography variant="h6">There are no users</Typography>;
+            return <Typography variant="h6">Você não possui nenhuma organização amiga</Typography>;
         }
 
         return (

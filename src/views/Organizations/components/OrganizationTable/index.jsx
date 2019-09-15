@@ -29,51 +29,69 @@ import { getInitials } from 'helpers';
 // Component styles
 import styles from './styles';
 import { Portlet, PortletContent } from 'components';
+import { findAllOrganizations } from '../requests';
+import { async } from 'q';
 
-class DocumentsTable extends Component {
+class OrganizationTable extends Component {
   state = {
-    selectedUsers: [],
-    rowsPerPage: 10,
-    page: 0
+    selectedOrganizations: [],
+    organizations: [],
+    rowsPerPage: 10, //limit
+    page: 0 //offset
   };
 
-  handleSelectAll = event => {
-    const { users, onSelect } = this.props;
+  componentDidMount() {
+    this.searchOrganizations();
+  }
 
-    let selectedUsers;
+  searchOrganizations = async () => {
+    const { page, rowsPerPage } = this.state;
+    await findAllOrganizations(page, rowsPerPage, resp => {
+      this.setState({
+        organizations: resp
+      })
+    }, err => {
+
+    })
+  }
+
+  handleSelectAll = event => {
+    const { users, onSelect, user } = this.props;
+
+    let selectedOrganizations;
 
     if (event.target.checked) {
-      selectedUsers = users.map(user => user.id);
+      selectedOrganizations = users.map(friend => user.id);
     } else {
-      selectedUsers = [];
+      selectedOrganizations = [];
     }
 
-    this.setState({ selectedUsers });
+    this.setState({ selectedOrganizations });
 
-    onSelect(selectedUsers);
+    onSelect(selectedOrganizations);
   };
 
   handleSelectOne = (event, id) => {
     const { onSelect } = this.props;
-    const { selectedUsers } = this.state;
+    const { selectedOrganizations } = this.state;
 
-    const selectedIndex = selectedUsers.indexOf(id);
+    const selectedIndex = selectedOrganizations.indexOf(id);
     let newSelectedUsers = [];
 
     if (selectedIndex === -1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers, id);
+      newSelectedUsers = newSelectedUsers.concat(selectedOrganizations, id);
     } else if (selectedIndex === 0) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(1));
-    } else if (selectedIndex === selectedUsers.length - 1) {
-      newSelectedUsers = newSelectedUsers.concat(selectedUsers.slice(0, -1));
+      newSelectedUsers = newSelectedUsers.concat(selectedOrganizations.slice(1));
+    } else if (selectedIndex === selectedOrganizations.length - 1) {
+      newSelectedUsers = newSelectedUsers.concat(selectedOrganizations.slice(0, -1));
     } else if (selectedIndex > 0) {
       newSelectedUsers = newSelectedUsers.concat(
-        selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1)
+        selectedOrganizations.slice(0, selectedIndex),
+        selectedOrganizations.slice(selectedIndex + 1)
       );
     }
 
-    this.setState({ selectedUsers: newSelectedUsers });
+    this.setState({ selectedOrganizations: newSelectedUsers });
 
     onSelect(newSelectedUsers);
   };
@@ -87,9 +105,9 @@ class DocumentsTable extends Component {
   };
 
   render() {
-    const { classes, className, users } = this.props;
-    const { activeTab, selectedUsers, rowsPerPage, page } = this.state;
-
+    const { classes, className, friend, users } = this.props;
+    const { activeTab, organizations, rowsPerPage, page, searchOrganization } = this.state;
+    
     const rootClassName = classNames(classes.root, className);
 
     return (
@@ -101,80 +119,64 @@ class DocumentsTable extends Component {
                 <TableRow>
                   <TableCell align="left">
                     <Checkbox
-                      checked={selectedUsers.length === users.length}
+                      checked={false}
                       color="primary"
-                      indeterminate={
-                        selectedUsers.length > 0 &&
-                        selectedUsers.length < users.length
-                      }
-                      onChange={this.handleSelectAll}
+                      indeterminate={false}
+                      onChange={() => {}}
                     />
-                    Name
+                    Nome
                   </TableCell>
-                  <TableCell align="left">ID</TableCell>
-                  <TableCell align="left">State</TableCell>
-                  <TableCell align="left">Phone</TableCell>
-                  <TableCell align="left">Registration date</TableCell>
+                  <TableCell align="left">E-mail</TableCell>
+                  <TableCell align="left">Status</TableCell>
+                  <TableCell align="left">Chave Pública</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users
-                  .filter(user => {
-                    if (activeTab === 1) {
-                      return !user.returning;
-                    }
-
-                    if (activeTab === 2) {
-                      return user.returning;
-                    }
-
-                    return user;
-                  })
-                  .slice(0, rowsPerPage)
-                  .map(user => (
+                {organizations
+                  .map(friend => (
                     <TableRow
                       className={classes.tableRow}
                       hover
-                      key={user.id}
-                      selected={selectedUsers.indexOf(user.id) !== -1}
+                      key={friend.id}
+                      selected={organizations.indexOf(friend.id) !== -1}
                     >
                       <TableCell className={classes.tableCell}>
                         <div className={classes.tableCellInner}>
                           <Checkbox
-                            checked={selectedUsers.indexOf(user.id) !== -1}
+                            checked={organizations.indexOf(friend.id) !== -1}
                             color="primary"
                             onChange={event =>
-                              this.handleSelectOne(event, user.id)
+                              this.handleSelectOne(event, friend.id)
                             }
                             value="true"
                           />
                           <Avatar
                             className={classes.avatar}
-                            src={user.avatarUrl}
+                            src={friend.avatarUrl}
                           >
-                            {getInitials(user.name)}
+                            {getInitials(friend.name)}
                           </Avatar>
                           <Link to="#">
                             <Typography
                               className={classes.nameText}
                               variant="body1"
                             >
-                              {user.name}
+                              {friend.name}
                             </Typography>
                           </Link>
                         </div>
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {user.id}
+                        {friend.email}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {user.address.state}
+                        {friend.match ? 'Aceitou' : 'Aguardando'}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {user.phone}
+                        {friend.publickey}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {moment(user.createdAt).format('DD/MM/YYYY')}
+                        {moment(friend.email).format('DD/MM/YYYY')}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -186,7 +188,7 @@ class DocumentsTable extends Component {
               'aria-label': 'Previous Page'
             }}
             component="div"
-            count={users.length}
+            //count={friend.length}
             nextIconButtonProps={{
               'aria-label': 'Next Page'
             }}
@@ -196,13 +198,14 @@ class DocumentsTable extends Component {
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[5, 10, 25]}
           />
+          {/* <button onClick={() => organizations.map(friend => {console.log(friend.Invited.name)})}>trazer</button> */}
         </PortletContent>
       </Portlet>
     );
   }
 }
 
-DocumentsTable.propTypes = {
+OrganizationTable.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
   onSelect: PropTypes.func,
@@ -210,10 +213,12 @@ DocumentsTable.propTypes = {
   users: PropTypes.array.isRequired
 };
 
-DocumentsTable.defaultProps = {
+OrganizationTable.defaultProps = {
   users: [],
-  onSelect: () => {},
-  onShowDetails: () => {}
+  onSelect: () => { },
+  onShowDetails: () => { }
 };
 
-export default withStyles(styles)(DocumentsTable);
+
+
+export default withStyles(styles)(OrganizationTable);
