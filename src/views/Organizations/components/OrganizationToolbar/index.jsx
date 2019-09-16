@@ -2,89 +2,108 @@ import React, { Component } from 'react';
 
 // Externals
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 // Material helpers
-import { withStyles } from '@material-ui/core';
-
-// Material components
-import { Button, IconButton } from '@material-ui/core';
-
-// Material icons
-import {
-  ArrowDownward as ArrowDownwardIcon,
-  ArrowUpward as ArrowUpwardIcon,
-  Delete as DeleteIcon
-} from '@material-ui/icons';
-
-// Shared components
-import { DisplayMode, SearchInput } from 'components';
+import { withStyles, Grid, Paper, InputBase, IconButton, Popover, Tooltip } from '@material-ui/core';
 
 // Component styles
 import styles from './styles';
 
+import { Search, Menu } from '@material-ui/icons';
+
+import OptionsList from './components/OptionsList';
+
+const searchOptions = [
+	{ label: 'Nome', value: 'name', inputLabel: "por nome..." },
+	{ label: 'E-mail', value: 'email', inputLabel: "pelo e-mail..." }
+]
+
 class OrganizationToolbar extends Component {
-  render() {
-    const { classes, className, selectedUsers } = this.props;
 
-    const rootClassName = classNames(classes.root, className);
+	constructor(props) {
+		super(props);
 
-    return (
-      <div className={rootClassName}>
-        <div className={classes.row}>
-          <span className={classes.spacer} />
-          {selectedUsers.length > 0 && (
-            <IconButton
-              className={classes.deleteButton}
-              onClick={this.handleDeleteUsers}
-            >
-              <DeleteIcon />
-            </IconButton>
-          )}
-          <Button
-            className={classes.importButton}
-            size="small"
-            variant="outlined"
-          >
-            <ArrowDownwardIcon className={classes.importIcon} /> Import
-          </Button>
-          <Button
-            className={classes.exportButton}
-            size="small"
-            variant="outlined"
-          >
-            <ArrowUpwardIcon className={classes.exportIcon} />
-            Export
-          </Button>
-          <Button
-            color="primary"
-            size="small"
-            variant="outlined"
-          >
-            Add
-          </Button>
-        </div>
-        <div className={classes.row}>
-          <SearchInput
-            className={classes.searchInput}
-            placeholder="Search user"
-          />
-          <span className={classes.spacer} />
-          <DisplayMode mode="list" />
-        </div>
-      </div>
-    );
-  }
+		this.state = {
+			popoverEl: null,
+			valueInputBase: '',
+			filterSelected: searchOptions[0]
+		}
+	}
+
+	handleCloseSearchFilter = () => {
+		this.setState({ popoverEl: null })
+	}
+
+	onSelectFilterOption = option => {
+		this.setState({ filterSelected: option });
+		this.handleCloseSearchFilter();
+	}
+
+	handleMenuOpen = event => {
+		this.setState({ popoverEl: event.currentTarget })
+	}
+
+	searchOrganizationsWithFilter = () => {
+		const { filterSelected, valueInputBase } = this.state;
+
+		this.props.searchOrganizations(filterSelected, valueInputBase);
+	}
+
+	handleChangeInputBase = e => {
+		this.setState({ valueInputBase: e.target.value })
+	}
+
+	render() {
+		const { classes } = this.props;
+		const { popoverEl, filterSelected, valueInputBase } = this.state;
+
+		return (
+			<Grid container direction="row" justify="center" alignItems="center">
+				<Paper className={classes.root}>
+					<IconButton
+						onClick={this.handleMenuOpen}
+						className={classes.iconButton}
+						aria-label="menu"
+					>
+						<Menu onClick={this.handleMenuOpen} />
+					</IconButton>
+					<InputBase
+						className={classes.input}
+						placeholder={`Pesquisar organização ${filterSelected.inputLabel}`}
+						onChange={this.handleChangeInputBase}
+						value={valueInputBase}
+					/>
+					<Tooltip title="Clique para efetuar a pesquisa">
+						<IconButton
+							className={classes.iconButton}
+							aria-label="search"
+						>
+							<Search onClick={this.searchOrganizationsWithFilter} />
+						</IconButton>
+					</Tooltip>
+				</Paper>
+				<Popover
+					open={Boolean(popoverEl)}
+					anchorEl={popoverEl}
+					onClose={this.handleCloseSearchFilter}
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+					transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+				>
+					<OptionsList
+						searchOptions={searchOptions}
+						onSelect={this.onSelectFilterOption}
+						filterSelected={filterSelected}
+					/>
+				</Popover>
+			</Grid>
+		);
+	}
 }
 
 OrganizationToolbar.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired,
-  selectedUsers: PropTypes.array
+	className: PropTypes.string,
+	classes: PropTypes.object.isRequired,
 };
 
-OrganizationToolbar.defaultProps = {
-  selectedUsers: []
-};
 
 export default withStyles(styles)(OrganizationToolbar);

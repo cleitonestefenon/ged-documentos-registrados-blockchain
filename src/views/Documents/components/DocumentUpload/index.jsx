@@ -11,7 +11,7 @@ import { bindActionCreators } from 'redux';
 import { showNotification } from 'config/actions';
 
 // Material helpers
-import { withStyles, Typography } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 
 // Components
 import Dropzone from 'react-dropzone';
@@ -22,13 +22,10 @@ import AlertDialog from 'components/Modal';
 import styles from './styles';
 
 //Functions
-import { registerDocument, loadAllTransactions } from '../requests';
+import { registerDocument } from '../requests';
 import { getBytesFromFile } from 'common/functions';
 import { SHA256 } from 'crypto-js';
 import WithoutDocument from './WithoutDocument';
-
-
-
 
 class Upload extends Component {
 

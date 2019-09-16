@@ -1,31 +1,15 @@
 export default theme => ({
-  root: {},
-  row: {
-    height: '42px',
+  root: {
+    padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    marginTop: theme.spacing(1)
+    width: 400,
   },
-  spacer: {
-    flexGrow: 1
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
   },
-  deleteButton: {
-    color: theme.palette.danger.main,
-    marginRight: theme.spacing(1)
+  iconButton: {
+    padding: 10,
   },
-  importButton: {
-    marginRight: theme.spacing(1)
-  },
-  importIcon: {
-    marginRight: theme.spacing(1)
-  },
-  exportButton: {
-    marginRight: theme.spacing(1)
-  },
-  exportIcon: {
-    marginRight: theme.spacing(1)
-  },
-  searchInput: {
-    marginRight: theme.spacing(1)
-  }
 });

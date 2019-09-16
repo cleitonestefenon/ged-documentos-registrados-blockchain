@@ -6,8 +6,12 @@ import PropTypes from 'prop-types';
 // Material helpers
 import { withStyles } from '@material-ui/core';
 
-// Material components
-import { CircularProgress, Typography } from '@material-ui/core';
+// Redux
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+// Actions redux
+import { showNotification } from 'config/actions';
 
 // Shared layouts
 import { Dashboard as DashboardLayout } from 'layouts';
@@ -16,109 +20,108 @@ import { Dashboard as DashboardLayout } from 'layouts';
 import { getUsers } from 'services/user';
 
 // Custom components
-import { UsersToolbar, UsersTable } from './components';
+import { OrganizationTable, OrganizationToolbar } from './components';
 
 // Component styles
 import styles from './style';
 
-import { findAllOrganizations } from './components/requests';
+import {
+    findAllSharedOrganizations,
+    findSharedOrganizationsByEmail,
+    findSharedOrganizationsByName
+} from './requests';
 
 class Organizations extends Component {
-    signal = true;
 
     state = {
-        isLoading: false,
-        limit: 25,
-        offset: 0,
-        users: [],
+        rowsPerPage: 10, //limit
+        page: 0, //offset
         organizations: [],
-        selectedUsers: [],
-        error: null
     };
-
-    loadDocuments = async () => {
-        const { limit, offset } = this.state;
-
-        const organizations = await findAllOrganizations(offset, limit);
-
-        this.setState({ organizations })
-    }
-
-    async getUsers() {
-        try {
-            this.setState({ isLoading: true });
-
-            const { limit } = this.state;
-
-            const { users } = await getUsers(limit);
-
-            if (this.signal) {
-                this.setState({
-                    isLoading: false,
-                    users
-                });
-            }
-        } catch (error) {
-            if (this.signal) {
-                this.setState({
-                    isLoading: false,
-                    error
-                });
-            }
-        }
-    }
 
     componentDidMount() {
-        this.signal = true;
-        this.getUsers();
-        this.loadDocuments();
+		this.searchOrganizations();
+	}
+
+    searchOrganizations = async (filterSelected, value) => {
+
+        const { page, rowsPerPage } = this.state;
+
+        if (value) {
+            if (filterSelected) {
+                switch (filterSelected.value) {
+                    case 'name': {
+                        await findSharedOrganizationsByName(value, page, rowsPerPage, resp => {
+                            this.setState({
+                                organizations: resp
+                            })
+                        }, err => {
+                            this.props.showNotification({
+                                variant: 'error',
+                                message: err && err.response.data.error || 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
+                            })
+                        })
+                        break;
+                    }
+                    case 'email': {
+                        await findSharedOrganizationsByEmail(value, page, rowsPerPage, resp => {
+                            this.setState({
+                                organizations: resp
+                            })
+                        }, err => {
+                            this.props.showNotification({
+                                variant: 'error',
+                                message: err && err.response.data.error || 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
+                            })
+                        })
+                        break;
+                    }
+                    default: break;
+                }
+            }
+        } else {
+            await findAllSharedOrganizations(page, rowsPerPage, resp => {
+                this.setState({
+                    organizations: resp
+                })
+            }, err => {
+                this.props.showNotification({
+                    variant: 'error',
+                    message: err && err.response.data.error || 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
+                })
+            })
+        }
+
     }
 
-    componentWillUnmount() {
-        this.signal = false;
-    }
-
-    handleSelect = selectedUsers => {
-        this.setState({ selectedUsers });
+    handleChangePage = (event, page) => {
+        this.setState({ page });
     };
 
-    renderUsers() {
-        const { classes } = this.props;
-        const { isLoading, users, error } = this.state;
-
-        if (isLoading) {
-            return (
-                <div className={classes.progressWrapper}>
-                    <CircularProgress />
-                </div>
-            );
-        }
-
-        if (error) {
-            return <Typography variant="h6">{error}</Typography>;
-        }
-
-        if (users.length === 0) {
-            return <Typography variant="h6">Você não possui nenhuma organização amiga</Typography>;
-        }
-
-        return (
-            <UsersTable
-                onSelect={this.handleSelect}
-                users={users}
-            />
-        );
-    }
+    handleChangeRowsPerPage = event => {
+        this.setState({ rowsPerPage: event.target.value });
+    };
 
     render() {
         const { classes } = this.props;
-        const { selectedUsers } = this.state;
+        const { page, rowsPerPage } = this.state;
 
         return (
-            <DashboardLayout title="Documentos">
+            <DashboardLayout title="Organizações">
                 <div className={classes.root}>
-                    <UsersToolbar selectedUsers={selectedUsers} />
-                    <div className={classes.content}>{this.renderUsers()}</div>
+                    <OrganizationToolbar
+                        searchOrganizations={this.searchOrganizations}
+                    />
+                    <OrganizationTable
+                        className={classes.content}
+                        onSelect={this.handleSelect}
+                        page={page}
+                        rowsPerPage={rowsPerPage}
+                        handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        handleChangePage={this.handleChangePage}
+                        searchOrganizations={this.searchOrganizations}
+                        organizations={this.state.organizations}
+                    />
                 </div>
             </DashboardLayout>
         );
@@ -130,4 +133,6 @@ Organizations.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Organizations);
+const mapDispatchToProps = dispatch => bindActionCreators({ showNotification }, dispatch);
+
+export default withStyles(styles)(connect(null, mapDispatchToProps)(Organizations));

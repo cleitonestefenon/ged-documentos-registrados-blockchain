@@ -58,7 +58,9 @@ class Sidebar extends Component {
                         <img
                             alt="Block Share logo"
                             className={classes.logoImage}
-                            src="/images/logos/Logo BlochShare.png"
+                            src="/images/logos/blockchain-logo2.svg"
+                            width={220}
+                            height={40}
                         />
                     </Link>
                 </div>
@@ -106,7 +108,7 @@ class Sidebar extends Component {
                         activeClassName={classes.activeListItem}
                         className={classes.listItem}
                         component={NavLink}
-                        to="/Organizations"
+                        to="/organizations"
                     >
                         <ListItemIcon className={classes.listItemIcon}>
                             <DescriptionOutlined />
