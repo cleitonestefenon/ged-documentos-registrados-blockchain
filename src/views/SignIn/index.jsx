@@ -27,7 +27,7 @@ import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
 import styles from './styles';
 
 // Form validation schema
-import schema from './schema';
+import * as Yup from "yup";
 
 //Services
 import { signIn, verifyWalletInformation } from './requests';
@@ -39,6 +39,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
+import { withFormik } from 'formik';
+import { defaultFormMessages } from 'common/form';
+
+const initialValues = {
+    email: '',
+    password: ''
+};
 
 class SignIn extends Component {
 	state = {
@@ -78,7 +85,7 @@ class SignIn extends Component {
 	};
 
 	validateForm = _.debounce(() => {
-		const { values } = this.state;
+		const { values, schema } = this.state;
 
 		const newState = { ...this.state };
 		const errors = validate(values, schema);
@@ -143,11 +150,9 @@ class SignIn extends Component {
 			errors,
 			isValid,
 			submitError,
-			isLoading
+			isLoading,
+			setFieldTouched
 		} = this.state;
-
-		const showEmailError = touched.email && errors.email;
-		const showPasswordError = touched.password && errors.password;
 
 		return (
 			<div className={classes.root}>
@@ -209,14 +214,7 @@ class SignIn extends Component {
 											value={values.email}
 											variant="outlined"
 										/>
-										{showEmailError && (
-											<Typography
-												className={classes.fieldError}
-												variant="body2"
-											>
-												{errors.email[0]}
-											</Typography>
-										)}
+										{/* <FieldErrorMessage touched={touched['email']} errors={errors} field="email" /> */}
 										<TextField
 											className={classes.textField}
 											label="Senha"
@@ -228,14 +226,7 @@ class SignIn extends Component {
 											value={values.password}
 											variant="outlined"
 										/>
-										{showPasswordError && (
-											<Typography
-												className={classes.fieldError}
-												variant="body2"
-											>
-												{errors.password[0]}
-											</Typography>
-										)}
+										{/* <FieldErrorMessage touched={touched['password']} errors={errors} field="password" /> */}
 									</div>
 									{submitError && (
 										<Typography
@@ -280,6 +271,20 @@ class SignIn extends Component {
 		);
 	}
 }
+
+const FieldErrorMessage = withFormik({
+	mapPropsToValues: () => ({ ...initialValues }),
+    validateOnChange: false,
+	validateOnBlur: true,
+
+	validationSchema: Yup.object({
+		email: Yup.string().required(defaultFormMessages.isRequired),
+		password: Yup.string().required(defaultFormMessages.invalidEmail),
+	}),
+
+	handleSubmit: () => { },
+
+})(SignIn);
 
 SignIn.propTypes = {
 	className: PropTypes.string,
