@@ -58,9 +58,9 @@ class Sidebar extends Component {
                         <img
                             alt="Block Share logo"
                             className={classes.logoImage}
-                            src="/images/logos/blockchain-logo2.svg"
+                            src="/images/logos/logo 5.1.PNG"
                             width={220}
-                            height={40}
+                            height={60}
                         />
                     </Link>
                 </div>

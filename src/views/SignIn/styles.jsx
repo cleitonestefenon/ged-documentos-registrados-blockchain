@@ -16,7 +16,6 @@ export default theme => ({
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundImage: 'url(/images/sign_up_1.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
@@ -28,7 +27,9 @@ export default theme => ({
   },
   quoteText: {
     color: theme.palette.common.white,
-    fontWeight: 300
+    fontWeight: 300,
+    alignItems: 'top',
+    marginTop: theme.spacing(8)
   },
   name: {
     marginTop: theme.spacing(3),

@@ -160,7 +160,7 @@ class SignUp extends Component {
                               className={classes.name}
                               variant="body1"
                            >
-                              By: Satoshi Nakamoto
+                              Satoshi Nakamoto
                   </Typography>
                         </div>
                      </div>
