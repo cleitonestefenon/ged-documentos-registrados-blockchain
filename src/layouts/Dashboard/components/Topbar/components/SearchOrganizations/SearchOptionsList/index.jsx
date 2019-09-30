@@ -37,6 +37,7 @@ class SearchOptionsList extends Component {
 								dense
 							>
 								<ListItemText id={labelId} primary={option.label} />
+
 								<ListItemSecondaryAction>
 									<Radio
 										edge="end"

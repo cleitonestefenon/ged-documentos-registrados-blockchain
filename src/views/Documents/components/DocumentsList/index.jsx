@@ -130,7 +130,7 @@ class DocumentsList extends Component {
 													{el.confirmations > 6 ? (
 														<Badge max={6} color="primary" variant="standard" badgeContent={el.confirmations} />
 													) : (
-															<Badge max={6} color="error" badgeContent={el.confirmations} />
+															<Badge max={6} color="secondary" badgeContent={el.confirmations || '0'} />
 														)
 													}
 												</TableCell>
@@ -139,7 +139,7 @@ class DocumentsList extends Component {
 													align="center"
 													className={classes.tableCell}
 												>
-													{el.confirmed ? <Check color="primary" /> : <Close color="error" />}
+													{el.confirmed ? <Check color="primary" /> : <Close color="secondary" />}
 												</TableCell>
 
 												<TableCell

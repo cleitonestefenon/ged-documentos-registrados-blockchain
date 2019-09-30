@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import CheckIcon from '@material-ui/icons/Check';
 import SaveIcon from '@material-ui/icons/Save';
+import { Card } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -54,7 +55,7 @@ export default function LoadingButton({ label, loading, success, handleButtonCli
                     aria-label="save"
                     color={color || "primary"}
                     className={buttonClassname}
-                    onClick={handleButtonClick}
+                    //onClick={handleButtonClick}
                 >
                     {success ? <CheckIcon /> : <SaveIcon />}
                 </Fab>
@@ -70,7 +71,6 @@ export default function LoadingButton({ label, loading, success, handleButtonCli
                 >
                     {label}
                 </Button>
-                {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
             </div>
         </div>
     );

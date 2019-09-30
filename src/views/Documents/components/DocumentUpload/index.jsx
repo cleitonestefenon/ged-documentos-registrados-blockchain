@@ -44,9 +44,10 @@ class Upload extends Component {
     }
 
     onClickRegister = async () => {
+
         this.setState({ loading: true })
 
-        registerDocument(this.state.document, () => {
+        await registerDocument(this.state.document, () => {
             this.props.showNotification({
                 variant: 'success',
                 message: 'Documento enviado para registro ✔✔'
@@ -64,8 +65,9 @@ class Upload extends Component {
                     }
                 }
             })
+        }, () => {
+            this.resetState();
         })
-        this.resetState()
     }
 
     resetState = () => {

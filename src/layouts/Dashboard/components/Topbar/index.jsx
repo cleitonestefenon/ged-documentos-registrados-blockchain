@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
 
 // Material helpers
-import { withStyles, Tooltip } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 
 // Material components
 import {
@@ -16,7 +16,6 @@ import {
 	Popover,
 	Toolbar,
 	Typography,
-	InputBase
 } from '@material-ui/core';
 
 // Material icons
@@ -25,37 +24,26 @@ import {
 	Close as CloseIcon,
 	NotificationsOutlined as NotificationsIcon,
 	Input as InputIcon,
-	Search as SearchIcon
+	PeopleSharp
 } from '@material-ui/icons';
 
 // Custom components
-import { NotificationList } from './components';
+import { NotificationList, SearchOrganizations } from './components';
 
 // Component styles
 import styles from './styles';
 import AlertDialog from 'components/Modal';
-import OrganizationList from './components/OrganizationList';
-import SearchOptionsList from './components/SearchOptionsList';
+
 import { getNumberOfNotifications } from './requests';
 
-const searchOptions = [
-	{ label: 'Nome', value: 'name', inputLabel: "por nome..." },
-	{ label: 'Chave pública', value: 'publickey', inputLabel: "pela chave pública..." },
-	{ label: 'Endereço', value: 'address', inputLabel: "pelo endereço..." }
-]
-
 class Topbar extends Component {
-	signal = true;
 
 	state = {
 		showExitConfirmation: false,
-		filterSelected: { label: 'Nome', value: 'name', icon: 'N', inputLabel: "por nome..." },
-		searchInputValue: '',
 		notifications: [],
 		notificationsCount: 0,
 		notificationsEl: null,
-		searchFilterEl: null,
-		searchEl: null
+		searchOrganizationsEl: null
 	};
 
 	async componentDidMount() {
@@ -79,9 +67,14 @@ class Topbar extends Component {
 		history.push('/sign-in');
 	};
 
-	handleShowOrganizations = event => {
+	handleShowSearchOrganizations = event => {
 		this.setState({
-			searchEl: event.currentTarget
+			searchOrganizationsEl: event.currentTarget
+		});
+	};
+	handleCloseSearchOrganizations = () => {
+		this.setState({
+			searchOrganizationsEl: null
 		});
 	};
 
@@ -90,50 +83,21 @@ class Topbar extends Component {
 			notificationsEl: event.currentTarget
 		});
 	};
-
-	handleShowSearchFilter = event => {
-		this.setState({
-			searchFilterEl: event.currentTarget
-		});
-	};
-
-	handleCloseOrganizations = () => {
-		this.setState({
-			searchEl: null
-		});
-	};
-
 	handleCloseNotifications = () => {
 		this.setState({
 			notificationsEl: null
 		});
 	};
 
-	handleCloseSearchFilter = () => {
-		this.setState({
-			searchFilterEl: null
-		});
-	};
-
-	onSelectFilterOption = option => {
-		this.setState({ filterSelected: option });
-		this.handleCloseSearchFilter();
-	}
-
-	onChangeInput = e => {
-		this.setState({ searchInputValue: e.target.value });
-	}
-
 	render() {
 		const { classes, className, title, isSidebarOpen, onToggleSidebar } = this.props;
 
-		const { notificationsCount, notificationsEl, searchEl, searchInputValue, searchFilterEl, filterSelected } = this.state;
+		const { notificationsCount, notificationsEl, searchOrganizationsEl } = this.state;
 
 		const rootClassName = classNames(classes.root, className);
 
 		const showNotifications = Boolean(notificationsEl);
-		const showOrganizations = Boolean(searchEl);
-		const showSearchFilter = Boolean(searchFilterEl)
+		const showSearchOrganizations = Boolean(searchOrganizationsEl);
 
 		return (
 			<Fragment>
@@ -152,26 +116,14 @@ class Topbar extends Component {
 						>
 							{title}
 						</Typography>
-						<div className={classes.searchContent}>
-							<Tooltip title="Troque o filtro para pesquisar da maneira desejada">
-								<IconButton className={classes.iconButton} aria-label="menu" onClick={this.handleShowSearchFilter}>
-									<MenuIcon onClick={this.handleShowSearchFilter} />
-								</IconButton>
-							</Tooltip>
-							<Tooltip title="Conecte-se com outras organizações para trocar documentos">
-								<InputBase
-									className={classes.inputSearch}
-									onChange={this.onChangeInput}
-									placeholder={`Pesquisar organização ${filterSelected.inputLabel}`}
-									inputProps={{ 'aria-label': 'search google maps' }}
-								/>
-							</Tooltip>
-							<Tooltip title="Clique para pesqusiar">
-								<IconButton className={classes.iconButton} aria-label="search" onClick={this.handleShowOrganizations}>
-									<SearchIcon onClick={this.handleShowOrganizations} />
-								</IconButton>
-							</Tooltip>
-						</div>
+
+						<IconButton
+							className={classes.peopleIcon}
+							onClick={this.handleShowSearchOrganizations}
+						>
+							<PeopleSharp />
+						</IconButton>
+
 						<IconButton
 							className={classes.notificationsButton}
 							onClick={this.handleShowNotifications}
@@ -183,12 +135,14 @@ class Topbar extends Component {
 								<NotificationsIcon />
 							</Badge>
 						</IconButton>
+
 						<IconButton
 							className={classes.signOutButton}
 							onClick={() => this.setState({ showExitConfirmation: true })}
 						>
 							<InputIcon />
 						</IconButton>
+
 					</Toolbar>
 				</div>
 				<Popover
@@ -205,30 +159,13 @@ class Topbar extends Component {
 				</Popover>
 
 				<Popover
-					anchorEl={searchEl}
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-					onClose={this.handleCloseOrganizations}
-					open={showOrganizations}
-					transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-				>
-					<OrganizationList
-						searchInputValue={searchInputValue}
-						filterSelected={filterSelected}
-					/>
-				</Popover>
-
-				<Popover
-					anchorEl={searchFilterEl}
+					anchorEl={searchOrganizationsEl}
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-					onClose={this.handleCloseSearchFilter}
-					open={showSearchFilter}
 					transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+					onClose={this.handleCloseSearchOrganizations}
+					open={showSearchOrganizations}
 				>
-					<SearchOptionsList
-						searchOptions={searchOptions}
-						onSelect={this.onSelectFilterOption}
-						filterSelected={filterSelected}
-					/>
+					<SearchOrganizations />
 				</Popover>
 
 				<AlertDialog

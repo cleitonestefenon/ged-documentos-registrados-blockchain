@@ -23,19 +23,8 @@ export default theme => ({
 	signOutButton: {
 		marginLeft: theme.spacing(1)
 	},
-	searchContent: {
-		marginLeft: 'auto',
-		padding: '2px 4px',
-		display: 'flex',
-		alignItems: 'center',
-		width: 400,
-	},
-	inputSearch: {
-		marginLeft: theme.spacing(1),
-		flex: 1,
-	},
-	iconButton: {
-		padding: 10,
+	peopleIcon: {
+		marginLeft: 'auto'
 	},
 	divider: {
 		height: 28,

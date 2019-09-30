@@ -24,11 +24,16 @@ export const findOrganizationByPublicKey = async (value, offset, limit, onSucces
     onSuccess && onSuccess(resp);
 }
 
-export const sendInvite = async (invitedid, onSuccess) => {
-    const resp = await api.post(`${DOCS_SERVICE}/organization/send_invite`, {
+export const sendInvite = (invitedid, onSuccess, onError) => {
+    api.post(`${DOCS_SERVICE}/organization/send_invite`, {
         interestedid: getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID),
         invitedid
-    });
+    })
+        .then(resp => {
+            onSuccess && onSuccess(resp);
+        })
+        .catch(err => {
+            onError && onError(err);
+        })
 
-    onSuccess && onSuccess(resp);
 }
