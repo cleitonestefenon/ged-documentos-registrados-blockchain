@@ -1,4 +1,4 @@
-export { default as Budget } from './Budget';
+export { default as DocumentsNotRegistred } from './DocumentsNotRegistred';
 export { default as DevicesChart } from './DevicesChart';
 export { default as OrdersTable } from './OrdersTable';
 export { default as ProductList } from './ProductList';

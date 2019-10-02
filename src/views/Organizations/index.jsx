@@ -87,7 +87,7 @@ class Organizations extends Component {
             }, err => {
                 this.props.showNotification({
                     variant: 'error',
-                    message: err && err.response.data.error || 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
+                    message: err && err.response && err.response.data && err.response.data.error || 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
                 })
             })
         }
