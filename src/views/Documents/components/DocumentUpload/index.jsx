@@ -22,7 +22,7 @@ import AlertDialog from 'components/Modal';
 import styles from './styles';
 
 //Functions
-import { registerDocument } from '../requests';
+import { registerDocument, loadAllTransactions } from '../../requests';
 import { getBytesFromFile } from 'common/functions';
 import { SHA256 } from 'crypto-js';
 import WithoutDocument from './WithoutDocument';
@@ -50,7 +50,10 @@ class Upload extends Component {
         await registerDocument(this.state.document, () => {
             this.props.showNotification({
                 variant: 'success',
-                message: 'Documento enviado para registro ✔✔'
+                message: 'Documento enviado para registro ✔✔',
+                callback: () => {
+                    this.props.getTransactions();
+                }
             })
         }, err => {
             this.props.showNotification({

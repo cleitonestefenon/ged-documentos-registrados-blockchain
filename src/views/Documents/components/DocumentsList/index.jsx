@@ -29,64 +29,29 @@ import { getInitials } from 'helpers';
 // Component styles
 import styles from './styles';
 import { Portlet, PortletContent } from 'components';
-import { loadAllTransactions } from '../requests';
+import { loadAllTransactions } from '../../requests';
 import { Check, Close, MoreVert } from '@material-ui/icons';
 
 class DocumentsList extends Component {
 	state = {
-		transactions: [],
-		loading: false,
 		anchorEl: null,
-		rowsPerPage: 10,
-		page: 0
 	};
 
 	componentDidMount() {
-		this.getTransactions();
+		this.props.getTransactions();
 	}
 
-	getTransactions = () => {
-		const { page, rowsPerPage } = this.state;
-
-		this.showLoading();
-
-		loadAllTransactions(page, rowsPerPage, transactions => {
-			this.setState({ transactions, loading: false });
-		}, err => {
-			this.hiddenLoading();
-			console.error(err);
-		})
-	}
-
-	showLoading = () => {
-		this.setState({ loading: true })
-	}
-
-	hiddenLoading = () => {
-		this.setState({ loading: false })
-	}
-
-	handleChangePage = async (event, page) => {
-		await this.setState({ page });
-		this.getTransactions();
-	};
-
-	handleChangeRowsPerPage = async event => {
-		await this.setState({ rowsPerPage: event.target.value });
-		this.getTransactions();
-	};
-
-	handleClick = event => {
+	handleDetailsClick = event => {
 		this.setState({ anchorEl: event.currentTarget })
 	}
 
-	handleClose = () => {
+	handleCloseDetails = () => {
 		this.setState({ anchorEl: null })
 	}
 
 	render() {
-		const { classes, className } = this.props;
-		const { rowsPerPage, page, transactions, anchorEl, loading } = this.state;
+		const { classes, className, rowsPerPage, loading, page, transactions } = this.props;
+		const { anchorEl } = this.state;
 
 		const rootClassName = classNames(classes.root, className);
 
@@ -154,7 +119,7 @@ class DocumentsList extends Component {
 													className={classes.tableCell}
 												>
 													<IconButton size="medium">
-														<MoreVert onClick={this.handleClick} />
+														<MoreVert onClick={this.handleDetailsClick} />
 													</IconButton>
 												</TableCell>
 											</TableRow>
@@ -182,7 +147,7 @@ class DocumentsList extends Component {
 						anchorEl={anchorEl}
 						keepMounted
 						open={Boolean(anchorEl)}
-						onClose={this.handleClose}
+						onClose={this.handleCloseDetails}
 					>
 						<MenuItem>
 							<ListItemText primary="Detalhar" />
