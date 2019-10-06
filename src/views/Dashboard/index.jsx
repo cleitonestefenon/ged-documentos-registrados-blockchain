@@ -14,17 +14,17 @@ import { Dashboard as DashboardLayout } from 'layouts';
 
 // Custom components
 import {
-	Users,
-	Progress,
-	Profit,
+	TotalDocumentsRegistred,
 	SalesChart,
-	DocumentsNotRegistred
+	DocumentsNotRegistred,
+	DocumentsRegistred,
+	Friend
 } from './components';
 
 // Component styles
 const styles = theme => ({
 	root: {
-		padding: theme.spacing(4)
+		padding: theme.spacing(2)
 	},
 	item: {
 		width: '100%',
@@ -41,7 +41,7 @@ class Dashboard extends Component {
 				<div className={classes.root}>
 					<Grid
 						container
-						spacing={4}
+						spacing={2}
 					>
 						<Grid
 							item
@@ -59,7 +59,7 @@ class Dashboard extends Component {
 							xl={3}
 							xs={12}
 						>
-							<Users className={classes.item} />
+							<DocumentsRegistred className={classes.item} />
 						</Grid>
 						<Grid
 							item
@@ -68,7 +68,7 @@ class Dashboard extends Component {
 							xl={3}
 							xs={12}
 						>
-							<Progress className={classes.item} />
+							<Friend className={classes.item} />
 						</Grid>
 						<Grid
 							item
@@ -77,7 +77,7 @@ class Dashboard extends Component {
 							xl={3}
 							xs={12}
 						>
-							<Profit className={classes.item} />
+							<TotalDocumentsRegistred className={classes.item} />
 						</Grid>
 						<Grid
 							item

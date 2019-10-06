@@ -13,7 +13,7 @@ import { Typography } from '@material-ui/core';
 // Material icons
 import {
     Add as AddIcon,
-    Description as FileIcon,
+    Description as FileIcon
 } from '@material-ui/icons';
 
 // Shared components
@@ -21,9 +21,9 @@ import { Paper } from 'components';
 
 // Component styles
 import styles from './styles';
-import { countNumberOfDocumentsNotRegistred } from './requests';
+import { countNumberOfDocumentsRegistred } from './requests';
 
-class DocumentsNotRegistred extends Component {
+class DocumentsRegistred extends Component {
 
     state = {
         documentsCount: 0,
@@ -31,7 +31,7 @@ class DocumentsNotRegistred extends Component {
     }
 
     componentDidMount() {
-        countNumberOfDocumentsNotRegistred(resp => {
+        countNumberOfDocumentsRegistred(resp => {
             this.setState({
                 documentsCount: resp.data.documentsCount,
                 sinceLastMonth: resp.data.sinceLastMonth
@@ -57,7 +57,7 @@ class DocumentsNotRegistred extends Component {
                             className={classes.title}
                             variant="body1"
                         >
-                            Documentos à ser registrados
+                            Documentos registrados
                         </Typography>
                         <Typography
                             align="center"
@@ -81,20 +81,33 @@ class DocumentsNotRegistred extends Component {
                                 <AddIcon />
                                 {this.state.sinceLastMonth}
                             </Typography>
-                            <Typography className={classes.caption} variant="caption">nos últimos 30 dias</Typography>
+                            <Typography
+                                className={classes.caption}
+                                variant="caption"
+                            >
+                                nos últimos 30 dias
+                            </Typography>
                         </React.Fragment>
                     ) : (
-                            <Typography className={classes.caption} variant="caption">Nenhum documento na fila de registro</Typography>
+                            <React.Fragment>
+                                <Typography
+                                    className={classes.caption}
+                                    variant="caption"
+                                >
+                                    Nenhum documento registrado nos últimos 30 dias
+                                </Typography>
+                            </React.Fragment>
                         )}
+
                 </div>
             </Paper>
         );
     }
 }
 
-DocumentsNotRegistred.propTypes = {
+DocumentsRegistred.propTypes = {
     className: PropTypes.string,
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(DocumentsNotRegistred);
+export default withStyles(styles)(DocumentsRegistred);

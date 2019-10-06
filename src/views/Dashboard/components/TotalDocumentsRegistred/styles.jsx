@@ -14,7 +14,8 @@ export default theme => ({
     color: theme.palette.common.white
   },
   value: {
-    color: theme.palette.common.white
+    color: theme.palette.common.white,
+    marginTop: theme.spacing(2)
   },
   iconWrapper: {
     alignItems: 'center',

@@ -10,5 +10,8 @@ export default theme => ({
   portletFooter: {
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+  rootModal: {
+    padding: theme.spacing(1)
   }
 });
