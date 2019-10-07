@@ -13,7 +13,7 @@ class WithoutDocument extends Component {
 
         return (
             <ButtonBase className={classes.contentItem}>
-                <img src='/images/cadastros/upload-de-arquivo.svg' alt='Upload Image' className={classes.image} />
+                <img src='/images/cadastros/upload-de-arquivo.svg' alt="upload files" className={classes.image} />
                 <Typography gutterBottom variant="subtitle1" >
                     {!this.props.isDragActive ? "Clique aqui ou arraste um arquivo de até 5MB para carregá-lo" : "Solte o arquivo para carregá-lo"}
                 </Typography>

@@ -12,6 +12,6 @@ export default theme => ({
     justifyContent: 'flex-end'
   },
   rootModal: {
-    padding: theme.spacing(1)
+    padding: theme.spacing(2)
   }
 });

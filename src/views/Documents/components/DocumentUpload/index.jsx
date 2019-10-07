@@ -22,7 +22,7 @@ import AlertDialog from 'components/Modal';
 import styles from './styles';
 
 //Functions
-import { registerDocument, loadAllTransactions } from '../../requests';
+import { registerDocument } from '../../requests';
 import { getBytesFromFile } from 'common/functions';
 import { SHA256 } from 'crypto-js';
 import WithoutDocument from './WithoutDocument';
@@ -58,7 +58,7 @@ class Upload extends Component {
         }, err => {
             this.props.showNotification({
                 variant: 'error',
-                message: err && err.error || 'Não foi possível registrar este arquivo  😮😮',
+                message: err && err.error ? err.error : 'Não foi possível registrar este arquivo  😮😮',
                 callback: () => {
                     if (err && err.response.data.transaction) {
                         this.setState({

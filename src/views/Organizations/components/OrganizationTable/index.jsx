@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 // Externals
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // Material helpers
@@ -13,7 +12,6 @@ import { withStyles } from '@material-ui/core';
 // Material components
 import {
   Avatar,
-  Checkbox,
   Table,
   TableBody,
   TableCell,

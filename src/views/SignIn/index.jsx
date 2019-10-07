@@ -26,9 +26,6 @@ import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
 // Component styles
 import styles from './styles';
 
-// Form validation schema
-import * as Yup from "yup";
-
 //Services
 import { signIn, verifyWalletInformation } from './requests';
 import { criptografar } from '../../common/cryptography';
@@ -39,13 +36,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
-import { withFormik } from 'formik';
-import { defaultFormMessages } from 'common/form';
-
-const initialValues = {
-    email: '',
-    password: ''
-};
 
 class SignIn extends Component {
 	state = {
@@ -146,12 +136,9 @@ class SignIn extends Component {
 		const { classes } = this.props;
 		const {
 			values,
-			touched,
-			errors,
 			isValid,
 			submitError,
 			isLoading,
-			setFieldTouched
 		} = this.state;
 
 		return (
@@ -272,19 +259,19 @@ class SignIn extends Component {
 	}
 }
 
-const FieldErrorMessage = withFormik({
-	mapPropsToValues: () => ({ ...initialValues }),
-    validateOnChange: false,
-	validateOnBlur: true,
+// SignIn = withFormik({
+// 	mapPropsToValues: () => ({ ...initialValues }),
+//     validateOnChange: false,
+// 	validateOnBlur: true,
 
-	validationSchema: Yup.object({
-		email: Yup.string().required(defaultFormMessages.isRequired),
-		password: Yup.string().required(defaultFormMessages.invalidEmail),
-	}),
+// 	validationSchema: Yup.object({
+// 		email: Yup.string().required(defaultFormMessages.isRequired),
+// 		password: Yup.string().required(defaultFormMessages.invalidEmail),
+// 	}),
 
-	handleSubmit: () => { },
+// 	handleSubmit: () => { },
 
-})(SignIn);
+// })
 
 SignIn.propTypes = {
 	className: PropTypes.string,

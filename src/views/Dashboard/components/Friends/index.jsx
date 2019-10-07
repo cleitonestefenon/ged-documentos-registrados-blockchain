@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
 
 // Material components
-import { Typography, LinearProgress } from '@material-ui/core';
+import { Typography, LinearProgress, Tooltip } from '@material-ui/core';
 
 // Material icons
 import { PeopleOutline as PeopleIcon } from '@material-ui/icons';
@@ -39,7 +39,7 @@ class Friend extends Component {
             console.error(err)
         });
     }
-    
+
     render() {
         const { classes, className, ...rest } = this.props;
 
@@ -70,13 +70,15 @@ class Friend extends Component {
                     </div>
                 </div>
                 <div className={classes.footer}>
-                    <Typography
-                        variant="h4"
-                    >
-                        {this.state.total > 0 ? (this.state.friendsMatched / this.state.total).toFixed(2) : 0}%
-                    </Typography>
+                    <Tooltip title={`Você possui ${this.state.total > 0 ? (this.state.friendsMatched / this.state.total).toFixed(2) * 100 : 0}% de convites aceitos`}>
+                        <Typography
+                            variant="h4"
+                        >
+                            {this.state.total > 0 ? (this.state.friendsMatched / this.state.total).toFixed(2) : 0}%
+                        </Typography>
+                    </Tooltip>
                     <LinearProgress
-                        value={75.5}
+                        value={this.state.total > 0 ? (this.state.friendsMatched / this.state.total).toFixed(2) * 100 : 0}
                         variant="determinate"
                     />
                 </div>

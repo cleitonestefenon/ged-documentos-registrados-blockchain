@@ -8,7 +8,6 @@ import {
     Typography,
     withStyles,
     Tooltip,
-    IconButton,
     Button,
     Divider
 } from '@material-ui/core';
@@ -29,13 +28,13 @@ class WithDocument extends Component {
         const type = String(document.type);
 
         if (type.includes('audio')) {
-            return <img alt="Audio image" src="/images/cadastros/audio.svg" className={classes.image} />
+            return <img src="/images/cadastros/audio.svg" alt="Audio" className={classes.image} />
         } else if (type.includes('video')) {
-            return <img alt="Video image" src="/images/cadastros/video.svg" className={classes.image} />
+            return <img src="/images/cadastros/video.svg" alt="Video" className={classes.image} />
         } else if (type.includes('image')) {
-            return <img alt="Image" src="/images/cadastros/image.svg" className={classes.image} />
+            return <img src="/images/cadastros/image.svg" alt="File" className={classes.image} />
         }
-        return <img alt="Image" src="/images/cadastros/application.svg" className={classes.image} />
+        return <img src="/images/cadastros/application.svg" alt="Application" className={classes.image} />
     }
 
     loadExtension = () => {

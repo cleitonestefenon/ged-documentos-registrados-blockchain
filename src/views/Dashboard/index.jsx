@@ -15,7 +15,7 @@ import { Dashboard as DashboardLayout } from 'layouts';
 // Custom components
 import {
 	TotalDocumentsRegistred,
-	SalesChart,
+	DocumentsByPeriod,
 	DocumentsNotRegistred,
 	DocumentsRegistred,
 	Friend
@@ -45,7 +45,7 @@ class Dashboard extends Component {
 					>
 						<Grid
 							item
-							lg={3}
+							lg={6}
 							sm={6}
 							xl={3}
 							xs={12}
@@ -54,7 +54,7 @@ class Dashboard extends Component {
 						</Grid>
 						<Grid
 							item
-							lg={3}
+							lg={6}
 							sm={6}
 							xl={3}
 							xs={12}
@@ -63,7 +63,7 @@ class Dashboard extends Component {
 						</Grid>
 						<Grid
 							item
-							lg={3}
+							lg={6}
 							sm={6}
 							xl={3}
 							xs={12}
@@ -72,7 +72,7 @@ class Dashboard extends Component {
 						</Grid>
 						<Grid
 							item
-							lg={3}
+							lg={6}
 							sm={6}
 							xl={3}
 							xs={12}
@@ -86,7 +86,7 @@ class Dashboard extends Component {
 							xl={12}
 							xs={12}
 						>
-							<SalesChart className={classes.item} />
+							<DocumentsByPeriod className={classes.item} />
 						</Grid>
 						{/* <Grid
 							item

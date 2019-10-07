@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 // Externals
 import classNames from 'classnames';
@@ -8,12 +7,10 @@ import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // Material helpers
-import { withStyles, Button, IconButton, Badge, Menu, MenuItem, ListItemText, Grid, CircularProgress } from '@material-ui/core';
+import { withStyles, IconButton, Badge, Menu, MenuItem, ListItemText, Grid, CircularProgress } from '@material-ui/core';
 
 // Material components
 import {
-	Avatar,
-	Checkbox,
 	Table,
 	TableBody,
 	TableCell,
@@ -23,13 +20,9 @@ import {
 	TablePagination
 } from '@material-ui/core';
 
-// Shared helpers
-import { getInitials } from 'helpers';
-
 // Component styles
 import styles from './styles';
 import { Portlet, PortletContent } from 'components';
-import { loadAllTransactions } from '../../requests';
 import { Check, Close, MoreVert } from '@material-ui/icons';
 
 class DocumentsList extends Component {

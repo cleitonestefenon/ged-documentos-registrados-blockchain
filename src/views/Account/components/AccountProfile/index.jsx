@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import compose from 'recompose/compose';
 
 // Material helpers
-import { withStyles, Tooltip, Grid, CircularProgress } from '@material-ui/core';
+import { withStyles, Grid, CircularProgress } from '@material-ui/core';
 
 // Material components
 import { Avatar, Typography, Button } from '@material-ui/core';
@@ -18,7 +18,6 @@ import { Portlet, PortletContent, PortletFooter } from 'components';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
-
 
 // Component styles
 import styles from './styles';

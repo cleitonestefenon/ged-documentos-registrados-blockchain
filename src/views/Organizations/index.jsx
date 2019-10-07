@@ -16,9 +16,6 @@ import { showNotification } from 'config/actions';
 // Shared layouts
 import { Dashboard as DashboardLayout } from 'layouts';
 
-// Shared services
-import { getUsers } from 'services/user';
-
 // Custom components
 import { OrganizationTable, OrganizationToolbar } from './components';
 
@@ -58,7 +55,7 @@ class Organizations extends Component {
                         }, err => {
                             this.props.showNotification({
                                 variant: 'error',
-                                message: err && err.response.data.error || 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
+                                message: err && err.response.data.error ? err.response.data.error : 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
                             })
                         })
                         break;
@@ -71,7 +68,7 @@ class Organizations extends Component {
                         }, err => {
                             this.props.showNotification({
                                 variant: 'error',
-                                message: err && err.response.data.error || 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
+                                message: err && err.response.data.error ? err.response.data.error : 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
                             })
                         })
                         break;
@@ -87,7 +84,7 @@ class Organizations extends Component {
             }, err => {
                 this.props.showNotification({
                     variant: 'error',
-                    message: err && err.response && err.response.data && err.response.data.error || 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
+                    message: err && err.response && err.response.data && err.response.data.error ? err.response.data.error : 'Ocorreu um erro ao localizar seus contatos pareados  😢😢',
                 })
             })
         }
