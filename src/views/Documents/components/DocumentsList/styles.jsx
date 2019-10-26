@@ -20,5 +20,8 @@ export default theme => ({
   },
   loading: {
     margin: theme.spacing(3)
+  },
+  closeModalButton: {
+    cursor: 'pointer'
   }
 });

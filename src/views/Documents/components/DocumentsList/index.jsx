@@ -6,8 +6,26 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
+import compose from 'recompose/compose';
+import { withRouter } from 'react-router-dom';
+
 // Material helpers
-import { withStyles, IconButton, Badge, Menu, MenuItem, ListItemText, Grid, CircularProgress } from '@material-ui/core';
+import {
+	withStyles,
+	IconButton,
+	Badge,
+	Menu,
+	MenuItem,
+	ListItemText,
+	Grid,
+	CircularProgress,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
+	DialogActions,
+	Button
+} from '@material-ui/core';
 
 // Material components
 import {
@@ -23,29 +41,49 @@ import {
 // Component styles
 import styles from './styles';
 import { Portlet, PortletContent } from 'components';
-import { Check, Close, MoreVert } from '@material-ui/icons';
+
+import {
+	Check,
+	Close,
+	MoreVert,
+	Close as CloseIcon
+} from '@material-ui/icons';
 
 class DocumentsList extends Component {
 	state = {
 		anchorEl: null,
+		rowSelected: null,
+		detailsOpen: false
 	};
 
 	componentDidMount() {
 		this.props.getTransactions();
 	}
 
-	handleDetailsClick = event => {
-		this.setState({ anchorEl: event.currentTarget })
+	handleDetailsClick = (event, rowSelected) => {
+		this.setState({
+			anchorEl: event.currentTarget,
+			rowSelected
+		})
 	}
 
 	handleCloseDetails = () => {
 		this.setState({ anchorEl: null })
 	}
 
+	handleOpenDetailDocument = () => {
+		this.setState({ detailsOpen: true })
+	}
+
+	handleCloseDetailDocument = () => {
+		this.setState({ detailsOpen: false })
+		this.handleCloseDetails();
+	}
+
 	render() {
 		const { classes, className, rowsPerPage, loading, page, transactions } = this.props;
-		const { anchorEl } = this.state;
-
+		const { anchorEl, detailsOpen, rowSelected } = this.state;
+console.log(rowSelected)
 		const rootClassName = classNames(classes.root, className);
 
 		return (
@@ -112,7 +150,7 @@ class DocumentsList extends Component {
 													className={classes.tableCell}
 												>
 													<IconButton size="medium">
-														<MoreVert onClick={this.handleDetailsClick} />
+														<MoreVert onClick={event => this.handleDetailsClick(event, el)} />
 													</IconButton>
 												</TableCell>
 											</TableRow>
@@ -143,10 +181,45 @@ class DocumentsList extends Component {
 						onClose={this.handleCloseDetails}
 					>
 						<MenuItem>
-							<ListItemText primary="Detalhar" />
+							<ListItemText
+								primary="Detalhar"
+								onClick={this.handleOpenDetailDocument}
+							/>
 						</MenuItem>
 					</Menu>
 				</PortletContent>
+				<Dialog
+					fullScreen={false}
+					open={detailsOpen}
+					onClose={this.handleCloseDetailDocument}
+					aria-labelledby="responsive-dialog-title"
+				>
+					<DialogTitle id="responsive-dialog-title">
+						<Grid
+							container
+							direction="row"
+							justify="space-between"
+							alignItems="center"
+						>
+							<span>Detalhamento do documento</span>
+							<CloseIcon
+								className={classes.closeModalButton}
+								onClick={this.handleCloseDetailDocument}
+							/>
+						</Grid>
+					</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							Let Google help apps determine location. This means sending anonymous location data to
+							Google, even when no apps are running.
+          				</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={this.handleCloseDetailDocument} color="primary">
+							Retornar à listagem
+          				</Button>
+					</DialogActions>
+				</Dialog>
 			</Portlet>
 		);
 	}
@@ -166,4 +239,4 @@ DocumentsList.defaultProps = {
 	onShowDetails: () => { }
 };
 
-export default withStyles(styles)(DocumentsList);
+export default compose(withRouter, withStyles(styles))(DocumentsList);
