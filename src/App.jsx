@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Router } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { BrowserRouter } from 'react-router-dom';
 
 // Externals
 import { Chart } from 'react-chartjs-2';
@@ -25,9 +24,6 @@ import { createStore } from 'redux'
 import rootReducer from './config/reducers';
 import Notification from 'components/Notification';
 
-// Browser history
-const browserHistory = createBrowserHistory();
-
 // Configure ChartJS
 Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
     draw: chartjs.draw
@@ -44,10 +40,10 @@ class App extends Component {
         return (
             <Provider store={store}>
                 <ThemeProvider theme={theme}>
-                    <Router history={browserHistory}>
+                    <BrowserRouter>
                         <Routes />
                         <Notification />
-                    </Router>
+                    </BrowserRouter>
                 </ThemeProvider>
             </Provider>
         );

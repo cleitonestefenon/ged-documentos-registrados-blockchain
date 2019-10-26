@@ -3,16 +3,11 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 // Views
 import Dashboard from './views/Dashboard';
-import ProductList from './views/ProductList';
 import Documents from './views/Documents';
-import Typography from './views/Typography';
-import Icons from './views/Documents/components/DocumentUpload';
 import Account from './views/Account';
 import Organizations from './views/Organizations';
-import Settings from './views/Settings';
 import SignUp from './views/SignUp';
 import SignIn from './views/SignIn';
-import UnderDevelopment from './views/UnderDevelopment';
 import NotFound from './views/NotFound';
 
 import { isAuthenticated } from './auth';
@@ -41,11 +36,6 @@ export default class Routes extends Component {
                     exact
                     path="/dashboard"
                 />
-                <PrivateRoute
-                    component={ProductList}
-                    exact
-                    path="/products"
-                />
 
                 <PrivateRoute
                     component={Documents}
@@ -54,50 +44,35 @@ export default class Routes extends Component {
                 />
 
                 <PrivateRoute
-                    component={Typography}
-                    exact
-                    path="/typography"
-                />
-                <PrivateRoute
-                    component={Icons}
-                    exact
-                    path="/icons"
-                />
-                <PrivateRoute
                     component={Account}
                     exact
                     path="/account"
                 />
+
                 <PrivateRoute
                     component={Organizations}
                     exact
                     path="/organizations"
                 />
-                <PrivateRoute
-                    component={Settings}
-                    exact
-                    path="/settings"
-                />
+
                 <Route
                     component={SignUp}
                     exact
                     path="/sign-up"
                 />
+
                 <Route
                     component={SignIn}
                     exact
                     path="/sign-in"
                 />
-                <Route
-                    component={UnderDevelopment}
-                    exact
-                    path="/under-development"
-                />
+
                 <Route
                     component={NotFound}
                     exact
                     path="/not-found"
                 />
+
                 <Redirect to="/not-found" />
             </Switch>
         );

@@ -59,12 +59,12 @@ class SearchOptionsList extends Component {
 SearchOptionsList.propTypes = {
 	className: PropTypes.string,
 	classes: PropTypes.object.isRequired,
-	notifications: PropTypes.array.isRequired,
+	searchOptions: PropTypes.array.isRequired,
 	onSelect: PropTypes.func
 };
 
 SearchOptionsList.defaultProps = {
-	notifications: [],
+	searchOptions: [],
 	onSelect: () => { }
 };
 

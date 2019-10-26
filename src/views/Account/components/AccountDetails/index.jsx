@@ -40,12 +40,11 @@ import { withFormik } from 'formik';
 // Yup validator
 import * as Yup from "yup";
 
-import { criptografar, descriptografar } from 'common/cryptography';
-
 //functions
 import { defaultFormMessages } from 'common/form';
 import { formHasError } from './functions';
 import { save, getWalletInformation, update } from './requests';
+import { descriptografar } from '../../../../common/cryptography';
 
 const initialValues = {
     id: '',
@@ -66,10 +65,9 @@ class Account extends Component {
 
     async componentDidMount() {
         const { organizationId } = this.state;
-        const { resetForm } = this.props;
 
         await getWalletInformation(organizationId, resp => {
-            resetForm(resp.data.wallet);
+            this.updateForm(resp);
         }, err => {
             if (err.error) {
                 this.props.showNotification({
@@ -91,6 +89,13 @@ class Account extends Component {
         })
     }
 
+    updateForm(wallet) {
+        this.props.resetForm({
+            ...wallet.data.wallet,
+            privatekey: descriptografar(wallet.data.wallet.privatekey)
+        });
+    }
+
     handleChange = (fieldName, value) => {
         const newState = { ...this.state };
         newState[fieldName] = value;
@@ -98,7 +103,7 @@ class Account extends Component {
     };
 
     handleSubmit = async () => {
-        const { errors, values, submitForm, resetForm, showNotification } = this.props;
+        const { errors, values, submitForm, showNotification } = this.props;
 
         submitForm();
 
@@ -108,7 +113,7 @@ class Account extends Component {
                     showNotification({
                         message: 'Sua carteira foi atualizada com sucesso. 🤪🤪',
                         callback: () => {
-                            resetForm(resp.data.wallet);
+                            this.updateForm(resp);
                         }
                     })
                 }, err => {
@@ -122,7 +127,7 @@ class Account extends Component {
                     showNotification({
                         message: 'Agora sua carteira está pronta para ser usada. 😍😍',
                         callback: () => {
-                            resetForm(resp.data.wallet);
+                            this.updateForm(resp);
                         }
                     })
                 }, err => {
@@ -134,6 +139,12 @@ class Account extends Component {
             }
         }
     };
+
+    handleCancel = () => {
+        const { initialValues, resetForm } = this.props;
+
+        resetForm(initialValues);
+    }
 
     render() {
         const { classes, className, values, errors, dirty, touched, setFieldTouched, ...rest } = this.props;
@@ -196,91 +207,91 @@ class Account extends Component {
                         />
                     </PortletHeader>
                     <PortletContent noPadding>
-                        <form autoComplete="off">
-                            <div className={classes.field}>
+                        <div className={classes.field}>
+                            <TextField
+                                className={classes.textField}
+                                label="Chave pública"
+                                margin="dense"
+                                value={values.publickey}
+                                name="publickey"
+                                onBlur={() => setFieldTouched('publickey', true)}
+                                variant="outlined"
+                                onChange={event => this.props.setFieldValue("publickey", event.target.value)}
+                            />
+                            <FieldErrorMessage touched={touched['publickey']} errors={errors} field="publickey" />
+
+                            <TextField
+                                margin="dense"
+                                onBlur={() => setFieldTouched('privatekey', true)}
+                                className={classes.textField}
+                                variant="outlined"
+                                type={visibilityPrivateKey ? 'text' : 'password'}
+                                label="Chave privada"
+                                value={values.privatekey}
+                                name="privatekey"
+                                onChange={event => this.props.setFieldValue("privatekey", event.target.value)}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                edge="end"
+                                                aria-label="toggle password visibility"
+                                                onClick={() => this.setState({ visibilityPrivateKey: !visibilityPrivateKey })}
+                                                onMouseDown={event => event.preventDefault}
+                                            >
+                                                {visibilityPrivateKey ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                            <FieldErrorMessage touched={touched['privatekey']} errors={errors} field="privatekey" />
+
+                            <TextField
+                                className={classes.textField}
+                                label="WIF"
+                                margin="dense"
+                                value={values.wif}
+                                name="wif"
+                                onBlur={() => setFieldTouched('wif', true)}
+                                onChange={event => this.props.setFieldValue("wif", event.target.value)}
+                                variant="outlined"
+                            />
+                            <FieldErrorMessage touched={touched['wif']} errors={errors} field="wif" />
+
+                            <Tooltip title="Endereço da sua carteira digital">
                                 <TextField
                                     className={classes.textField}
-                                    label="Chave pública"
+                                    label="Endereço"
                                     margin="dense"
-                                    value={values.publickey}
-                                    name="publickey"
-                                    onBlur={() => setFieldTouched('publickey', true)}
-                                    variant="outlined"
-                                    onChange={event => this.props.setFieldValue("publickey", event.target.value)}
-                                />
-                                <FieldErrorMessage touched={touched['publickey']} errors={errors} field="publickey" />
-
-                                <TextField
-                                    margin="dense"
-                                    onBlur={() => setFieldTouched('privatekey', true)}
-                                    className={classes.textField}
-                                    variant="outlined"
-                                    type={visibilityPrivateKey ? 'text' : 'password'}
-                                    label="Chave privada"
-                                    value={values.privatekey}
-                                    name="privatekey"
-                                    onChange={event => this.props.setFieldValue("privatekey", event.target.value)}
-                                    InputProps={{
-                                        endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    edge="end"
-                                                    aria-label="toggle password visibility"
-                                                    onClick={() => {
-                                                        if (visibilityPrivateKey === false) {
-                                                            this.props.setFieldValue('privatekey', descriptografar(values.privatekey))
-                                                        } else {
-                                                            this.props.setFieldValue('privatekey', criptografar(values.privatekey))
-                                                        }
-                                                        this.setState({ ...this.state, visibilityPrivateKey: !visibilityPrivateKey })
-                                                    }}
-                                                    onMouseDown={event => event.preventDefault}
-                                                >
-                                                    {visibilityPrivateKey ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                />
-                                <FieldErrorMessage touched={touched['privatekey']} errors={errors} field="privatekey" />
-
-                                <TextField
-                                    className={classes.textField}
-                                    label="WIF"
-                                    margin="dense"
-                                    value={values.wif}
-                                    name="wif"
-                                    onBlur={() => setFieldTouched('wif', true)}
-                                    onChange={event => this.props.setFieldValue("wif", event.target.value)}
+                                    value={values.address}
+                                    name="address"
+                                    onBlur={() => setFieldTouched('address', true)}
+                                    onChange={event => this.props.setFieldValue("address", event.target.value)}
                                     variant="outlined"
                                 />
-                                <FieldErrorMessage touched={touched['wif']} errors={errors} field="wif" />
-
-                                <Tooltip title="Endereço da sua carteira digital">
-                                    <TextField
-                                        className={classes.textField}
-                                        label="Endereço"
-                                        margin="dense"
-                                        value={values.address}
-                                        name="address"
-                                        onBlur={() => setFieldTouched('address', true)}
-                                        onChange={event => this.props.setFieldValue("address", event.target.value)}
-                                        variant="outlined"
-                                    />
-                                </Tooltip>
-                                <FieldErrorMessage touched={touched['address']} errors={errors} field="address" />
-                            </div>
-                        </form>
+                            </Tooltip>
+                            <FieldErrorMessage touched={touched['address']} errors={errors} field="address" />
+                        </div>
                     </PortletContent>
                     <PortletFooter>
                         <Button
-                            className={classes.signInButton}
+                            className={classes.button}
                             color="primary"
                             disabled={!dirty}
                             onClick={this.handleSubmit}
                             variant="contained"
                         >
                             Salvar
+                        </Button>
+                        <Button
+                            className={classes.button}
+                            color="secondary"
+                            disabled={!dirty}
+                            onClick={this.handleCancel}
+                            variant="contained"
+                        >
+                            Cancelar
                         </Button>
                     </PortletFooter>
                 </Portlet>
@@ -297,13 +308,9 @@ Account.propTypes = {
 const AccountDetailsForm = withFormik({
     mapPropsToValues: () => ({ ...initialValues }),
     validateOnChange: false,
-    validateOnBlur: true,
 
-    // Custom sync validation
     validate: values => {
         const errors = {};
-
-        //validations
 
         return errors;
     },

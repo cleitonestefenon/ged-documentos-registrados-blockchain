@@ -34,11 +34,10 @@ class Footer extends Component {
           className={classes.company}
           variant="body1"
         >
-          &copy; Devias Io. 2019
+          &copy; Clediano e Cleiton Estefenon. 2019
         </Typography>
         <Typography variant="caption">
-          Created with love for the environment. By designers and developers who
-          love to work together in offices!
+          Trabalho de conclusão de curso desenvolvido com a ajuda do Prof. Me. Roberson Junior Fernandes Alves
         </Typography>
       </div>
     );

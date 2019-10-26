@@ -16,7 +16,7 @@ export default theme => ({
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    backgroundImage: 'url(/images/sign_up_1.jpg)',
+    backgroundImage: 'url(/images/logos/sign_up_in.jpg)',
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center'

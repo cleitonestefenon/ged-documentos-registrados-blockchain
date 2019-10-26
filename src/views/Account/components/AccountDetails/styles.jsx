@@ -13,5 +13,8 @@ export default theme => ({
     paddingRight: theme.spacing(3),
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2)
+  },
+  button: {
+    margin: theme.spacing(1)
   }
 });

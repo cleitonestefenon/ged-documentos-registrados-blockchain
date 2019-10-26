@@ -22,6 +22,8 @@ import { withRouter } from 'react-router-dom';
 // Component styles
 import styles from './styles';
 
+import avatar_default from './images/avatar_default.png';
+
 // Functions
 import { getUserIP, saveAvatar, removeAvatar } from './requests';
 import { getFromSessionStorage, saveAsSessionStorage } from 'common/localstorage';
@@ -147,7 +149,7 @@ class AccountProfile extends Component {
                                 <Grid item>
                                     <Avatar
                                         className={classes.avatar}
-                                        src={this.state.avatar || "/images/avatars/avatar_default.png"}
+                                        src={this.state.avatar || avatar_default}
                                     />
                                 </Grid>
                             </Grid>

@@ -47,7 +47,7 @@ class OrganizationList extends Component {
 							<React.Fragment key={organization.id}>
 								<ListItem key={organization.id} alignItems="flex-start">
 									<ListItemAvatar>
-										<Avatar alt="Avatar">{organization.name.substr(0, 1)}</Avatar>
+										<Avatar alt="Avatar">{organization.name ? organization.name.substr(0, 1) : ""}</Avatar>
 									</ListItemAvatar>
 									<ListItemText
 										key={organization.id}

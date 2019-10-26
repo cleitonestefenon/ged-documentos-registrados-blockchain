@@ -31,7 +31,7 @@ class Account extends Component {
     const { classes } = this.props;
 
     return (
-      <DashboardLayout title="Account">
+      <DashboardLayout title="Conta">
         <div className={classes.root}>
           <Grid
             container

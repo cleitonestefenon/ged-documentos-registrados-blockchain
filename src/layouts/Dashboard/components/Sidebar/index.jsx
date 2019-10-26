@@ -30,6 +30,11 @@ import {
 
 // Component styles
 import styles from './styles';
+
+// Logos
+import logo from './images/logo.png';
+import avatar_default from './images/avatar_default.png';
+
 import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
 
@@ -58,7 +63,7 @@ class Sidebar extends Component {
                         <img
                             alt="Block Share logo"
                             className={classes.logoImage}
-                            src="/images/logos/logo 5.1.PNG"
+                            src={logo}
                             width={220}
                             height={60}
                         />
@@ -70,9 +75,8 @@ class Sidebar extends Component {
                 <div className={classes.profile}>
                     <Link to="/account">
                         <Avatar
-                            //alt="Roman Kutepov"
                             className={classes.avatar}
-                            src={this.state.avatar || "/images/avatars/avatar_default.png"}
+                            src={this.state.avatar || avatar_default}
                         />
                     </Link>
                     <Typography
@@ -134,37 +138,7 @@ class Sidebar extends Component {
                         />
                     </ListItem>
 
-                    <ListItem
-                        activeClassName={classes.activeListItem}
-                        className={classes.listItem}
-                        component={NavLink}
-                        to="/products"
-                    >
-                        <ListItemIcon className={classes.listItemIcon}>
-                            <ShoppingBasketIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{ primary: classes.listItemText }}
-                            primary="Products"
-                        />
-                    </ListItem>
-
                     <Divider className={classes.listDivider} />
-
-                    <ListItem
-                        activeClassName={classes.activeListItem}
-                        className={classes.listItem}
-                        component={NavLink}
-                        to="/settings"
-                    >
-                        <ListItemIcon className={classes.listItemIcon}>
-                            <SettingsIcon />
-                        </ListItemIcon>
-                        <ListItemText
-                            classes={{ primary: classes.listItemText }}
-                            primary="Settings"
-                        />
-                    </ListItem>
                 </List>
             </nav>
         );

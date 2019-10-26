@@ -4,8 +4,6 @@ import { Link, withRouter } from 'react-router-dom';
 // Externals
 import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
-import validate from 'validate.js';
-import _ from 'underscore';
 
 // Material helpers
 import { withStyles } from '@material-ui/core';
@@ -20,15 +18,27 @@ import {
 	Typography
 } from '@material-ui/core';
 
+import FieldErrorMessage from 'components/FieldErrorMessage';
+
+// Functions
+import { criptografar } from 'common/cryptography';
+
 // Material icons
 import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
 
 // Component styles
 import styles from './styles';
 
+// Formik
+import { withFormik } from 'formik';
+
+// Yup validator
+import * as Yup from "yup";
+
 //Services
 import { signIn, verifyWalletInformation } from './requests';
-import { criptografar } from '../../common/cryptography';
+
+import { defaultFormMessages } from 'common/form';
 
 // Redux func
 import { showNotification } from 'config/actions';
@@ -36,34 +46,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
+import { formHasError } from 'views/Account/components/AccountDetails/functions';
+
+const initialValues = {
+	email: '',
+	password: ''
+};
 
 class SignIn extends Component {
-	state = {
-		notification: false,
-		notificationMessage: '',
-		notificationVariant: 'success',
-		values: {
-			email: '',
-			password: '',
-			tokenAuthentication: {}
-		},
-		touched: {
-			email: false,
-			password: false
-		},
-		errors: {
-			email: null,
-			password: null
-		},
-		isValid: false,
-		isLoading: false,
-		submitError: null,
-	};
 
 	componentDidMount() {
 		const token = getFromSessionStorage(KEY_STORAGE.TOKEN);
 
-		if(token) {
+		if (token) {
 			this.props.history.push('/dashboard');
 		}
 	}
@@ -74,34 +69,9 @@ class SignIn extends Component {
 		history.goBack();
 	};
 
-	validateForm = _.debounce(() => {
-		const { values, schema } = this.state;
-
-		const newState = { ...this.state };
-		const errors = validate(values, schema);
-
-		newState.errors = errors || {};
-		newState.isValid = errors ? false : true;
-
-		this.setState(newState);
-	}, 300);
-
-	handleFieldChange = (field, value) => {
-		const newState = { ...this.state };
-
-		newState.submitError = null;
-		newState.touched[field] = true;
-		newState.values[field] = value;
-
-		this.setState(newState, this.validateForm);
-	};
-
 	handleSignIn = async () => {
 
-		const { history, showNotification } = this.props;
-		const { values } = this.state;
-
-		this.setState({ isLoading: true });
+		const { history, showNotification, values } = this.props;
 
 		var email = criptografar(values.email);
 		var password = criptografar(values.password);
@@ -129,17 +99,10 @@ class SignIn extends Component {
 			this.props.showNotification({ message, variant: 'error' });
 		});
 
-		this.setState({ isLoading: false });
 	};
 
 	render() {
-		const { classes } = this.props;
-		const {
-			values,
-			isValid,
-			submitError,
-			isLoading,
-		} = this.state;
+		const { classes, values, errors, dirty, touched, setFieldTouched } = this.props;
 
 		return (
 			<div className={classes.root}>
@@ -157,12 +120,16 @@ class SignIn extends Component {
 								<Typography
 									className={classes.quoteText}
 									variant="h1"
-								>Blockchain: a inovação mais disruptiva desde a invenção da Web</Typography>
+								>
+									Blockchain: a inovação mais disruptiva desde a invenção da Web
+								</Typography>
 								<div className={classes.person}>
 									<Typography
 										className={classes.name}
 										variant="body1"
-									>Satoshi Nakamoto</Typography>
+									>
+										Satoshi Nakamoto
+									</Typography>
 								</div>
 							</div>
 						</div>
@@ -182,61 +149,53 @@ class SignIn extends Component {
 									<ArrowBackIcon />
 								</IconButton>
 							</div>
+
 							<div className={classes.contentBody}>
 								<form className={classes.form}>
 									<Typography
 										className={classes.title}
 										variant="h2"
-									>Entrar
+									>
+										Entrar
 									</Typography>
 									<div className={classes.fields}>
 										<TextField
 											className={classes.textField}
 											label="Endereço de e-mail"
 											name="email"
-											onChange={event =>
-												this.handleFieldChange('email', event.target.value)
-											}
+											error={Boolean(touched['email']) && Boolean(errors.email)}
+											onBlur={() => setFieldTouched('email', true)}
+											onChange={event => this.props.setFieldValue("email", event.target.value)}
 											type="text"
 											value={values.email}
 											variant="outlined"
 										/>
-										{/* <FieldErrorMessage touched={touched['email']} errors={errors} field="email" /> */}
+										<FieldErrorMessage touched={touched['email']} errors={errors} field="email" />
 										<TextField
 											className={classes.textField}
 											label="Senha"
 											name="password"
-											onChange={event =>
-												this.handleFieldChange('password', event.target.value)
-											}
+											error={Boolean(touched['password']) && Boolean(errors.password)}
+											onBlur={() => setFieldTouched('password', true)}
+											onChange={event => this.props.setFieldValue("password", event.target.value)}
 											type="password"
 											value={values.password}
 											variant="outlined"
 										/>
-										{/* <FieldErrorMessage touched={touched['password']} errors={errors} field="password" /> */}
+										<FieldErrorMessage touched={touched['password']} errors={errors} field="password" />
 									</div>
-									{submitError && (
-										<Typography
-											className={classes.submitError}
-											variant="body2"
-										>
-											{submitError}
-										</Typography>
-									)}
-									{isLoading ? (
-										<CircularProgress className={classes.progress} />
-									) : (
-											<Button
-												className={classes.signInButton}
-												color="primary"
-												disabled={!isValid}
-												onClick={this.handleSignIn}
-												size="large"
-												variant="contained"
-											>
-												Acessar
-                    						</Button>
-										)}
+
+									<Button
+										className={classes.signInButton}
+										color="primary"
+										disabled={!dirty || formHasError(errors)}
+										onClick={this.handleSignIn}
+										size="large"
+										variant="contained"
+									>
+										Acessar
+                    				</Button>
+
 									<Typography
 										className={classes.signUp}
 										variant="body1"
@@ -259,26 +218,30 @@ class SignIn extends Component {
 	}
 }
 
-// SignIn = withFormik({
-// 	mapPropsToValues: () => ({ ...initialValues }),
-//     validateOnChange: false,
-// 	validateOnBlur: true,
-
-// 	validationSchema: Yup.object({
-// 		email: Yup.string().required(defaultFormMessages.isRequired),
-// 		password: Yup.string().required(defaultFormMessages.invalidEmail),
-// 	}),
-
-// 	handleSubmit: () => { },
-
-// })
-
 SignIn.propTypes = {
 	className: PropTypes.string,
 	classes: PropTypes.object.isRequired,
 	history: PropTypes.object.isRequired
 };
 
+const SignInDetailsForm = withFormik({
+	mapPropsToValues: () => ({ ...initialValues }),
+	validateOnChange: false,
+
+	validate: values => {
+		const errors = {};
+
+		return errors;
+	},
+
+	validationSchema: Yup.object({
+		email: Yup.string().email('E-mail inválido').required(defaultFormMessages.isRequired),
+		password: Yup.string().required(defaultFormMessages.isRequired),
+	}),
+
+	handleSubmit: () => { },
+})(SignIn);
+
 const mapDispatchToProps = dispatch => bindActionCreators({ showNotification }, dispatch);
 
-export default compose(withRouter, withStyles(styles))(connect(null, mapDispatchToProps)(SignIn));
+export default compose(withRouter, withStyles(styles))(connect(null, mapDispatchToProps)(SignInDetailsForm));
