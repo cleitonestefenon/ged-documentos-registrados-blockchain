@@ -13,7 +13,6 @@ import {
 	Grid,
 	Button,
 	IconButton,
-	CircularProgress,
 	TextField,
 	Typography
 } from '@material-ui/core';

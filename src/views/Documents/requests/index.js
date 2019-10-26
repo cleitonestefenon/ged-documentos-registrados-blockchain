@@ -4,9 +4,10 @@ import { getFromSessionStorage } from 'common/localstorage';
 import { KEY_STORAGE } from 'common/localstorage/const';
 
 export const registerDocument = (documento, onSuccess, onError, onFinnaly) => {
+    
     const formData = new FormData();
     formData.append('file', documento);
-    formData.append('organization', getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID));
+    formData.set('organization', getFromSessionStorage(KEY_STORAGE.ORGANIZATION_ID));
     const config = { headers: { 'Content-Type': 'multipart/form-data' } };
 
     axios.post(`${DOCS_SERVICE}/doc/create_with_image`, formData, config).then(resp => {

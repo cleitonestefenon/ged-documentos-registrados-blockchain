@@ -22,8 +22,6 @@ import {
 // Material icons
 import {
     DashboardOutlined as DashboardIcon,
-    ShoppingBasketOutlined as ShoppingBasketIcon,
-    SettingsOutlined as SettingsIcon,
     DescriptionOutlined,
     CloudUploadOutlined
 } from '@material-ui/icons';

@@ -59,7 +59,7 @@ class DocumentsRegistration extends Component {
         const { rowsPerPage, page, transactions, loading } = this.state;
 
         return (
-            <DashboardLayout title="Upload">
+            <DashboardLayout title="Novo Documento">
                 <div className={classes.root}>
                     <DocumentUpload getTransactions={this.getTransactions} />
                     <Divider className={classes.listDivider} />

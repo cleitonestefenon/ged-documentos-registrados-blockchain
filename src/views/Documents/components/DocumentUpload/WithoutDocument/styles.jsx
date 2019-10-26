@@ -5,7 +5,7 @@ export default theme => ({
       paper: {
             padding: theme.spacing(2),
             margin: theme.spacing(2),
-            height: '150px',
+            minHeight: '150px',
             cursor: 'pointer',
       },
       contentItem: {
