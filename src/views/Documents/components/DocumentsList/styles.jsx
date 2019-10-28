@@ -23,5 +23,20 @@ export default theme => ({
   },
   closeModalButton: {
     cursor: 'pointer'
+  },
+
+  media: {
+    width: '64px',
+    height: '64px',
+
+  },
+  header: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  badgeMargin: {
+    margin: theme.spacing(2),
+    marginTop: '5px'
   }
 });

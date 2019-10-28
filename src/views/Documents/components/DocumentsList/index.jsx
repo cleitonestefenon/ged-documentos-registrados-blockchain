@@ -9,6 +9,9 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router-dom';
 
+import waitingRegisterImage from './images/waiting.svg';
+import registredImage from './images/registred.svg';
+
 // Material helpers
 import {
 	withStyles,
@@ -24,7 +27,11 @@ import {
 	DialogContent,
 	DialogContentText,
 	DialogActions,
-	Button
+	Button,
+	Card,
+	CardActionArea,
+	CardMedia,
+	CardContent
 } from '@material-ui/core';
 
 // Material components
@@ -48,6 +55,20 @@ import {
 	MoreVert,
 	Close as CloseIcon
 } from '@material-ui/icons';
+import { format } from 'date-fns/esm';
+
+const CardItem = ({ title, description, display }) => {
+	return (
+		<div style={{ margin: '10px 0px 10px 0px' }}>
+			<Typography gutterBottom variant="h5" component="h2" display={display}>
+				{`${title} `}
+			</Typography>
+			<Typography variant="body2" color="textSecondary" component="p" display={display}>
+				{description}
+			</Typography>
+		</div>
+	)
+}
 
 class DocumentsList extends Component {
 	state = {
@@ -83,7 +104,7 @@ class DocumentsList extends Component {
 	render() {
 		const { classes, className, rowsPerPage, loading, page, transactions } = this.props;
 		const { anchorEl, detailsOpen, rowSelected } = this.state;
-console.log(rowSelected)
+		console.log(rowSelected)
 		const rootClassName = classNames(classes.root, className);
 
 		return (
@@ -190,18 +211,19 @@ console.log(rowSelected)
 				</PortletContent>
 				<Dialog
 					fullScreen={false}
+					fullWidth={true}
 					open={detailsOpen}
 					onClose={this.handleCloseDetailDocument}
 					aria-labelledby="responsive-dialog-title"
+					maxWidth="sm"
 				>
 					<DialogTitle id="responsive-dialog-title">
 						<Grid
 							container
 							direction="row"
-							justify="space-between"
+							justify="flex-end"
 							alignItems="center"
 						>
-							<span>Detalhamento do documento</span>
 							<CloseIcon
 								className={classes.closeModalButton}
 								onClick={this.handleCloseDetailDocument}
@@ -210,9 +232,62 @@ console.log(rowSelected)
 					</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
-							Let Google help apps determine location. This means sending anonymous location data to
-							Google, even when no apps are running.
-          				</DialogContentText>
+							{rowSelected && rowSelected ? (
+								<React.Fragment>
+									<div className={classes.header}>
+										{rowSelected.confirmed ? (
+											<Grid
+												container
+												direction="column"
+												justify="center"
+												alignItems="center"
+											>
+												<CardMedia
+													className={classes.media}
+													image={registredImage}
+													title="Documento registrado com sucesso"
+												/>
+												<span>Documento registrado em {format(new Date(rowSelected.createdAt), "dd/MM/yyyy HH:mm:ss")}</span>
+											</Grid>
+										) : (
+												<Grid
+													container
+													direction="column"
+													justify="center"
+													alignItems="center"
+												>
+													<CardMedia
+														className={classes.media}
+														image={waitingRegisterImage}
+														title="Documento aguardando registro"
+													/>
+													<span>Aguardando registro</span>
+												</Grid>
+											)}
+									</div>
+									<CardItem
+										title="Confirmações"
+										description={<Badge className={classes.badgeMargin} badgeContent={rowSelected && rowSelected.confirmations} color="primary" />}
+									/>
+									<CardItem
+										title="Hash do documento"
+										description={rowSelected.hash}
+									/>
+									<CardItem
+										title="OP Return"
+										description={<span style={{ wordBreak: 'break-word' }}>{rowSelected.opreturn}</span>}
+									/>
+									<CardItem
+										title="Transaction"
+										description={rowSelected.transaction}
+									/>
+								</React.Fragment>
+							) : (
+									<Typography variant="body2" color="textSecondary" component="p">
+										Nenhum documento selecionado
+									</Typography>
+								)}
+						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
 						<Button onClick={this.handleCloseDetailDocument} color="primary">
