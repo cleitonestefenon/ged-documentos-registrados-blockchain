@@ -23,5 +23,9 @@ export default theme => ({
     marginLeft: theme.spacing(2),
     fontWeight: 500,
     cursor: 'pointer'
-  }
+  },
+  shape: {
+    width: 40,
+    height: 40,
+  },
 });

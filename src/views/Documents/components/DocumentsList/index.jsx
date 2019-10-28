@@ -102,9 +102,9 @@ class DocumentsList extends Component {
 	}
 
 	render() {
-		const { classes, className, rowsPerPage, loading, page, transactions } = this.props;
+		const { classes, className, rowsPerPage, loading, page, transactions, handleChangeRowsPerPage, handleChangePage } = this.props;
 		const { anchorEl, detailsOpen, rowSelected } = this.state;
-		console.log(rowSelected)
+
 		const rootClassName = classNames(classes.root, className);
 
 		return (
@@ -181,16 +181,12 @@ class DocumentsList extends Component {
 							)}
 					</PerfectScrollbar>
 					<TablePagination
-						backIconButtonProps={{
-							'aria-label': 'Previous Page'
-						}}
+						backIconButtonProps={{ 'aria-label': 'Previous Page' }}
 						component="div"
 						count={transactions.length}
-						nextIconButtonProps={{
-							'aria-label': 'Next Page'
-						}}
-						onChangePage={this.handleChangePage}
-						onChangeRowsPerPage={this.handleChangeRowsPerPage}
+						nextIconButtonProps={{ 'aria-label': 'Next Page' }}
+						onChangePage={handleChangePage}
+						onChangeRowsPerPage={handleChangeRowsPerPage}
 						page={page}
 						rowsPerPage={rowsPerPage}
 						rowsPerPageOptions={[5, 10, 25]}
@@ -267,7 +263,13 @@ class DocumentsList extends Component {
 									</div>
 									<CardItem
 										title="Confirmações"
-										description={<Badge className={classes.badgeMargin} badgeContent={rowSelected && rowSelected.confirmations} color="primary" />}
+										description={
+											<Badge
+												className={classes.badgeMargin}
+												badgeContent={rowSelected.confirmations || '0'}
+												color={rowSelected.confirmations ? "primary" : "secondary"}
+											/>
+										}
 									/>
 									<CardItem
 										title="Hash do documento"

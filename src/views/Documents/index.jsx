@@ -64,6 +64,8 @@ class DocumentsRegistration extends Component {
                     <DocumentUpload getTransactions={this.getTransactions} />
                     <Divider className={classes.listDivider} />
                     <DocumentsList
+                        handleChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        handleChangePage={this.handleChangePage}
                         getTransactions={this.getTransactions}
                         rowsPerPage={rowsPerPage}
                         page={page}

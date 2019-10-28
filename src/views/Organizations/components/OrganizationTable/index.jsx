@@ -18,7 +18,8 @@ import {
   TableHead,
   TableRow,
   Typography,
-  TablePagination
+  TablePagination,
+  Chip
 } from '@material-ui/core';
 
 // Shared helpers
@@ -27,6 +28,7 @@ import { getInitials } from 'helpers';
 // Component styles
 import styles from './styles';
 import { Portlet, PortletContent } from 'components';
+import { Done, Timer } from '@material-ui/icons';
 
 class OrganizationTable extends Component {
 
@@ -85,7 +87,11 @@ class OrganizationTable extends Component {
                         {friend.email}
                       </TableCell>
                       <TableCell className={classes.tableCell}>
-                        {friend.match ? 'Aceitou' : 'Aguardando'}
+                        {friend.match ?
+                          <Chip label="Aceitou" color="primary" size="small" icon={<Done />} />
+                          :
+                          <Chip label="Aguardando" color="secondary" size="small" icon={<Timer />} />
+                        }
                       </TableCell>
                       <TableCell className={classes.tableCell}>
                         {friend.publickey}
