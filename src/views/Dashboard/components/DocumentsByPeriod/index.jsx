@@ -9,9 +9,7 @@ import DateFnsUtils from '@date-io/date-fns';
 
 import { format, subDays, isValid, isAfter } from 'date-fns';
 
-import {
-    MuiPickersUtilsProvider,
-    KeyboardDatePicker,
+import {    MuiPickersUtilsProvider,    KeyboardDatePicker,
 } from '@material-ui/pickers'
 
 // Material helpers
@@ -21,9 +19,7 @@ import { withStyles, Popover, Grid, Typography } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 
 // Material icons
-import {
-    ArrowDropDown as ArrowDropDownIcon,
-} from '@material-ui/icons';
+import {    ArrowDropDown as ArrowDropDownIcon,} from '@material-ui/icons';
 
 // Shared components
 import {

@@ -28,4 +28,9 @@ export default theme => ({
     width: 40,
     height: 40,
   },
+  bigAvatar: {
+    margin: theme.spacing(1),
+    width: '120px',
+    height: '120px',
+  },
 });
