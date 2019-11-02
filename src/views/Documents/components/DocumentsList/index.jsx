@@ -273,7 +273,7 @@ class DocumentsList extends Component {
 									/>
 									<CardItem
 										title="Hash do documento"
-										description={rowSelected.hash}
+										description={<span style={{ wordBreak: 'break-word' }}>{rowSelected.hash}</span>}
 									/>
 									<CardItem
 										title="OP Return"
@@ -281,7 +281,7 @@ class DocumentsList extends Component {
 									/>
 									<CardItem
 										title="Transaction"
-										description={rowSelected.transaction}
+										description={<span style={{ wordBreak: 'break-word' }}>{rowSelected.transaction}</span>}
 									/>
 								</React.Fragment>
 							) : (
