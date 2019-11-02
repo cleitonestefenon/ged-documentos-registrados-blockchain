@@ -22,7 +22,7 @@ export const save = async (organizationId, data, onSuccess, onError) => {
 }
 
 export const update = async (organizationId, data, onSuccess, onError) => {
-    await api.post(`${DOCS_SERVICE}/organization/${organizationId}/create_wallet`, data)
+    await api.put(`${DOCS_SERVICE}/organization/${organizationId}/update_wallet`, data)
         .then(resp => {
             onSuccess(resp)
         })

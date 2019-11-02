@@ -64,30 +64,37 @@ class AccountProfile extends Component {
 
         this.showLoading();
 
-        const formData = new FormData();
-        formData.append('file', target.files[0]);
+        if (target.files[0].size < 100000) {
+            const formData = new FormData();
+            formData.append('file', target.files[0]);
 
-        saveAvatar(formData, resp => {
-            loadAvatar(resp.data._id, () => {
+            saveAvatar(formData, resp => {
+                loadAvatar(resp.data._id, () => {
+                    this.props.showNotification({
+                        message: 'Avatar atualizado com sucesso! 👻👻',
+                        variant: 'success',
+                        callback: () => {
+                            this.hiddenLoading();
+                            saveAsSessionStorage(KEY_STORAGE.AVATAR_ID, resp.data._id);
+                            window.location.reload();
+                        }
+                    })
+                });
+            }, err => {
                 this.props.showNotification({
-                    message: 'Avatar atualizado com sucesso! 👻👻',
-                    variant: 'success',
+                    message: 'Esse arquivo infelizmente não é suportado. 😢😢',
+                    variant: 'error',
                     callback: () => {
                         this.hiddenLoading();
-                        saveAsSessionStorage(KEY_STORAGE.AVATAR_ID, resp.data._id);
-                        window.location.reload();
                     }
                 })
-            });
-        }, err => {
-            this.props.showNotification({
-                message: 'Esse arquivo infelizmente não é suportado. 😢😢',
-                variant: 'error',
-                callback: () => {
-                    this.hiddenLoading();
-                }
             })
-        })
+        } else {
+            this.props.showNotification({
+                message: 'Tamanho do arquivo não suportado. 😢😢 Limite máximo de 100KB',
+                variant: 'warning',
+            })
+        }
     };
 
     deleteAvatar = () => {

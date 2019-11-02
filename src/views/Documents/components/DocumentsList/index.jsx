@@ -28,10 +28,7 @@ import {
 	DialogContentText,
 	DialogActions,
 	Button,
-	Card,
-	CardActionArea,
 	CardMedia,
-	CardContent
 } from '@material-ui/core';
 
 // Material components
@@ -127,27 +124,27 @@ class DocumentsList extends Component {
 										</TableRow>
 									</TableHead>
 									<TableBody>
-										{transactions ? transactions.map(el => (
+										{transactions ? transactions.map(transaction => (
 											<TableRow
 												className={classes.tableRow}
 												hover
-												key={el.id}
+												key={transaction.id}
 											>
 												<TableCell
 													align="center"
 													className={classes.tableCell}
 												>
-													<Typography variant="body1">{el.transaction}</Typography>
+													<Typography variant="body1">{transaction.transaction}</Typography>
 												</TableCell>
 
 												<TableCell
 													align="center"
 													className={classes.tableCell}
 												>
-													{el.confirmations > 6 ? (
-														<Badge max={6} color="primary" variant="standard" badgeContent={el.confirmations} />
+													{transaction.confirmations > 6 ? (
+														<Badge max={6} color="primary" variant="standard" badgeContent={transaction.confirmations} />
 													) : (
-															<Badge max={6} color="secondary" badgeContent={el.confirmations || '0'} />
+															<Badge max={6} color="secondary" badgeContent={transaction.confirmations || '0'} />
 														)
 													}
 												</TableCell>
@@ -156,14 +153,14 @@ class DocumentsList extends Component {
 													align="center"
 													className={classes.tableCell}
 												>
-													{el.confirmed ? <Check color="primary" /> : <Close color="secondary" />}
+													{transaction.confirmed ? <Check color="primary" /> : <Close color="secondary" />}
 												</TableCell>
 
 												<TableCell
 													align="center"
 													className={classes.tableCell}
 												>
-													{moment(el.createdAt).format('DD/MM/YYYY')}
+													{moment(transaction.createdAt).format('DD/MM/YYYY')}
 												</TableCell>
 
 												<TableCell
@@ -171,7 +168,7 @@ class DocumentsList extends Component {
 													className={classes.tableCell}
 												>
 													<IconButton size="medium">
-														<MoreVert onClick={event => this.handleDetailsClick(event, el)} />
+														<MoreVert onClick={event => this.handleDetailsClick(event, transaction)} />
 													</IconButton>
 												</TableCell>
 											</TableRow>

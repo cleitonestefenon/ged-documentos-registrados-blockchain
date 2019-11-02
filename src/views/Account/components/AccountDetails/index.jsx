@@ -96,19 +96,13 @@ class Account extends Component {
         });
     }
 
-    handleChange = (fieldName, value) => {
-        const newState = { ...this.state };
-        newState[fieldName] = value;
-        this.setState(newState);
-    };
-
     handleSubmit = async () => {
         const { errors, values, submitForm, showNotification } = this.props;
 
         submitForm();
 
         if (!formHasError(errors)) {
-            if (values.id) {
+            if (values.id != null) {
                 await update(this.state.organizationId, values, resp => {
                     showNotification({
                         message: 'Sua carteira foi atualizada com sucesso. 🤪🤪',
