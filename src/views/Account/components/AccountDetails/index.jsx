@@ -102,21 +102,7 @@ class Account extends Component {
         submitForm();
 
         if (!formHasError(errors)) {
-            if (values.id != null) {
-                await update(this.state.organizationId, values, resp => {
-                    showNotification({
-                        message: 'Sua carteira foi atualizada com sucesso. 🤪🤪',
-                        callback: () => {
-                            this.updateForm(resp);
-                        }
-                    })
-                }, err => {
-                    showNotification({
-                        message: 'Ocorreu um erro ao salvar sua carteira. 😢😢',
-                        variant: 'error'
-                    })
-                })
-            } else {
+            if (!values || !values.id) {
                 await save(this.state.organizationId, values, resp => {
                     showNotification({
                         message: 'Agora sua carteira está pronta para ser usada. 😍😍',
@@ -127,6 +113,21 @@ class Account extends Component {
                 }, err => {
                     showNotification({
                         message: 'Ocorreu um erro ao salvar seua carteira. 😢😢',
+                        variant: 'error'
+                    })
+                })
+
+            } else {
+                await update(this.state.organizationId, values, resp => {
+                    showNotification({
+                        message: 'Sua carteira foi atualizada com sucesso. 🤪🤪',
+                        callback: () => {
+                            this.updateForm(resp);
+                        }
+                    })
+                }, err => {
+                    showNotification({
+                        message: 'Ocorreu um erro ao salvar sua carteira. 😢😢',
                         variant: 'error'
                     })
                 })

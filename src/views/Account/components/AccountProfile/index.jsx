@@ -93,6 +93,9 @@ class AccountProfile extends Component {
             this.props.showNotification({
                 message: 'Tamanho do arquivo não suportado. 😢😢 Limite máximo de 100KB',
                 variant: 'warning',
+                callback: () => {
+                    this.hiddenLoading();
+                }
             })
         }
     };

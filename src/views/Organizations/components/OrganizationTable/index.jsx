@@ -29,7 +29,6 @@ import {
     Menu,
     MenuItem,
     ListItemText,
-    CircularProgress
 } from '@material-ui/core';
 
 // Shared helpers
@@ -39,10 +38,11 @@ import { getInitials } from 'helpers';
 import styles from './styles';
 import { Portlet, PortletContent } from 'components';
 import { Done, Timer, MoreVert, Close as CloseIcon } from '@material-ui/icons';
-import avatarVelho from './velho_hermoso.jpeg';
+import avatarDefault from './images/avatar_default.png';
 
 //Functions
 import { mountDataImage } from 'common/functions';
+import { DocumentsOrganizationList } from '../index.jsx';
 
 class OrganizationTable extends Component {
 
@@ -70,10 +70,20 @@ class OrganizationTable extends Component {
         this.setState({ anchorEl: null })
     }
 
+    montarAvatar = oidPhoto => {
+        mountDataImage(oidPhoto)
+            .then(avatar => {
+                this.setState({ avatar })
+            })
+    }
+
     handleOpenDetailOrganization = () => {
+
+        this.montarAvatar(this.state.rowSelected.oidphoto);
+
         this.setState({
             detailsOpen: true,
-            avatar: mountDataImage(rowSelected.oidphoto)
+            avatar: avatarDefault
         })
     }
 
@@ -108,7 +118,6 @@ class OrganizationTable extends Component {
                                             className={classes.tableRow}
                                             hover
                                             key={friend.id}
-                                            selected={organizations.indexOf(friend.id) !== -1}
                                         >
                                             <TableCell className={classes.tableCell}>
                                                 <div className={classes.tableCellInner}>
@@ -182,6 +191,7 @@ class OrganizationTable extends Component {
                 <Dialog
                     fullScreen={false}
                     fullWidth={true}
+                    scroll="body"
                     open={detailsOpen}
                     onClose={this.handleCloseDetailOrganization}
                     aria-labelledby="responsive-dialog-title"
@@ -210,15 +220,11 @@ class OrganizationTable extends Component {
                                         justify="center"
                                         alignItems="center"
                                     >
-                                        {avatar && avatar ? (
-                                            <Avatar
-                                                alt="Avatar"
-                                                src={avatarVelho}
-                                                className={classes.bigAvatar}
-                                            />
-                                        ): (
-                                            <CircularProgress />
-                                        )}
+                                        <Avatar
+                                            alt="Avatar"
+                                            src={avatar}
+                                            className={classes.bigAvatar}
+                                        />
                                         <Typography variant="body1" color="textSecondary" component="p">
                                             {rowSelected.name}
                                         </Typography>
@@ -226,20 +232,27 @@ class OrganizationTable extends Component {
                                             {rowSelected.email}
                                         </Typography>
                                     </Grid>
+                                    <DocumentsOrganizationList
+                                        organization={rowSelected}
+                                    />
                                 </React.Fragment>
                             ) : (
-                                    <Typography variant="body2" color="textSecondary" component="p">
-                                        Nenhuma organização selecionada
-									</Typography>
+                                    <Grid
+                                        container
+                                        direction="column"
+                                        justify="center"
+                                        alignItems="center"
+                                    >
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                            Nenhuma organização selecionada
+                                        </Typography>
+                                    </Grid>
                                 )}
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleCloseDetailOrganization} color="primary">
                             Retornar à listagem
-          				</Button>
-                        <Button onClick={() => console.log(rowSelected)} color="primary">
-                            Visualizar
           				</Button>
                     </DialogActions>
                 </Dialog>
