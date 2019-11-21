@@ -19,7 +19,7 @@ import {
     PortletFooter
 } from 'components';
 
-import Modal from '../../../../components/Modal';
+import Modal from 'components/Modal';
 
 import FieldErrorMessage from 'components/FieldErrorMessage';
 
