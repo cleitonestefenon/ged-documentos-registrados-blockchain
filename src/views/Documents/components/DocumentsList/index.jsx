@@ -116,11 +116,11 @@ class DocumentsList extends Component {
 								<Table size="small">
 									<TableHead>
 										<TableRow>
-											<TableCell align="left">Transação</TableCell>
-											<TableCell align="left">Confirmações</TableCell>
-											<TableCell align="left">Confirmada</TableCell>
-											<TableCell align="left">Data registro</TableCell>
-											<TableCell align="left">Ações</TableCell>
+											<TableCell align="center">Transação</TableCell>
+											<TableCell align="center">Confirmações</TableCell>
+											<TableCell align="center">Confirmada</TableCell>
+											<TableCell align="center">Data registro</TableCell>
+											<TableCell align="center">Ações</TableCell>
 										</TableRow>
 									</TableHead>
 									<TableBody>

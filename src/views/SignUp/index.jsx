@@ -132,7 +132,7 @@ class SignUp extends Component {
                               className={classes.subtitle}
                               variant="body1"
                            >
-                              Use seu melhor email e crie uma conta... É gratuito
+                              Use seu melhor e-mail e crie uma conta... É gratuito
                            </Typography>
 
                            <div className={classes.fields}>
