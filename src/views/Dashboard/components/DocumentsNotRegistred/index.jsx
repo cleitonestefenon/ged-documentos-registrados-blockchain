@@ -57,7 +57,7 @@ class DocumentsNotRegistred extends Component {
                             className={classes.title}
                             variant="body1"
                         >
-                            Documentos à ser registrados
+                            Documentos a registrar
                         </Typography>
                         <Typography
                             align="center"
