@@ -68,7 +68,7 @@ class SignIn extends Component {
 		history.goBack();
 	};
 
-	handleSignIn = async () => {
+	handleSignIn = async (e) => {
 
 		const { history, showNotification, values } = this.props;
 
@@ -99,6 +99,12 @@ class SignIn extends Component {
 		});
 
 	};
+
+	handleKeyDown = e => {
+		if (e.keyCode === 13) {
+			this.handleSignIn();
+		}
+	}
 
 	render() {
 		const { classes, values, errors, dirty, touched, setFieldTouched } = this.props;
@@ -166,6 +172,7 @@ class SignIn extends Component {
 											onBlur={() => setFieldTouched('email', true)}
 											onChange={event => this.props.setFieldValue("email", event.target.value)}
 											type="text"
+											onKeyDown={this.handleKeyDown}
 											value={values.email}
 											variant="outlined"
 										/>
@@ -179,6 +186,7 @@ class SignIn extends Component {
 											onChange={event => this.props.setFieldValue("password", event.target.value)}
 											type="password"
 											value={values.password}
+											onKeyDown={this.handleKeyDown}
 											variant="outlined"
 										/>
 										<FieldErrorMessage touched={touched['password']} errors={errors} field="password" />
@@ -187,9 +195,10 @@ class SignIn extends Component {
 									<Button
 										className={classes.signInButton}
 										color="primary"
-										disabled={!dirty || formHasError(errors)}
+										disabled={!values.password}
 										onClick={this.handleSignIn}
 										size="large"
+										onKeyDown={this.handleKeyDown}
 										variant="contained"
 									>
 										Acessar

@@ -45,8 +45,8 @@ class DocumentsRegistration extends Component {
 
         this.showLoading();
 
-        loadAllTransactions(page, rowsPerPage, transactions => {
-            this.setState({ transactions, loading: false });
+        loadAllTransactions(page, rowsPerPage, ({ count, rows }) => {
+            this.setState({ transactions: rows, count, loading: false });
         }, err => {
             this.hiddenLoading();
             console.error(err);
@@ -56,7 +56,7 @@ class DocumentsRegistration extends Component {
     render() {
 
         const { classes } = this.props;
-        const { rowsPerPage, page, transactions, loading } = this.state;
+        const { rowsPerPage, page, count, transactions, loading } = this.state;
 
         return (
             <DashboardLayout title="Novo Documento">
@@ -69,6 +69,7 @@ class DocumentsRegistration extends Component {
                         getTransactions={this.getTransactions}
                         rowsPerPage={rowsPerPage}
                         page={page}
+                        count={count}
                         loading={loading}
                         transactions={transactions}
                     />

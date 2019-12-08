@@ -99,7 +99,7 @@ class DocumentsList extends Component {
 	}
 
 	render() {
-		const { classes, className, rowsPerPage, loading, page, transactions, handleChangeRowsPerPage, handleChangePage } = this.props;
+		const { classes, className, rowsPerPage, loading, page, transactions, handleChangeRowsPerPage, handleChangePage, count } = this.props;
 		const { anchorEl, detailsOpen, rowSelected } = this.state;
 
 		const rootClassName = classNames(classes.root, className);
@@ -180,7 +180,7 @@ class DocumentsList extends Component {
 					<TablePagination
 						backIconButtonProps={{ 'aria-label': 'Previous Page' }}
 						component="div"
-						count={transactions.length}
+						count={count}
 						nextIconButtonProps={{ 'aria-label': 'Next Page' }}
 						onChangePage={handleChangePage}
 						onChangeRowsPerPage={handleChangeRowsPerPage}

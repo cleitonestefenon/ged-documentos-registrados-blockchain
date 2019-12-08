@@ -71,8 +71,14 @@ class SignUp extends Component {
 
    };
 
+   handleKeyDown = e => {
+		if (e.keyCode === 13) {
+			this.handleSignUp();
+		}
+	}
+
    render() {
-      const { classes, values, errors, dirty, touched, setFieldTouched } = this.props;
+      const { classes, values, errors, touched, setFieldTouched } = this.props;
 
       return (
          <div className={classes.root}>
@@ -144,6 +150,7 @@ class SignUp extends Component {
                                  onBlur={() => setFieldTouched('name', true)}
                                  onChange={event => this.props.setFieldValue("name", event.target.value)}
                                  value={values.name}
+                                 onKeyDown={this.handleKeyDown}
                                  variant="outlined"
                               />
                               <FieldErrorMessage touched={touched['name']} errors={errors} field="name" />
@@ -155,6 +162,7 @@ class SignUp extends Component {
                                  onBlur={() => setFieldTouched('email', true)}
                                  onChange={event => this.props.setFieldValue("email", event.target.value)}
                                  value={values.email}
+                                 onKeyDown={this.handleKeyDown}
                                  variant="outlined"
                               />
                               <FieldErrorMessage touched={touched['email']} errors={errors} field="email" />
@@ -166,6 +174,7 @@ class SignUp extends Component {
                                  onBlur={() => setFieldTouched('password', true)}
                                  onChange={event => this.props.setFieldValue("password", event.target.value)}
                                  type="password"
+                                 onKeyDown={this.handleKeyDown}
                                  value={values.password}
                                  variant="outlined"
                               />
@@ -175,9 +184,10 @@ class SignUp extends Component {
                            <Button
                               className={classes.signUpButton}
                               color="primary"
-                              disabled={!dirty || formHasError(errors)}
+                              disabled={!values.password || !values.email || !values.name}
                               onClick={this.handleSignUp}
                               size="large"
+                              onKeyDown={this.handleKeyDown}
                               variant="contained"
                            >
                               Cadastrar

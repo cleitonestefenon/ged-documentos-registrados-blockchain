@@ -11,9 +11,9 @@ import {
     ListItemAvatar,
     ListItemSecondaryAction,
     Grid,
-    Tooltip,
     Divider,
     Typography,
+    TablePagination,
 } from '@material-ui/core';
 
 // Component styles
@@ -21,48 +21,46 @@ import styles from './styles';
 
 //Functions
 import { findAllDocumentsByOrganization } from './requests';
-import { ArrowRight, GetApp, Archive, ArrowLeft } from '@material-ui/icons';
+import { GetApp, Archive } from '@material-ui/icons';
 import { format } from 'date-fns/esm';
 
 class DocumentsOrganizationList extends Component {
 
     state = {
         documents: null,
-        offset: 0,
-        limit: 10
+        rowsPerPage: 5, //limit
+        count: 0,
+        page: 0, //offset
     };
 
     componentDidMount() {
-        const { organization } = this.props;
-        const { offset, limit } = this.state;
-
-        this.getDocuments(organization.id, offset, limit);
+        this.getDocuments();
     }
 
-    getDocuments = (organizationId, offset, limit) => {
-        findAllDocumentsByOrganization(organizationId, offset, limit, documents => {
-            this.setState({ documents })
+    getDocuments = () => {
+        const { organization } = this.props;
+        const { page, rowsPerPage } = this.state;
+
+        findAllDocumentsByOrganization(organization.id, page, rowsPerPage, ({ count, rows }) => {
+            this.setState({ documents: rows, count })
         }, () => {
             this.setState({ documents: [] })
         });
     }
 
-    handleChangePage = (limit, offset) => {
-        this.setState({ limit, offset })
-    }
+    handleChangePage = async (event, page) => {
+        await this.setState({ page });
+        this.getDocuments();
+    };
 
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.offset !== prevState.offset || this.state.limit !== prevState.limit) {
-            const { organization } = this.props;
-            const { offset, limit } = this.state;
-
-            this.getDocuments(organization.id, offset, limit);
-        }
-    }
+    handleChangeRowsPerPage = async event => {
+        await this.setState({ rowsPerPage: event.target.value });
+        this.getDocuments();
+    };
 
     render() {
         const { classes } = this.props;
-        const { documents } = this.state;
+        const { documents, rowsPerPage, page, count } = this.state;
         return (
             <div className={classes.demo}>
                 <List dense>
@@ -101,7 +99,18 @@ class DocumentsOrganizationList extends Component {
                         )
                     })}
                     <Divider />
-                    <Grid
+                    <TablePagination
+                        backIconButtonProps={{ 'aria-label': 'Previous Page' }}
+                        component="div"
+                        count={count}
+                        nextIconButtonProps={{ 'aria-label': 'Next Page' }}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                        page={page}
+                        rowsPerPage={rowsPerPage}
+                        rowsPerPageOptions={[5, 10, 25]}
+                    />
+                    {/* <Grid
                         container
                         direction="row"
                         justify="flex-end"
@@ -117,7 +126,7 @@ class DocumentsOrganizationList extends Component {
                                 <ArrowRight />
                             </IconButton>
                         </Tooltip>
-                    </Grid>
+                    </Grid> */}
 
                 </List>
             </div>

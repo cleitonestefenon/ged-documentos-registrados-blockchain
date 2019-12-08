@@ -74,7 +74,7 @@ class Friend extends Component {
                         <Typography
                             variant="h4"
                         >
-                            {this.state.total > 0 ? (this.state.friendsMatched / this.state.total).toFixed(2) : 0}%
+                            {this.state.total > 0 ? (this.state.friendsMatched / this.state.total) * 100 : 0}%
                         </Typography>
                     </Tooltip>
                     <LinearProgress
